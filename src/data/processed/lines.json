@@ -1,0 +1,324 @@
+[
+  {
+    "id": 1,
+    "name": {
+      "en": "Line 1 (Red Line)",
+      "fa": "خط ۱ (خط قرمز)"
+    },
+    "color": "#E0001F",
+    "description": {
+      "en": "Tehran Metro Line 1",
+      "fa": "خط مترو تهران 1"
+    },
+    "stationIds": [
+      "station_1",
+      "station_2",
+      "station_3",
+      "station_4",
+      "station_5",
+      "station_6",
+      "station_7",
+      "station_8",
+      "station_9",
+      "station_10",
+      "station_11",
+      "station_12",
+      "station_13",
+      "station_14",
+      "station_15",
+      "station_16",
+      "station_17",
+      "station_18",
+      "station_19",
+      "station_20",
+      "station_21",
+      "station_22",
+      "station_23",
+      "station_24",
+      "station_25",
+      "station_26",
+      "station_27",
+      "station_28",
+      "station_29",
+      "station_30",
+      "station_31",
+      "station_32",
+      "station_119"
+    ],
+    "specifications": {
+      "stationCount": 33,
+      "length": 49.5,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 2,
+    "name": {
+      "en": "Line 2 (Blue Line)",
+      "fa": "خط ۲ (خط آبی)"
+    },
+    "color": "#2F4389",
+    "description": {
+      "en": "Tehran Metro Line 2",
+      "fa": "خط مترو تهران 2"
+    },
+    "stationIds": [
+      "station_15",
+      "station_33",
+      "station_34",
+      "station_35",
+      "station_36",
+      "station_37",
+      "station_38",
+      "station_39",
+      "station_40",
+      "station_41",
+      "station_42",
+      "station_43",
+      "station_44",
+      "station_45",
+      "station_46",
+      "station_47",
+      "station_48",
+      "station_49",
+      "station_50",
+      "station_51",
+      "station_52",
+      "station_53"
+    ],
+    "specifications": {
+      "stationCount": 22,
+      "length": 33,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 3,
+    "name": {
+      "en": "Line 3 (Light Blue Line)",
+      "fa": "خط ۳ (خط آبی روشن)"
+    },
+    "color": "#67C5F5",
+    "description": {
+      "en": "Tehran Metro Line 3",
+      "fa": "خط مترو تهران 3"
+    },
+    "stationIds": [
+      "station_10",
+      "station_54",
+      "station_55",
+      "station_56",
+      "station_57",
+      "station_58",
+      "station_59",
+      "station_60",
+      "station_61",
+      "station_62",
+      "station_63",
+      "station_64",
+      "station_65",
+      "station_66",
+      "station_67",
+      "station_68",
+      "station_69",
+      "station_70",
+      "station_71",
+      "station_72",
+      "station_73",
+      "station_74",
+      "station_75",
+      "station_76",
+      "station_121"
+    ],
+    "specifications": {
+      "stationCount": 25,
+      "length": 37.5,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 4,
+    "name": {
+      "en": "Line 4 (Yellow Line)",
+      "fa": "خط ۴ (خط زرد)"
+    },
+    "color": "#F8E100",
+    "description": {
+      "en": "Tehran Metro Line 4",
+      "fa": "خط مترو تهران 4"
+    },
+    "stationIds": [
+      "station_13",
+      "station_43",
+      "station_50",
+      "station_67",
+      "station_77",
+      "station_78",
+      "station_79",
+      "station_80",
+      "station_81",
+      "station_82",
+      "station_83",
+      "station_84",
+      "station_85",
+      "station_86",
+      "station_87",
+      "station_88",
+      "station_89",
+      "station_90",
+      "station_91",
+      "station_92",
+      "station_93",
+      "station_94",
+      "station_116"
+    ],
+    "specifications": {
+      "stationCount": 23,
+      "length": 34.5,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 5,
+    "name": {
+      "en": "Line 5 (Purple Line)",
+      "fa": "خط ۵ (خط بنفش)"
+    },
+    "color": "#8B47AC",
+    "description": {
+      "en": "Tehran Metro Line 5",
+      "fa": "خط مترو تهران 5"
+    },
+    "stationIds": [
+      "station_53",
+      "station_94",
+      "station_95",
+      "station_96",
+      "station_97",
+      "station_98",
+      "station_99",
+      "station_100",
+      "station_101",
+      "station_102",
+      "station_103",
+      "station_104"
+    ],
+    "specifications": {
+      "stationCount": 12,
+      "length": 18,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 6,
+    "name": {
+      "en": "Line 6 (Orange Line)",
+      "fa": "خط ۶ (خط نارنجی)"
+    },
+    "color": "#F97316",
+    "description": {
+      "en": "Tehran Metro Line 6",
+      "fa": "خط مترو تهران 6"
+    },
+    "stationIds": [
+      "station_42",
+      "station_105",
+      "station_106",
+      "station_107",
+      "station_108",
+      "station_109",
+      "station_110",
+      "station_111",
+      "station_112",
+      "station_113",
+      "station_114",
+      "station_115",
+      "station_116",
+      "station_117",
+      "station_118",
+      "station_119",
+      "station_120",
+      "station_121",
+      "station_122",
+      "station_123",
+      "station_124",
+      "station_125",
+      "station_126",
+      "station_127",
+      "station_128",
+      "station_129",
+      "station_130",
+      "station_131",
+      "station_132",
+      "station_133",
+      "station_134"
+    ],
+    "specifications": {
+      "stationCount": 31,
+      "length": 46.5,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  },
+  {
+    "id": 7,
+    "name": {
+      "en": "Line 7 (Dark Purple Line)",
+      "fa": "خط ۷ (خط بنفش تیره)"
+    },
+    "color": "#7F0B74",
+    "description": {
+      "en": "Tehran Metro Line 7",
+      "fa": "خط مترو تهران 7"
+    },
+    "stationIds": [
+      "station_18",
+      "station_49",
+      "station_69",
+      "station_84",
+      "station_114",
+      "station_124",
+      "station_135",
+      "station_136",
+      "station_137",
+      "station_138",
+      "station_139",
+      "station_140",
+      "station_141",
+      "station_142",
+      "station_143",
+      "station_144",
+      "station_145",
+      "station_146",
+      "station_147",
+      "station_148",
+      "station_149",
+      "station_150"
+    ],
+    "specifications": {
+      "stationCount": 22,
+      "length": 33,
+      "openingYear": 2000
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.899Z"
+    }
+  }
+]

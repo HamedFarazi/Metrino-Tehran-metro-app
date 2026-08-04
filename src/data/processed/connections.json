@@ -1,0 +1,2722 @@
+[
+  {
+    "id": "conn_1",
+    "fromStationId": "station_1",
+    "toStationId": "station_2",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.2975790564926022,
+      "travelTime": 3.0951581129852044,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.966Z"
+    }
+  },
+  {
+    "id": "conn_2",
+    "fromStationId": "station_2",
+    "toStationId": "station_3",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.8786205434823444,
+      "travelTime": 2.257241086964689,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.966Z"
+    }
+  },
+  {
+    "id": "conn_3",
+    "fromStationId": "station_4",
+    "toStationId": "station_3",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.3884863521396014,
+      "travelTime": 3.2769727042792027,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.966Z"
+    }
+  },
+  {
+    "id": "conn_4",
+    "fromStationId": "station_4",
+    "toStationId": "station_5",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.260811463932714,
+      "travelTime": 3.021622927865428,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.967Z"
+    }
+  },
+  {
+    "id": "conn_5",
+    "fromStationId": "station_5",
+    "toStationId": "station_6",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.9924959191140504,
+      "travelTime": 2.484991838228101,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.967Z"
+    }
+  },
+  {
+    "id": "conn_6",
+    "fromStationId": "station_6",
+    "toStationId": "station_7",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.7605168155937392,
+      "travelTime": 2.0210336311874784,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.967Z"
+    }
+  },
+  {
+    "id": "conn_7",
+    "fromStationId": "station_7",
+    "toStationId": "station_8",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.9161119877533082,
+      "travelTime": 2.3322239755066163,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.967Z"
+    }
+  },
+  {
+    "id": "conn_8",
+    "fromStationId": "station_8",
+    "toStationId": "station_9",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.8497282438079176,
+      "travelTime": 2.1994564876158353,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.967Z"
+    }
+  },
+  {
+    "id": "conn_9",
+    "fromStationId": "station_9",
+    "toStationId": "station_10",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.0560086333545762,
+      "travelTime": 2.6120172667091524,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.968Z"
+    }
+  },
+  {
+    "id": "conn_10",
+    "fromStationId": "station_10",
+    "toStationId": "station_64",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.8946865314089569,
+      "travelTime": 2.289373062817914,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.968Z"
+    }
+  },
+  {
+    "id": "conn_11",
+    "fromStationId": "station_10",
+    "toStationId": "station_65",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.9256496111068312,
+      "travelTime": 2.3512992222136626,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.968Z"
+    }
+  },
+  {
+    "id": "conn_12",
+    "fromStationId": "station_10",
+    "toStationId": "station_11",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.7135304689382755,
+      "travelTime": 1.927060937876551,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.968Z"
+    }
+  },
+  {
+    "id": "conn_13",
+    "fromStationId": "station_11",
+    "toStationId": "station_119",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.038815370055537,
+      "travelTime": 2.577630740111074,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_14",
+    "fromStationId": "station_12",
+    "toStationId": "station_119",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.8778516558649253,
+      "travelTime": 2.2557033117298504,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_15",
+    "fromStationId": "station_12",
+    "toStationId": "station_13",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.6313573394601761,
+      "travelTime": 1.7627146789203523,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_16",
+    "fromStationId": "station_13",
+    "toStationId": "station_82",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.6558981620401045,
+      "travelTime": 1.811796324080209,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_17",
+    "fromStationId": "station_13",
+    "toStationId": "station_43",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.1199050716730123,
+      "travelTime": 2.7398101433460247,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_18",
+    "fromStationId": "station_13",
+    "toStationId": "station_14",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.9454055522140822,
+      "travelTime": 2.390811104428164,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_19",
+    "fromStationId": "station_14",
+    "toStationId": "station_15",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.9647756624058128,
+      "travelTime": 2.4295513248116256,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_20",
+    "fromStationId": "station_15",
+    "toStationId": "station_46",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.8874151267726065,
+      "travelTime": 2.274830253545213,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_21",
+    "fromStationId": "station_15",
+    "toStationId": "station_45",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.707531073698646,
+      "travelTime": 1.915062147397292,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_22",
+    "fromStationId": "station_15",
+    "toStationId": "station_16",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.8629441657098413,
+      "travelTime": 2.2258883314196827,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_23",
+    "fromStationId": "station_16",
+    "toStationId": "station_17",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.5371198020944585,
+      "travelTime": 1.574239604188917,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_24",
+    "fromStationId": "station_17",
+    "toStationId": "station_18",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.5582189135092074,
+      "travelTime": 1.6164378270184148,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_25",
+    "fromStationId": "station_18",
+    "toStationId": "station_69",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.5156248118250977,
+      "travelTime": 3.5312496236501953,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_26",
+    "fromStationId": "station_18",
+    "toStationId": "station_140",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.005764495598444722,
+      "travelTime": 0.5115289911968894,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.971Z"
+    }
+  },
+  {
+    "id": "conn_27",
+    "fromStationId": "station_18",
+    "toStationId": "station_19",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.2142871900410472,
+      "travelTime": 2.9285743800820945,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_28",
+    "fromStationId": "station_19",
+    "toStationId": "station_20",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.7740677293667347,
+      "travelTime": 2.0481354587334692,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_29",
+    "fromStationId": "station_20",
+    "toStationId": "station_21",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.1340179269877126,
+      "travelTime": 2.7680358539754253,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_30",
+    "fromStationId": "station_21",
+    "toStationId": "station_22",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.2159665625537057,
+      "travelTime": 2.9319331251074114,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_31",
+    "fromStationId": "station_22",
+    "toStationId": "station_23",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 2.2264162424854224,
+      "travelTime": 4.952832484970845,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_32",
+    "fromStationId": "station_23",
+    "toStationId": "station_24",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 1.70970867768158,
+      "travelTime": 3.91941735536316,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_33",
+    "fromStationId": "station_24",
+    "toStationId": "station_25",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 4.405190561851348,
+      "travelTime": 9.310381123702696,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_34",
+    "fromStationId": "station_25",
+    "toStationId": "station_26",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 2.0850868967373497,
+      "travelTime": 4.670173793474699,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_35",
+    "fromStationId": "station_26",
+    "toStationId": "station_27",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 3.126153636877279,
+      "travelTime": 6.752307273754558,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_36",
+    "fromStationId": "station_26",
+    "toStationId": "station_31",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 0.8725976541459163,
+      "travelTime": 2.245195308291833,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_37",
+    "fromStationId": "station_27",
+    "toStationId": "station_28",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 5.258695962500053,
+      "travelTime": 11.017391925000107,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_38",
+    "fromStationId": "station_28",
+    "toStationId": "station_29",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 17.829938525088508,
+      "travelTime": 36.159877050177016,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_39",
+    "fromStationId": "station_29",
+    "toStationId": "station_30",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 17.312792872903383,
+      "travelTime": 35.12558574580677,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_40",
+    "fromStationId": "station_31",
+    "toStationId": "station_32",
+    "lineIds": [
+      1
+    ],
+    "travelMetrics": {
+      "distance": 2.651301455826306,
+      "travelTime": 5.802602911652612,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_41",
+    "fromStationId": "station_33",
+    "toStationId": "station_34",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.3722512172099464,
+      "travelTime": 3.2445024344198927,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_42",
+    "fromStationId": "station_34",
+    "toStationId": "station_35",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.4029966378997518,
+      "travelTime": 3.3059932757995036,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_43",
+    "fromStationId": "station_35",
+    "toStationId": "station_36",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.0423644287000184,
+      "travelTime": 2.584728857400037,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_44",
+    "fromStationId": "station_36",
+    "toStationId": "station_37",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.9151298252724382,
+      "travelTime": 2.3302596505448765,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.972Z"
+    }
+  },
+  {
+    "id": "conn_45",
+    "fromStationId": "station_37",
+    "toStationId": "station_38",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.954757389943786,
+      "travelTime": 2.409514779887572,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_46",
+    "fromStationId": "station_38",
+    "toStationId": "station_39",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.1025575271492176,
+      "travelTime": 2.7051150542984352,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_47",
+    "fromStationId": "station_39",
+    "toStationId": "station_40",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.3681322841762735,
+      "travelTime": 3.236264568352547,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_48",
+    "fromStationId": "station_40",
+    "toStationId": "station_41",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.427866257021579,
+      "travelTime": 3.355732514043158,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_49",
+    "fromStationId": "station_41",
+    "toStationId": "station_42",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.0401450479894236,
+      "travelTime": 2.5802900959788473,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_50",
+    "fromStationId": "station_42",
+    "toStationId": "station_117",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.7947473025368739,
+      "travelTime": 2.0894946050737477,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_51",
+    "fromStationId": "station_42",
+    "toStationId": "station_116",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.3169566950291929,
+      "travelTime": 3.1339133900583858,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_52",
+    "fromStationId": "station_42",
+    "toStationId": "station_43",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.8035349071850074,
+      "travelTime": 2.107069814370015,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_53",
+    "fromStationId": "station_43",
+    "toStationId": "station_116",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.3089843373110366,
+      "travelTime": 3.117968674622073,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_54",
+    "fromStationId": "station_43",
+    "toStationId": "station_44",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.9139381404607693,
+      "travelTime": 2.3278762809215383,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_55",
+    "fromStationId": "station_44",
+    "toStationId": "station_45",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.6579722387240314,
+      "travelTime": 1.8159444774480629,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_56",
+    "fromStationId": "station_46",
+    "toStationId": "station_47",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.9702562884629474,
+      "travelTime": 2.4405125769258946,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_57",
+    "fromStationId": "station_47",
+    "toStationId": "station_48",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.0749625532566662,
+      "travelTime": 2.6499251065133325,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_58",
+    "fromStationId": "station_48",
+    "toStationId": "station_49",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 0.9185482219206954,
+      "travelTime": 2.337096443841391,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_59",
+    "fromStationId": "station_49",
+    "toStationId": "station_84",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.713143459590627,
+      "travelTime": 1.926286919181254,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_60",
+    "fromStationId": "station_49",
+    "toStationId": "station_144",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.7611611800714531,
+      "travelTime": 2.022322360142906,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_61",
+    "fromStationId": "station_49",
+    "toStationId": "station_50",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.578938801891021,
+      "travelTime": 3.657877603782042,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_62",
+    "fromStationId": "station_50",
+    "toStationId": "station_84",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.3599844324875683,
+      "travelTime": 3.2199688649751366,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_63",
+    "fromStationId": "station_50",
+    "toStationId": "station_85",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.6741912911810951,
+      "travelTime": 1.8483825823621902,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_64",
+    "fromStationId": "station_50",
+    "toStationId": "station_51",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.058844284829827,
+      "travelTime": 2.617688569659654,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_65",
+    "fromStationId": "station_51",
+    "toStationId": "station_52",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.4748069177861987,
+      "travelTime": 3.4496138355723973,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_66",
+    "fromStationId": "station_52",
+    "toStationId": "station_53",
+    "lineIds": [
+      2
+    ],
+    "travelMetrics": {
+      "distance": 1.1372543254263818,
+      "travelTime": 2.7745086508527637,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_67",
+    "fromStationId": "station_53",
+    "toStationId": "station_94",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 2.633782093434086,
+      "travelTime": 5.767564186868172,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_68",
+    "fromStationId": "station_54",
+    "toStationId": "station_55",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.1597119602787573,
+      "travelTime": 2.8194239205575147,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_69",
+    "fromStationId": "station_55",
+    "toStationId": "station_56",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 2.2172062102333316,
+      "travelTime": 4.934412420466663,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_70",
+    "fromStationId": "station_56",
+    "toStationId": "station_57",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.16697866592719,
+      "travelTime": 2.83395733185438,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_71",
+    "fromStationId": "station_57",
+    "toStationId": "station_58",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.318702607822748,
+      "travelTime": 3.137405215645496,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_72",
+    "fromStationId": "station_58",
+    "toStationId": "station_59",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.916442051961603,
+      "travelTime": 2.332884103923206,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_73",
+    "fromStationId": "station_59",
+    "toStationId": "station_60",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.4487275587334094,
+      "travelTime": 3.397455117466819,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.980Z"
+    }
+  },
+  {
+    "id": "conn_74",
+    "fromStationId": "station_60",
+    "toStationId": "station_61",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.909881006063844,
+      "travelTime": 4.319762012127688,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_75",
+    "fromStationId": "station_61",
+    "toStationId": "station_62",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.0056423485623316,
+      "travelTime": 2.511284697124663,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_76",
+    "fromStationId": "station_62",
+    "toStationId": "station_63",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.3409949367854677,
+      "travelTime": 3.1819898735709353,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_77",
+    "fromStationId": "station_63",
+    "toStationId": "station_64",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.668478684493114,
+      "travelTime": 1.836957368986228,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_78",
+    "fromStationId": "station_65",
+    "toStationId": "station_66",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.1791336258358622,
+      "travelTime": 2.8582672516717245,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_79",
+    "fromStationId": "station_66",
+    "toStationId": "station_121",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.9539679398331571,
+      "travelTime": 2.407935879666314,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_80",
+    "fromStationId": "station_67",
+    "toStationId": "station_121",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.2300468055130866,
+      "travelTime": 2.9600936110261733,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_81",
+    "fromStationId": "station_67",
+    "toStationId": "station_82",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.1889114158498573,
+      "travelTime": 2.8778228316997145,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_82",
+    "fromStationId": "station_67",
+    "toStationId": "station_83",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.3868811673901942,
+      "travelTime": 3.2737623347803884,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_83",
+    "fromStationId": "station_67",
+    "toStationId": "station_68",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 2.2579731342551304,
+      "travelTime": 5.015946268510261,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_84",
+    "fromStationId": "station_68",
+    "toStationId": "station_69",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.572018347685301,
+      "travelTime": 3.644036695370602,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_85",
+    "fromStationId": "station_69",
+    "toStationId": "station_141",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.0626146501472524,
+      "travelTime": 2.625229300294505,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_86",
+    "fromStationId": "station_69",
+    "toStationId": "station_70",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.9386607401212946,
+      "travelTime": 2.377321480242589,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_87",
+    "fromStationId": "station_70",
+    "toStationId": "station_71",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.923128093246893,
+      "travelTime": 2.346256186493786,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_88",
+    "fromStationId": "station_71",
+    "toStationId": "station_72",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.5248976973548132,
+      "travelTime": 3.5497953947096264,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_89",
+    "fromStationId": "station_72",
+    "toStationId": "station_73",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 0.986556012849411,
+      "travelTime": 2.473112025698822,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_90",
+    "fromStationId": "station_73",
+    "toStationId": "station_74",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.0745242596238183,
+      "travelTime": 2.6490485192476365,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_91",
+    "fromStationId": "station_74",
+    "toStationId": "station_75",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.2724844449040096,
+      "travelTime": 3.044968889808019,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_92",
+    "fromStationId": "station_75",
+    "toStationId": "station_76",
+    "lineIds": [
+      3
+    ],
+    "travelMetrics": {
+      "distance": 1.2771013655598036,
+      "travelTime": 3.054202731119607,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_93",
+    "fromStationId": "station_77",
+    "toStationId": "station_78",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.2037990585262648,
+      "travelTime": 2.9075981170525296,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_94",
+    "fromStationId": "station_78",
+    "toStationId": "station_79",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.9852651000105672,
+      "travelTime": 2.4705302000211344,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_95",
+    "fromStationId": "station_79",
+    "toStationId": "station_80",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.8644438657037031,
+      "travelTime": 2.228887731407406,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_96",
+    "fromStationId": "station_80",
+    "toStationId": "station_81",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.0282592936263766,
+      "travelTime": 2.556518587252753,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.981Z"
+    }
+  },
+  {
+    "id": "conn_97",
+    "fromStationId": "station_81",
+    "toStationId": "station_116",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.8100855310826716,
+      "travelTime": 2.120171062165343,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_98",
+    "fromStationId": "station_83",
+    "toStationId": "station_84",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.0317769083380568,
+      "travelTime": 2.5635538166761136,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_99",
+    "fromStationId": "station_84",
+    "toStationId": "station_145",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.6571105996781021,
+      "travelTime": 1.8142211993562043,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_100",
+    "fromStationId": "station_85",
+    "toStationId": "station_86",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.0339058818619653,
+      "travelTime": 2.5678117637239306,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_101",
+    "fromStationId": "station_86",
+    "toStationId": "station_87",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.0254313087907119,
+      "travelTime": 2.5508626175814237,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_102",
+    "fromStationId": "station_87",
+    "toStationId": "station_88",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.1971938510093536,
+      "travelTime": 2.894387702018707,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_103",
+    "fromStationId": "station_88",
+    "toStationId": "station_91",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.3036014803704044,
+      "travelTime": 3.1072029607408087,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_104",
+    "fromStationId": "station_88",
+    "toStationId": "station_89",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 0.5523041564695127,
+      "travelTime": 1.6046083129390254,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_105",
+    "fromStationId": "station_89",
+    "toStationId": "station_90",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.0170791988524335,
+      "travelTime": 2.534158397704867,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_106",
+    "fromStationId": "station_91",
+    "toStationId": "station_94",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.4738745798458186,
+      "travelTime": 3.447749159691637,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_107",
+    "fromStationId": "station_92",
+    "toStationId": "station_94",
+    "lineIds": [
+      4
+    ],
+    "travelMetrics": {
+      "distance": 1.519184101659025,
+      "travelTime": 3.53836820331805,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_108",
+    "fromStationId": "station_94",
+    "toStationId": "station_95",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 1.6043801943899751,
+      "travelTime": 3.7087603887799503,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_109",
+    "fromStationId": "station_95",
+    "toStationId": "station_96",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 3.6282982100880603,
+      "travelTime": 7.756596420176121,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_110",
+    "fromStationId": "station_96",
+    "toStationId": "station_97",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 4.351492213508182,
+      "travelTime": 9.202984427016364,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_111",
+    "fromStationId": "station_97",
+    "toStationId": "station_98",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 4.627928285541506,
+      "travelTime": 9.755856571083012,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_112",
+    "fromStationId": "station_98",
+    "toStationId": "station_99",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 6.2934199437699645,
+      "travelTime": 13.086839887539929,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_113",
+    "fromStationId": "station_99",
+    "toStationId": "station_100",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 3.6147195733798836,
+      "travelTime": 7.729439146759767,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_114",
+    "fromStationId": "station_100",
+    "toStationId": "station_101",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 4.565198387242656,
+      "travelTime": 9.630396774485313,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_115",
+    "fromStationId": "station_101",
+    "toStationId": "station_102",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 3.806011558106453,
+      "travelTime": 8.112023116212907,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_116",
+    "fromStationId": "station_102",
+    "toStationId": "station_103",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 3.8236496628979415,
+      "travelTime": 8.147299325795883,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_117",
+    "fromStationId": "station_103",
+    "toStationId": "station_104",
+    "lineIds": [
+      5
+    ],
+    "travelMetrics": {
+      "distance": 24.369360495978345,
+      "travelTime": 49.23872099195669,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_118",
+    "fromStationId": "station_105",
+    "toStationId": "station_106",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.2510599685789639,
+      "travelTime": 1.0021199371579277,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_119",
+    "fromStationId": "station_106",
+    "toStationId": "station_107",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.2457849918657216,
+      "travelTime": 2.991569983731443,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_120",
+    "fromStationId": "station_107",
+    "toStationId": "station_108",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.0458983269254605,
+      "travelTime": 2.591796653850921,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_121",
+    "fromStationId": "station_108",
+    "toStationId": "station_109",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.3250001188743779,
+      "travelTime": 3.1500002377487557,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_122",
+    "fromStationId": "station_109",
+    "toStationId": "station_110",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 2.121416001768693,
+      "travelTime": 4.742832003537386,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_123",
+    "fromStationId": "station_110",
+    "toStationId": "station_111",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.3779273507446805,
+      "travelTime": 3.255854701489361,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_124",
+    "fromStationId": "station_111",
+    "toStationId": "station_112",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.8515486491061655,
+      "travelTime": 2.203097298212331,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_125",
+    "fromStationId": "station_112",
+    "toStationId": "station_113",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.3085457895213695,
+      "travelTime": 3.117091579042739,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_126",
+    "fromStationId": "station_113",
+    "toStationId": "station_114",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.47253248735812803,
+      "travelTime": 1.445064974716256,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_127",
+    "fromStationId": "station_114",
+    "toStationId": "station_115",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.5742551405623497,
+      "travelTime": 3.6485102811246994,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_128",
+    "fromStationId": "station_114",
+    "toStationId": "station_138",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.550246223508687,
+      "travelTime": 3.600492447017374,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_129",
+    "fromStationId": "station_114",
+    "toStationId": "station_139",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.752999952775266,
+      "travelTime": 2.005999905550532,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_130",
+    "fromStationId": "station_115",
+    "toStationId": "station_116",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.8896481693596917,
+      "travelTime": 2.2792963387193836,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_131",
+    "fromStationId": "station_117",
+    "toStationId": "station_118",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.9991838563032598,
+      "travelTime": 2.4983677126065196,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_132",
+    "fromStationId": "station_118",
+    "toStationId": "station_119",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.6609105086059476,
+      "travelTime": 1.8218210172118952,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_133",
+    "fromStationId": "station_119",
+    "toStationId": "station_120",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.0588382919384842,
+      "travelTime": 2.6176765838769684,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.982Z"
+    }
+  },
+  {
+    "id": "conn_134",
+    "fromStationId": "station_120",
+    "toStationId": "station_121",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.7117280351350825,
+      "travelTime": 1.923456070270165,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_135",
+    "fromStationId": "station_121",
+    "toStationId": "station_122",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.5954746916131177,
+      "travelTime": 3.6909493832262354,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_136",
+    "fromStationId": "station_122",
+    "toStationId": "station_123",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.7606421997276136,
+      "travelTime": 2.021284399455227,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_137",
+    "fromStationId": "station_123",
+    "toStationId": "station_124",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.2667543225951599,
+      "travelTime": 3.0335086451903197,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_138",
+    "fromStationId": "station_124",
+    "toStationId": "station_146",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.9439364972463796,
+      "travelTime": 2.387872994492759,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_139",
+    "fromStationId": "station_124",
+    "toStationId": "station_145",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.973861242875981,
+      "travelTime": 4.447722485751962,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_140",
+    "fromStationId": "station_124",
+    "toStationId": "station_125",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.225577944807222,
+      "travelTime": 2.951155889614444,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_141",
+    "fromStationId": "station_125",
+    "toStationId": "station_126",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.120541200580877,
+      "travelTime": 2.741082401161754,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_142",
+    "fromStationId": "station_126",
+    "toStationId": "station_127",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.201370218488671,
+      "travelTime": 2.902740436977342,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_143",
+    "fromStationId": "station_127",
+    "toStationId": "station_128",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.3051175968514952,
+      "travelTime": 3.1102351937029904,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_144",
+    "fromStationId": "station_128",
+    "toStationId": "station_129",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.0702214113274517,
+      "travelTime": 2.6404428226549035,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_145",
+    "fromStationId": "station_129",
+    "toStationId": "station_130",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.631858670596308,
+      "travelTime": 3.763717341192616,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_146",
+    "fromStationId": "station_130",
+    "toStationId": "station_131",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.8825406182418559,
+      "travelTime": 2.265081236483712,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_147",
+    "fromStationId": "station_131",
+    "toStationId": "station_132",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.0932787209487813,
+      "travelTime": 2.6865574418975626,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_148",
+    "fromStationId": "station_132",
+    "toStationId": "station_133",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 1.1428343160821919,
+      "travelTime": 2.7856686321643838,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_149",
+    "fromStationId": "station_133",
+    "toStationId": "station_134",
+    "lineIds": [
+      6
+    ],
+    "travelMetrics": {
+      "distance": 0.9009321508293419,
+      "travelTime": 2.301864301658684,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_150",
+    "fromStationId": "station_135",
+    "toStationId": "station_136",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.6440844608174323,
+      "travelTime": 3.7881689216348646,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_151",
+    "fromStationId": "station_136",
+    "toStationId": "station_137",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.5692133968605064,
+      "travelTime": 3.638426793721013,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_152",
+    "fromStationId": "station_137",
+    "toStationId": "station_138",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.032477262514646,
+      "travelTime": 2.564954525029292,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_153",
+    "fromStationId": "station_139",
+    "toStationId": "station_140",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.9357301808870992,
+      "travelTime": 4.371460361774199,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_154",
+    "fromStationId": "station_141",
+    "toStationId": "station_142",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.8411761347679735,
+      "travelTime": 2.182352269535947,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_155",
+    "fromStationId": "station_142",
+    "toStationId": "station_143",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.8177504952085694,
+      "travelTime": 2.135500990417139,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_156",
+    "fromStationId": "station_143",
+    "toStationId": "station_144",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 0.7939684427073317,
+      "travelTime": 2.0879368854146634,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_157",
+    "fromStationId": "station_146",
+    "toStationId": "station_147",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.728134138465268,
+      "travelTime": 3.956268276930536,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_158",
+    "fromStationId": "station_147",
+    "toStationId": "station_148",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.2394223346364888,
+      "travelTime": 2.9788446692729775,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.983Z"
+    }
+  },
+  {
+    "id": "conn_159",
+    "fromStationId": "station_148",
+    "toStationId": "station_149",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.4032176724534533,
+      "travelTime": 3.3064353449069066,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.984Z"
+    }
+  },
+  {
+    "id": "conn_160",
+    "fromStationId": "station_149",
+    "toStationId": "station_150",
+    "lineIds": [
+      7
+    ],
+    "travelMetrics": {
+      "distance": 1.4909301763366838,
+      "travelTime": 3.4818603526733676,
+      "isUnderground": true,
+      "tracks": 2
+    },
+    "metadata": {
+      "processedAt": "2026-08-04T22:50:38.984Z"
+    }
+  }
+]
