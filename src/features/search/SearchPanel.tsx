@@ -272,8 +272,7 @@ function QuickActions({
   searchMode: string;
   onClose: () => void;
 }) {
-  const { recentRoutes, favorites } = useMetroStore();
-  const { openStationSheet, setOrigin, setDestination } = useMetroStore();
+  const { recentRoutes, favorites, openStationSheet, setOrigin, setDestination, setOriginAndDestination } = useMetroStore();
 
   const hasFavorites = favorites.length > 0;
   const hasRecents = recentRoutes.length > 0;
@@ -343,9 +342,22 @@ function QuickActions({
                   <button
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 hover:bg-white/5 transition-colors text-right"
                     onClick={() => {
-                      if (searchMode === "origin") { setOrigin(origin); onClose(); }
-                      else if (searchMode === "destination") { setDestination(dest); onClose(); }
-                      else { setOrigin(origin); setDestination(dest); onClose(); }
+                      if (searchMode === "origin") {
+                        setOrigin(origin);
+                        onClose();
+                      } else if (searchMode === "destination") {
+                        setDestination(dest);
+                        onClose();
+                      } else {
+                        // Close first, then set — avoids any potential
+                        // state conflict during panel unmount
+                        onClose();
+                        // Use requestAnimationFrame to ensure panel is
+                        // fully closed before updating route state
+                        requestAnimationFrame(() => {
+                          setOriginAndDestination(origin, dest);
+                        });
+                      }
                     }}
                   >
                     <Clock className="h-3.5 w-3.5 shrink-0 text-foreground/30" />

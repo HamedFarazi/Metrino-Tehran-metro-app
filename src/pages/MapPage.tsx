@@ -6,13 +6,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, ZoomIn, ZoomOut, Maximize2,
   Map, Satellite, Layers,
-  ArrowLeftRight, MapPin, Navigation, Route, X,
+  ArrowLeftRight, MapPin, Navigation, Route, X, LocateFixed,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import { LINE_COLORS } from "@/types/metro";
 import { cn, formatDuration } from "@/lib/utils";
 
@@ -41,7 +42,9 @@ function MapTopBar() {
     openSearch, swapOriginDestination,
     setCurrentRoute, addRecentRoute,
     currentRoute, clearRoute,
+    userLocation, setOrigin,
   } = useMetroStore();
+  const { request: requestLocation, loading: locLoading } = useGeolocation();
 
   const [routeMode, setRouteMode] = useState(false);
   const canRoute = !!originStation && !!destinationStation;
@@ -52,7 +55,16 @@ function MapTopBar() {
     if (route) {
       setCurrentRoute(route);
       addRecentRoute(originStation.id, destinationStation.id);
-      setRouteMode(false); // close the route panel — RouteSheet takes over
+      setRouteMode(false);
+    }
+  };
+
+  const handleLocateMe = () => {
+    requestLocation();
+    // If we already have location, find nearest station
+    if (userLocation) {
+      const nearest = MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 1)[0];
+      if (nearest) setOrigin(nearest);
     }
   };
 
@@ -67,6 +79,16 @@ function MapTopBar() {
             >
               <Search className="h-4 w-4 shrink-0" />
               <span>جستجوی ایستگاه…</span>
+            </button>
+            {/* Locate Me */}
+            <button
+              onClick={handleLocateMe}
+              disabled={locLoading}
+              className={cn("flex items-center gap-1.5 rounded-2xl px-3 py-2.5 text-sm transition-colors", GLASS,
+                userLocation ? "text-sky-400 border-sky-500/30" : "text-white/50 hover:text-white"
+              )}
+            >
+              <LocateFixed className={cn("h-4 w-4 shrink-0", locLoading && "animate-spin")} />
             </button>
             <button
               onClick={() => setRouteMode(true)}
@@ -218,14 +240,22 @@ function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewM
               <button key={layer.id} onClick={() => { onChange(layer.id); setOpen(false); }}
                 className={cn("flex items-center gap-3 rounded-2xl border px-4 py-2.5 text-left transition-all",
                   "bg-black/40 backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_8px_24px_rgba(0,0,0,0.5)]",
-                  mode === layer.id ? "border-emerald-500/30 text-emerald-300" : "border-white/8 text-white/65 hover:text-white hover:border-white/15"
+                  mode === layer.id
+                    ? "border-[var(--color-primary)]/40 text-[var(--color-primary)]"
+                    : "border-white/8 text-white/65 hover:text-white hover:border-white/15"
                 )}>
-                <span className={mode === layer.id ? "text-emerald-400" : "text-white/30"}>{layer.icon}</span>
+                <span style={{ color: mode === layer.id ? "var(--color-primary)" : undefined }}
+                  className={mode === layer.id ? "" : "text-white/30"}>
+                  {layer.icon}
+                </span>
                 <div dir="rtl">
                   <p className="text-sm font-semibold leading-none">{layer.labelFa}</p>
                   <p className="text-xs text-white/35 mt-0.5">{layer.desc}</p>
                 </div>
-                {mode === layer.id && <div className="mr-auto h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(52,211,153,0.8)]" />}
+                {mode === layer.id && (
+                  <div className="mr-auto h-1.5 w-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: "var(--color-primary)", boxShadow: "0 0 6px var(--color-primary)" }} />
+                )}
               </button>
             ))}
           </motion.div>
@@ -234,7 +264,9 @@ function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewM
       <button onClick={() => setOpen((v) => !v)}
         className={cn("flex items-center gap-2 rounded-2xl border px-3 py-2.5 transition-all",
           "bg-black/40 backdrop-blur-2xl shadow-[inset_0_1px_0_rgba(255,255,255,0.07),0_4px_16px_rgba(0,0,0,0.4)]",
-          open ? "border-emerald-500/30 text-emerald-300" : "border-white/8 text-white/60 hover:text-white hover:border-white/15"
+          open
+            ? "border-[var(--color-primary)]/40 text-[var(--color-primary)]"
+            : "border-white/8 text-white/60 hover:text-white hover:border-white/15"
         )}>
         <Layers className="h-4 w-4" />
         <span className="text-xs font-medium" dir="rtl">{current.labelFa}</span>
@@ -247,26 +279,74 @@ function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewM
 
 function OfflineMap() {
   const [scale, setScale] = useState(1);
+  const [showHint, setShowHint] = useState(true);
+
+  // Hide gesture hint after 2s
+  useEffect(() => {
+    const t = setTimeout(() => setShowHint(false), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
   return (
     <div className="relative h-full w-full bg-[#0d1117]">
-      <TransformWrapper initialScale={1} minScale={0.3} maxScale={6} centerOnInit
-        onTransformed={(r) => setScale(r.state.scale)}>
+      <TransformWrapper
+        initialScale={1}
+        minScale={0.3}
+        maxScale={6}
+        centerOnInit
+        initialPositionX={0}
+        initialPositionY={0}
+        onTransformed={(r) => setScale(r.state.scale)}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <TransformComponent
               wrapperStyle={{ width: "100%", height: "100%" }}
-              contentStyle={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <img src="/metromap.jpg" alt="نقشه مترو تهران" draggable={false}
-                style={{ width: 900, maxWidth: "none", userSelect: "none" }} />
+              contentStyle={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+            >
+              <img
+                src="/metromap.jpg"
+                alt="نقشه مترو تهران"
+                draggable={false}
+                style={{ width: 900, maxWidth: "none", userSelect: "none" }}
+              />
             </TransformComponent>
+
+            {/* Zoom controls */}
             <div className="absolute bottom-2 right-4 flex flex-col gap-1.5 z-10">
               <ZoomBtn icon={<ZoomIn className="h-4 w-4" />} onClick={() => zoomIn()} />
               <ZoomBtn icon={<ZoomOut className="h-4 w-4" />} onClick={() => zoomOut()} />
               <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform()} />
             </div>
+
+            {/* Scale indicator */}
             <div className="absolute bottom-2 left-4 z-10 rounded-lg bg-black/40 backdrop-blur-xl border border-white/8 px-2 py-1 text-xs text-white/40">
               {Math.round(scale * 100)}%
             </div>
+
+            {/* Gesture hint — shows for 2s on first load */}
+            <AnimatePresence>
+              {showHint && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+                >
+                  <div className="flex flex-col items-center gap-3 rounded-2xl bg-black/50 backdrop-blur-xl border border-white/10 px-8 py-6">
+                    <motion.span
+                      animate={{ x: [0, 10, -10, 8, -6, 0], y: [0, -5, 5, -3, 3, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="text-4xl select-none"
+                    >
+                      👆
+                    </motion.span>
+                    <p className="text-xs text-white/60" dir="rtl">برای جابجایی بکشید</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </>
         )}
       </TransformWrapper>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="100" fill="#09090b"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#10b981" stroke-width="18"/>
+  <text x="256" y="295" font-family="Arial" font-size="140" font-weight="bold" fill="white" text-anchor="middle">م</text>
+</svg>

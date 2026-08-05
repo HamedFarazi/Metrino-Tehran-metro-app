@@ -1,10 +1,11 @@
 /**
- * SettingsPopup — Theme selector popup triggered from BottomNav settings gear.
+ * SettingsPopup — Theme selector + PWA install button.
  */
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, Moon, Monitor, Waves } from "lucide-react";
+import { X, Sun, Moon, Monitor, Waves, Download, CheckCircle, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { usePWAInstall } from "@/hooks/usePWAInstall";
 
 export type ThemeMode = "dark" | "light" | "system" | "darya";
 
@@ -16,14 +17,15 @@ interface SettingsPopupProps {
 }
 
 const THEMES: { id: ThemeMode; labelFa: string; icon: React.ElementType; accent: string }[] = [
-  { id: "dark",   labelFa: "تاریک",  icon: Moon,   accent: "text-slate-300" },
-  { id: "light",  labelFa: "روشن",   icon: Sun,    accent: "text-amber-400" },
-  { id: "system", labelFa: "سیستم",  icon: Monitor, accent: "text-sky-400"  },
-  { id: "darya",  labelFa: "دریا",   icon: Waves,  accent: "text-indigo-400" },
+  { id: "dark",   labelFa: "تاریک",  icon: Moon,    accent: "text-slate-300"  },
+  { id: "light",  labelFa: "روشن",   icon: Sun,     accent: "text-amber-400"  },
+  { id: "system", labelFa: "سیستم",  icon: Monitor, accent: "text-sky-400"    },
+  { id: "darya",  labelFa: "دریا",   icon: Waves,   accent: "text-indigo-400" },
 ];
 
 export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: SettingsPopupProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const { state: installState, install, installing } = usePWAInstall();
 
   // Close on outside click
   useEffect(() => {
@@ -52,7 +54,7 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 10 }}
           transition={{ type: "spring", damping: 24, stiffness: 320 }}
-          className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-50 w-56 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]/80 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.4)] p-3"
+          className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-50 w-60 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]/90 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.4)] p-3"
           dir="rtl"
         >
           {/* Header */}
@@ -65,6 +67,50 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
               <X className="h-3 w-3" />
             </button>
           </div>
+
+          {/* PWA Install section */}
+          {installState !== "not-available" && (
+            <>
+              <p className="text-[10px] text-[var(--color-foreground)]/30 uppercase tracking-wider px-1 mb-2">
+                نصب برنامه
+              </p>
+              <div className="mb-3">
+                {installState === "installed" ? (
+                  <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 bg-emerald-500/10 border border-emerald-500/20">
+                    <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span className="text-xs text-emerald-400 font-medium">نصب شده</span>
+                  </div>
+                ) : installState === "ios" ? (
+                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-sky-500/10 border border-sky-500/20">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-4 w-4 text-sky-400 shrink-0" />
+                      <span className="text-xs text-sky-400 font-medium">نصب در iOS</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--color-foreground)]/50 leading-relaxed">
+                      Safari → دکمه Share → «Add to Home Screen»
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={install}
+                    disabled={installing}
+                    className={cn(
+                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
+                      "bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/25",
+                      "hover:bg-[var(--color-primary)]/15 active:scale-98",
+                      installing && "opacity-60 pointer-events-none"
+                    )}
+                  >
+                    <Download className={cn("h-4 w-4 shrink-0 text-[var(--color-primary)]", installing && "animate-bounce")} />
+                    <span className="flex-1 text-right text-[var(--color-foreground)] font-medium">
+                      {installing ? "در حال نصب…" : "نصب برنامه"}
+                    </span>
+                  </button>
+                )}
+              </div>
+              <div className="h-px bg-[var(--color-border)]/50 mx-1 mb-3" />
+            </>
+          )}
 
           {/* Theme section */}
           <p className="text-[10px] text-[var(--color-foreground)]/30 uppercase tracking-wider px-1 mb-2">
@@ -85,7 +131,10 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
                   )}
                 >
                   <Icon className={cn("h-4 w-4 shrink-0", isActive ? accent : "")} />
-                  <span className={cn("flex-1 text-right text-[var(--color-foreground)]", isActive ? "font-medium" : "opacity-70")}>
+                  <span className={cn(
+                    "flex-1 text-right text-[var(--color-foreground)]",
+                    isActive ? "font-medium" : "opacity-70"
+                  )}>
                     {labelFa}
                   </span>
                   {isActive && (

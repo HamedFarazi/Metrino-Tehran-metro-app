@@ -2,14 +2,15 @@
  * HomePage — Main landing page of Tehran Metro app.
  * Apple Maps + Linear inspired design.
  */
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap, LocateFixed } from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
 import { LineBadge } from "@/components/shared/LineBadge";
-import { Button } from "@/components/ui/button";
+import { SparkleButton } from "@/components/ui/sparkle-button";
+import { MetroLinesAnimation } from "@/components/ui/metro-lines-animation";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import type { Station } from "@/types/metro";
 import { cn } from "@/lib/utils";
@@ -79,10 +80,15 @@ export function HomePage() {
 
 function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-b from-emerald-500/10 via-background to-background px-4 pt-14 pb-14">
-      {/* Background glow */}
-      <div className="absolute -top-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-emerald-500/10 blur-3xl" />
-      <div className="absolute -top-10 left-1/3 h-40 w-40 rounded-full bg-cyan-500/10 blur-2xl" />
+    <div className="relative overflow-hidden px-4 pt-14 pb-14">
+      {/* Animated metro lines — full bleed background */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-35 pointer-events-none select-none">
+        <MetroLinesAnimation className="w-full h-full" />
+      </div>
+
+      {/* Gradient overlays: fade edges so lines disappear naturally */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80 pointer-events-none" />
 
       <motion.div
         className="relative"
@@ -215,25 +221,16 @@ function RoutePlannerCard({
       </button>
 
       {/* Route Button */}
-      <Button
+      <SparkleButton
         onClick={handleRoute}
         disabled={!canRoute}
-        size="lg"
-        className={cn(
-          "mt-3 w-full font-semibold transition-all duration-300",
-          canRoute
-            ? routeError
-              ? "bg-red-500 text-white hover:bg-red-400 shadow-lg shadow-red-500/25"
-              : "bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/25"
-            : "bg-surface text-foreground/20 cursor-not-allowed"
-        )}
       >
         {canRoute
           ? routeError
-            ? "مسیری پیدا نشد — دوباره تلاش کنید"
+            ? "مسیری پیدا نشد"
             : "یافتن مسیر"
           : "انتخاب مبدا و مقصد"}
-      </Button>
+      </SparkleButton>
     </div>
   );
 }
@@ -328,7 +325,7 @@ function FavoritesSection() {
 // ─── Recent Routes ─────────────────────────────────────────────────────────
 
 function RecentRoutesSection() {
-  const { recentRoutes, setOrigin, setDestination, setCurrentRoute } = useMetroStore();
+  const { recentRoutes, setOriginAndDestination, setCurrentRoute } = useMetroStore();
 
   if (recentRoutes.length === 0) return null;
 
@@ -345,8 +342,7 @@ function RecentRoutesSection() {
               key={idx}
               className="flex w-full items-center gap-3 rounded-xl border border-border/40 bg-surface/60 p-3 text-right transition-colors hover:bg-surface"
               onClick={() => {
-                setOrigin(origin);
-                setDestination(dest);
+                setOriginAndDestination(origin, dest);
                 const route = MetroRouteService.calculate(origin.id, dest.id);
                 if (route) setCurrentRoute(route);
               }}
@@ -369,15 +365,48 @@ function RecentRoutesSection() {
 
 // ─── Quick Stats ───────────────────────────────────────────────────────────
 
+function useCountUp(target: number, duration = 1200) {
+  const [count, setCount] = useState(0);
+  const [started, setStarted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !started) setStarted(true); },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [started]);
+
+  useEffect(() => {
+    if (!started) return;
+    let startTime: number | null = null;
+    const step = (ts: number) => {
+      if (!startTime) startTime = ts;
+      const progress = Math.min((ts - startTime) / duration, 1);
+      // easeOutExpo
+      const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setCount(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [started, target, duration]);
+
+  return { count, ref };
+}
+
 function QuickStatsSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
   return (
     <motion.section variants={fadeUp} className="pb-2">
       <SectionHeader icon={<Zap className="h-4 w-4" />} title="آمار سریع" />
       <div className="mt-3 grid grid-cols-2 gap-3">
-        <StatCard label="ایستگاه فعال" value={stats.activeStations} color="emerald" />
+        <StatCard label="ایستگاه فعال"   value={stats.activeStations}   color="emerald" />
         <StatCard label="ایستگاه تبادلی" value={stats.interchangeCount} color="amber" />
-        <StatCard label="ایستگاه پایانه" value={stats.terminalCount} color="cyan" />
-        <StatCard label="اتصالات" value={stats.totalConnections} color="purple" />
+        <StatCard label="ایستگاه پایانه" value={stats.terminalCount}    color="cyan" />
+        <StatCard label="اتصالات"         value={stats.totalConnections} color="purple" />
       </div>
     </motion.section>
   );
@@ -483,15 +512,19 @@ function StatCard({
     amber: "from-amber-500/10 border-amber-500/20 text-amber-400",
     purple: "from-purple-500/10 border-purple-500/20 text-purple-400",
   };
+  const { count, ref } = useCountUp(value);
 
   return (
     <div
+      ref={ref}
       className={cn(
         "rounded-xl border bg-gradient-to-br to-transparent p-4",
         colorMap[color]
       )}
     >
-      <p className={cn("text-2xl font-bold", colorMap[color].split(" ").pop())}>{value}</p>
+      <p className={cn("text-2xl font-bold tabular-nums", colorMap[color].split(" ").pop())}>
+        {count}
+      </p>
       <p className="mt-1 text-xs text-foreground/50">{label}</p>
     </div>
   );

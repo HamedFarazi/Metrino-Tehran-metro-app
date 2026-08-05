@@ -8,6 +8,7 @@
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
 
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
@@ -25,5 +26,16 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/domain",
+    "src/scripts",
+    "src/demo",
+    "src/data/index.ts",
+    "src/data/RawStationData.ts",
+    "src/services/DataParserService.ts",
+    "src/services/MetroDataService.ts",
+    "src/services/ValidationService.ts",
+    "src/utils"
+  ]
 }

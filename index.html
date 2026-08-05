@@ -2,19 +2,37 @@
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- PWA essentials -->
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#09090b" />
+    <meta name="mobile-web-app-capable" content="yes" />
+
+    <!-- iOS PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="مترو تهران" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.svg" />
+
+    <!-- SEO -->
+    <meta name="description" content="مسیریابی هوشمند مترو تهران — سریع‌ترین مسیر رو پیدا کن" />
+    <meta name="application-name" content="مترو تهران" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>مترو تهران</title>
+
     <!-- Vazirmatn Font -->
     <link rel="preconnect" href="https://cdn.jsdelivr.net" />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css"
     />
+
     <!-- MapLibre GL JS v5 from CDN -->
     <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet" />
+
     <!-- RTL Text Plugin — REQUIRED for correct Persian/Arabic rendering -->
     <script>
       window.addEventListener('load', function() {
@@ -22,7 +40,7 @@
           maplibregl.setRTLTextPlugin(
             'https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js',
             null,
-            true // lazy load
+            true
           );
         }
       });

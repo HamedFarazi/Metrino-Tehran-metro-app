@@ -24,6 +24,7 @@ interface MetroState {
   destinationStation: Station | null;
   setOrigin: (station: Station | null) => void;
   setDestination: (station: Station | null) => void;
+  setOriginAndDestination: (origin: Station, destination: Station) => void;
   swapOriginDestination: () => void;
   clearRoute: () => void;
 
@@ -78,6 +79,8 @@ export const useMetroStore = create<MetroState>()(
       destinationStation: null,
       setOrigin: (station) => set({ originStation: station }),
       setDestination: (station) => set({ destinationStation: station }),
+      setOriginAndDestination: (origin, destination) =>
+        set({ originStation: origin, destinationStation: destination }),
       swapOriginDestination: () =>
         set((state) => ({
           originStation: state.destinationStation,
