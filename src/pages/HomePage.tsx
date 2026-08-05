@@ -3,7 +3,7 @@
  * Apple Maps + Linear inspired design.
  */
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap, LocateFixed } from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
@@ -17,16 +17,16 @@ import { cn } from "@/lib/utils";
 
 // ─── Animation Variants ────────────────────────────────────────────────────
 
-const fadeUp = {
+const fadeUp: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: (i = 0) => ({
+  visible: (i: number = 0) => ({
     opacity: 1,
     y: 0,
     transition: { delay: i * 0.06, duration: 0.4, ease: [0.4, 0, 0.2, 1] },
   }),
 };
 
-const stagger = {
+const stagger: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.06 } },
 };

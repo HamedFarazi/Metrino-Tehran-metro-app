@@ -8,7 +8,7 @@ import {
   Map, Satellite, Layers,
   ArrowLeftRight, MapPin, Navigation, Route, X, LocateFixed,
 } from "lucide-react";
-import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
@@ -277,11 +277,20 @@ function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewM
 
 // ─── Offline Map ──────────────────────────────────────────────────────────────
 
+// ─── Offline Map ──────────────────────────────────────────────────────────────
+
+/** Reads current transform scale via useTransformEffect and calls back */
+function ScaleTracker({ onScale }: { onScale: (s: number) => void }) {
+  useTransformEffect(({ state }) => {
+    onScale(state.scale);
+  });
+  return null;
+}
+
 function OfflineMap() {
   const [scale, setScale] = useState(1);
   const [showHint, setShowHint] = useState(true);
 
-  // Hide gesture hint after 2s
   useEffect(() => {
     const t = setTimeout(() => setShowHint(false), 2000);
     return () => clearTimeout(t);
@@ -289,17 +298,10 @@ function OfflineMap() {
 
   return (
     <div className="relative h-full w-full bg-[#0d1117]">
-      <TransformWrapper
-        initialScale={1}
-        minScale={0.3}
-        maxScale={6}
-        centerOnInit
-        initialPositionX={0}
-        initialPositionY={0}
-        onTransformed={(r) => setScale(r.state.scale)}
-      >
+      <TransformWrapper initialScale={1} minScale={0.3} maxScale={6} centerOnInit>
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
+            <ScaleTracker onScale={setScale} />
             <TransformComponent
               wrapperStyle={{ width: "100%", height: "100%" }}
               contentStyle={{ display: "flex", alignItems: "center", justifyContent: "center" }}
@@ -324,7 +326,7 @@ function OfflineMap() {
               {Math.round(scale * 100)}%
             </div>
 
-            {/* Gesture hint — shows for 2s on first load */}
+            {/* Gesture hint */}
             <AnimatePresence>
               {showHint && (
                 <motion.div
@@ -438,7 +440,8 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
     const styleDef = MAP_STYLES[styleKey];
 
     const initMap = async () => {
-      let styleObj: string | object = styleDef.url;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let styleObj: string | any = styleDef.url;
       if (styleKey !== "satellite") {
         try {
           const res = await fetch(styleDef.url);
@@ -472,11 +475,11 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function addStationLayers(map: any) {
-    const geojson: GeoJSON.FeatureCollection = {
-      type: "FeatureCollection",
+    const geojson = {
+      type: "FeatureCollection" as const,
       features: stations.map((s) => ({
-        type: "Feature",
-        geometry: { type: "Point", coordinates: [s.coordinates.lng, s.coordinates.lat] },
+        type: "Feature" as const,
+        geometry: { type: "Point" as const, coordinates: [s.coordinates.lng, s.coordinates.lat] },
         properties: { id: s.id, name: s.name, color: s.colors[0] ?? "#888", isInterchange: s.lines.length > 1 },
       })),
     };

@@ -76,7 +76,7 @@ const InteractiveMenu: React.FC<InteractiveMenuProps> = ({
               setActiveIndex(index);
               item.onClick?.();
             }}
-            ref={(el) => (itemRefs.current[index] = el)}
+            ref={(el) => { itemRefs.current[index] = el; }}
             style={{ "--lineWidth": "0px" } as React.CSSProperties}
             aria-current={isActive ? "page" : undefined}
             aria-label={item.labelFa}
@@ -86,7 +86,7 @@ const InteractiveMenu: React.FC<InteractiveMenuProps> = ({
             </div>
             <strong
               className={`menu__text ${isActive ? "active" : ""}`}
-              ref={(el) => (textRefs.current[index] = el as HTMLElement)}
+              ref={(el) => { textRefs.current[index] = el as HTMLElement; }}
             >
               {item.labelFa}
             </strong>

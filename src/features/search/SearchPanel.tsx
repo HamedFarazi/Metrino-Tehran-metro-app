@@ -342,22 +342,12 @@ function QuickActions({
                   <button
                     className="flex w-full items-center gap-2 rounded-xl px-3 py-2 hover:bg-white/5 transition-colors text-right"
                     onClick={() => {
-                      if (searchMode === "origin") {
-                        setOrigin(origin);
-                        onClose();
-                      } else if (searchMode === "destination") {
-                        setDestination(dest);
-                        onClose();
-                      } else {
-                        // Close first, then set — avoids any potential
-                        // state conflict during panel unmount
-                        onClose();
-                        // Use requestAnimationFrame to ensure panel is
-                        // fully closed before updating route state
-                        requestAnimationFrame(() => {
-                          setOriginAndDestination(origin, dest);
-                        });
-                      }
+                      // Recent routes always set BOTH origin and destination
+                      // regardless of searchMode — the full route is the intent
+                      onClose();
+                      requestAnimationFrame(() => {
+                        setOriginAndDestination(origin, dest);
+                      });
                     }}
                   >
                     <Clock className="h-3.5 w-3.5 shrink-0 text-foreground/30" />
