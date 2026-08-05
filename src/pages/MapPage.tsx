@@ -353,7 +353,7 @@ function OfflineMap() {
             <div className="absolute bottom-2 right-4 flex flex-col gap-1.5 z-10">
               <ZoomBtn icon={<ZoomIn className="h-4 w-4" />} onClick={() => zoomIn()} />
               <ZoomBtn icon={<ZoomOut className="h-4 w-4" />} onClick={() => zoomOut()} />
-              <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform(0, 0, initialScale)} />
+              <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform()} />
             </div>
 
             {/* Scale indicator */}
