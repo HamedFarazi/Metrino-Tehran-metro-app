@@ -52,6 +52,10 @@
     color-scheme: dark;
   }
 
+  html.theme-darya {
+    color-scheme: light;
+  }
+
   body {
     margin: 0;
     padding: 0;
@@ -113,15 +117,53 @@
   }
 }
 
-/* ─── Interactive Menu (Mobile Dock) ──────────────────────────────────────── */
+/* ─── Themes ──────────────────────────────────────────────────────────────── */
 
+/* Default (dark) — applied to :root */
 :root {
+  --color-background: oklch(11% 0.01 260);
+  --color-surface:    oklch(13% 0.01 260);
+  --color-card:       oklch(15% 0.01 260);
+  --color-border:     oklch(22% 0.01 260);
+  --color-foreground: oklch(97% 0.005 260);
+
   --component-inactive-color: oklch(60% 0.01 260);
-  --component-bg: oklch(15% 0.01 260);
-  --component-shadow: oklch(22% 0.01 260);
-  --component-active-bg: oklch(20% 0.01 260);
+  --component-bg: rgba(0, 0, 0, 0.45);
+  --component-shadow: rgba(255, 255, 255, 0.08);
+  --component-active-bg: rgba(255, 255, 255, 0.08);
   --component-line-inactive-color: oklch(22% 0.01 260);
   --component-active-color-default: oklch(66% 0.17 163); /* emerald */
+}
+
+/* ── تم دریا (Darya) — light, indigo/blue ── */
+:root.theme-darya {
+  /* Base surfaces */
+  --color-background: #fbfbfe;
+  --color-surface:    #f0f0fc;
+  --color-card:       #e8e8fa;
+  --color-border:     #c8c6f0;
+  --color-foreground: #050315;
+
+  /* Primary palette */
+  --color-primary:            #2f27ce;
+  --color-primary-foreground: #ffffff;
+  --color-accent:             #433bff;
+  --color-accent-foreground:  #ffffff;
+  --color-success:            oklch(50% 0.17 145);
+  --color-warning:            oklch(60% 0.18 60);
+  --color-error:              oklch(50% 0.21 25);
+  --color-destructive:        oklch(50% 0.21 25);
+  --color-destructive-foreground: #ffffff;
+
+  /* Interactive menu */
+  --component-inactive-color: #8b86c8;
+  --component-bg: rgba(47, 39, 206, 0.07);
+  --component-shadow: rgba(47, 39, 206, 0.15);
+  --component-active-bg: rgba(47, 39, 206, 0.1);
+  --component-line-inactive-color: #c8c6f0;
+  --component-active-color-default: #2f27ce;
+
+  color-scheme: light;
 }
 
 @keyframes iconBounce {
@@ -141,9 +183,11 @@
   border-radius: 2rem;
   padding: 0.5rem 0.75rem;
   gap: 0.25rem;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.05);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
   min-width: 280px;
 }
 

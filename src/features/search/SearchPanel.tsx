@@ -340,7 +340,14 @@ function QuickActions({
               if (!origin || !dest) return null;
               return (
                 <li key={idx}>
-                  <button className="flex w-full items-center gap-2 rounded-xl px-3 py-2 hover:bg-white/5 transition-colors text-right">
+                  <button
+                    className="flex w-full items-center gap-2 rounded-xl px-3 py-2 hover:bg-white/5 transition-colors text-right"
+                    onClick={() => {
+                      if (searchMode === "origin") { setOrigin(origin); onClose(); }
+                      else if (searchMode === "destination") { setDestination(dest); onClose(); }
+                      else { setOrigin(origin); setDestination(dest); onClose(); }
+                    }}
+                  >
                     <Clock className="h-3.5 w-3.5 shrink-0 text-foreground/30" />
                     <span className="text-sm text-foreground/60 truncate">
                       {origin.nameFa} → {dest.nameFa}

@@ -172,7 +172,7 @@ export interface SearchResult {
   highlights: string[];
 }
 
-// ─── App State ────────────────────────────────────────────────────────────────
+// ─── Route Query & App State ─────────────────────────────────────────────────
 
 export interface RouteQuery {
   originId: string | null;

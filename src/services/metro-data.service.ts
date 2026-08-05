@@ -96,9 +96,21 @@ class MetroDataServiceClass {
     this._stations.forEach((s) => this._stationMap.set(s.id, s));
     this._lines.forEach((l) => this._lineMap.set(l.id, l));
 
-    // Build adjacency
+    // Build BIDIRECTIONAL adjacency
+    // Raw data has some one-way connections — make them all two-way
+    const adj = new Map<string, Set<string>>();
     this._stations.forEach((s) => {
-      this._adjacency.set(s.id, s.connectedStationIds);
+      if (!adj.has(s.id)) adj.set(s.id, new Set());
+      s.connectedStationIds.forEach((nid) => {
+        adj.get(s.id)!.add(nid);
+        // Add reverse direction
+        if (!adj.has(nid)) adj.set(nid, new Set());
+        adj.get(nid)!.add(s.id);
+      });
+    });
+    // Convert sets to arrays
+    adj.forEach((neighbors, id) => {
+      this._adjacency.set(id, Array.from(neighbors));
     });
 
     // Enrich lines with interchange station IDs

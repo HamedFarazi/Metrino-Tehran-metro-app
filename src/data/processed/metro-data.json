@@ -5857,7 +5857,7 @@
       "colors": [
         "#EF639F"
       ],
-      "isDisabled": true,
+      "isDisabled": false,
       "amenities": {
         "restroom": false,
         "coffeeShop": false,

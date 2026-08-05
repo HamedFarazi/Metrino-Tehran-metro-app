@@ -10,6 +10,7 @@ import { SearchPanel } from "@/features/search/SearchPanel";
 import { StationSheet } from "@/features/station/StationSheet";
 import { RouteSheet } from "@/features/route/RouteSheet";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 
 // Lazy load pages for performance
 const HomePage = lazy(() =>
@@ -66,9 +67,15 @@ function TabContent() {
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 function App() {
+  const { activeTab } = useMetroStore();
+  const isMapPage = activeTab === "map";
+
   return (
-    <div className="relative flex h-svh w-full flex-col bg-background overflow-hidden">
-      {/* Status Bar Spacer (mobile) */}
+    <div className={cn(
+      "relative flex h-svh w-full flex-col overflow-hidden",
+      isMapPage ? "bg-transparent" : "bg-background"
+    )}>
+      {/* Status Bar Spacer */}
       <div className="h-safe-top" />
 
       {/* Main Content */}
@@ -76,10 +83,10 @@ function App() {
         <TabContent />
       </main>
 
-      {/* Bottom Navigation */}
+      {/* Bottom Navigation — fixed, floats over everything including MapPage */}
       <BottomNav />
 
-      {/* Global Overlays — rendered in correct z-order */}
+      {/* Global Overlays */}
       <SearchPanel />
       <StationSheet />
       <RouteSheet />

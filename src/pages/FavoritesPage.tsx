@@ -18,7 +18,7 @@ const fadeUp = {
 };
 
 export function FavoritesPage() {
-  const { favorites, removeFavorite, openStationSheet, openSearch, setOrigin, setDestination } =
+  const { favorites, removeFavorite, openStationSheet, openSearch, setOrigin, setDestination, setActiveTab } =
     useMetroStore();
 
   const hasFavorites = favorites.length > 0;
@@ -120,23 +120,21 @@ export function FavoritesPage() {
                 {/* Actions */}
                 <div className="flex items-center gap-1 shrink-0">
                   <button
-                    onClick={() => { setOrigin(station); }}
+                    onClick={() => { setOrigin(station); setActiveTab("home"); }}
                     className="rounded-lg px-2 py-1 text-xs text-emerald-400/70 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
-                    title="انتخاب به عنوان مبدا"
                   >
                     مبدا
                   </button>
                   <button
-                    onClick={() => { setDestination(station); }}
+                    onClick={() => { setDestination(station); setActiveTab("home"); }}
                     className="rounded-lg px-2 py-1 text-xs text-cyan-400/70 hover:text-cyan-400 hover:bg-cyan-500/10 transition-colors"
-                    title="انتخاب به عنوان مقصد"
                   >
                     مقصد
                   </button>
                   <button
                     onClick={() => removeFavorite(fav.stationId)}
-                    className="rounded-lg p-1.5 text-foreground/20 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100"
-                    title="حذف از علاقه‌مندی‌ها"
+                    className="rounded-lg p-1.5 text-foreground/30 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                    title="حذف"
                   >
                     <X className="h-3.5 w-3.5" />
                   </button>

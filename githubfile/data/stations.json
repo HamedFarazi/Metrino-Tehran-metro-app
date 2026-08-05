@@ -3712,7 +3712,7 @@
         "latitude": 35.708965257212725,
         "address": "خیابان سپاه، میدان سپاه",
         "colors": ["#EF639F"],
-        "disabled": true,
+        "disabled": false,
         "wc": false,
         "coffeeShop": false,
         "groceryStore": false,

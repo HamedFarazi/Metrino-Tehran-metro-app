@@ -64,16 +64,21 @@ class MetroRouteServiceClass {
     if (stations.length < 2) return { segments, transfers };
 
     let segmentStart = stations[0];
-    let currentLineId = this._getCommonLine(stations[0], stations[1]);
+    let currentLineId = this._getCommonLine(stations[0], stations[1]) ?? stations[0].lines[0] ?? 1;
 
     for (let i = 1; i < stations.length; i++) {
       const from = stations[i - 1];
       const to = stations[i];
       const lineId = this._getCommonLine(from, to);
 
-      // Line change = transfer
-      if (lineId !== currentLineId && currentLineId !== null) {
-        // Close current segment
+      // Transfer detected when: no common line (null), or shared line differs from current
+      const isTransfer = lineId === null || (lineId !== currentLineId && currentLineId !== null);
+
+      if (isTransfer) {
+        // Determine toLineId: the line used AFTER the transfer station
+        const toLineId = this._getNextLineId(from, to, currentLineId);
+
+        // Close current segment up to transfer station
         segments.push({
           fromStation: segmentStart,
           toStation: from,
@@ -85,34 +90,52 @@ class MetroRouteServiceClass {
         transfers.push({
           atStation: from,
           fromLineId: currentLineId,
-          toLineId: lineId ?? currentLineId,
+          toLineId,
           transferTimeMin: TRANSFER_PENALTY_MIN,
         });
 
         segmentStart = from;
-        currentLineId = lineId;
+        currentLineId = toLineId;
       }
     }
 
     // Close last segment
-    if (currentLineId !== null) {
-      segments.push({
-        fromStation: segmentStart,
-        toStation: stations[stations.length - 1],
-        lineId: currentLineId,
-        stationCount: stations.length - stations.indexOf(segmentStart),
-      });
-    }
+    segments.push({
+      fromStation: segmentStart,
+      toStation: stations[stations.length - 1],
+      lineId: currentLineId,
+      stationCount: stations.length - stations.indexOf(segmentStart),
+    });
 
     return { segments, transfers };
   }
 
+  /**
+   * Find the line shared between two adjacent stations.
+   * Returns null if no common line exists (cross-line connection / transfer point).
+   */
   private _getCommonLine(a: Station, b: Station): number | null {
     for (const line of a.lines) {
       if (b.lines.includes(line)) return line;
     }
-    // Fallback to first available line
-    return a.lines[0] ?? null;
+    return null;
+  }
+
+  /**
+   * Determine which line to ride AFTER a transfer at `from`.
+   * Looks at what line connects `from` → `to` that isn't the current line.
+   */
+  private _getNextLineId(from: Station, to: Station, currentLineId: number): number {
+    // Prefer a line shared between `from` and `to` that isn't the current one
+    for (const line of from.lines) {
+      if (line !== currentLineId && to.lines.includes(line)) return line;
+    }
+    // Fall back to any line of `to` that isn't the current one
+    for (const line of to.lines) {
+      if (line !== currentLineId) return line;
+    }
+    // Last resort
+    return to.lines[0] ?? currentLineId;
   }
 
   private _calculateTotalDistance(stations: Station[]): number {

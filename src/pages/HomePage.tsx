@@ -2,13 +2,15 @@
  * HomePage — Main landing page of Tehran Metro app.
  * Apple Maps + Linear inspired design.
  */
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap } from "lucide-react";
+import { Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap, LocateFixed } from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
 import { LineBadge } from "@/components/shared/LineBadge";
 import { Button } from "@/components/ui/button";
+import { useGeolocation } from "@/hooks/useGeolocation";
 import type { Station } from "@/types/metro";
 import { cn } from "@/lib/utils";
 
@@ -138,16 +140,20 @@ function RoutePlannerCard({
   onSwap: () => void;
 }) {
   const { setCurrentRoute, addRecentRoute } = useMetroStore();
+  const [routeError, setRouteError] = useState(false);
 
   const canRoute = origin && destination;
 
   const handleRoute = () => {
     if (!origin || !destination) return;
+    setRouteError(false);
     const route = MetroRouteService.calculate(origin.id, destination.id);
     if (route) {
       setCurrentRoute(route);
       addRecentRoute(origin.id, destination.id);
-      // Stay on home page — RouteSheet slides up from bottom
+    } else {
+      setRouteError(true);
+      setTimeout(() => setRouteError(false), 3000);
     }
   };
 
@@ -216,11 +222,17 @@ function RoutePlannerCard({
         className={cn(
           "mt-3 w-full font-semibold transition-all duration-300",
           canRoute
-            ? "bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/25"
+            ? routeError
+              ? "bg-red-500 text-white hover:bg-red-400 shadow-lg shadow-red-500/25"
+              : "bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-500/25"
             : "bg-surface text-foreground/20 cursor-not-allowed"
         )}
       >
-        {canRoute ? "یافتن مسیر" : "انتخاب مبدا و مقصد"}
+        {canRoute
+          ? routeError
+            ? "مسیری پیدا نشد — دوباره تلاش کنید"
+            : "یافتن مسیر"
+          : "انتخاب مبدا و مقصد"}
       </Button>
     </div>
   );
@@ -230,18 +242,28 @@ function RoutePlannerCard({
 
 function NearbyStationsSection() {
   const { userLocation, openStationSheet, setActiveTab } = useMetroStore();
+  const { request, loading, supported } = useGeolocation();
 
-  // Show top 5 stations or nearest if location available
   const stations = userLocation
-    ? MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 5)
+    ? MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 6)
     : MetroDataService.getAllStations().slice(0, 8);
+
+  const title = userLocation ? "ایستگاه‌های نزدیک" : "ایستگاه‌های پرکاربرد";
 
   return (
     <motion.section variants={fadeUp}>
       <SectionHeader
         icon={<Navigation className="h-4 w-4" />}
-        title={userLocation ? "ایستگاه‌های نزدیک" : "ایستگاه‌های معروف"}
-        action={{ label: "همه", onClick: () => setActiveTab("map") }}
+        title={title}
+        action={
+          !userLocation && supported
+            ? {
+                label: loading ? "در حال جستجو…" : "موقعیت من",
+                onClick: request,
+                icon: <LocateFixed className={cn("h-3.5 w-3.5", loading && "animate-pulse")} />,
+              }
+            : { label: "همه", onClick: () => setActiveTab("map") }
+        }
       />
       <div className="mt-3 flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
         {stations.map((station) => (
@@ -370,7 +392,7 @@ function SectionHeader({
 }: {
   icon: React.ReactNode;
   title: string;
-  action?: { label: string; onClick: () => void };
+  action?: { label: string; onClick: () => void; icon?: React.ReactNode };
 }) {
   return (
     <div className="flex items-center justify-between">
@@ -381,8 +403,9 @@ function SectionHeader({
       {action && (
         <button
           onClick={action.onClick}
-          className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+          className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
         >
+          {action.icon}
           {action.label}
         </button>
       )}
