@@ -5648,7 +5648,7 @@
     "colors": [
       "#EF639F"
     ],
-    "isDisabled": true,
+    "isDisabled": false,
     "amenities": {
       "restroom": false,
       "coffeeShop": false,
@@ -7006,8 +7006,8 @@
       7
     ],
     "coordinates": {
-      "latitude": 35.668181587846355,
-      "longitude": 51.41601339759233
+      "longitude": 51.4285005,
+        "latitude": 35.6693134
     },
     "address": "خیابان مولوی، چهارراه مولوی",
     "colors": [

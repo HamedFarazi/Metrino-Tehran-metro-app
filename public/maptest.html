@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
+  <link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet" />
+  <style> body { margin: 0; } #map { width: 100vw; height: 100vh; } </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    const map = new maplibregl.Map({
+      style: 'https://tiles.openfreemap.org/styles/fiord',
+      center: [51.389, 35.6892],
+      zoom: 11,
+      container: 'map',
+    });
+    map.on('load', () => console.log('MAP LOADED'));
+    map.on('error', (e) => console.error('MAP ERROR', e));
+  </script>
+</body>
+</html>
