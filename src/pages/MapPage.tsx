@@ -48,6 +48,17 @@ function MapTopBar() {
 
   const [routeMode, setRouteMode] = useState(false);
   const canRoute = !!originStation && !!destinationStation;
+  // Track previous userLocation to detect when it's freshly set
+  const prevLocationRef = useRef(userLocation);
+
+  // When userLocation changes (after requestLocation resolves), find nearest station
+  useEffect(() => {
+    if (userLocation && userLocation !== prevLocationRef.current) {
+      prevLocationRef.current = userLocation;
+      const nearest = MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 1)[0];
+      if (nearest) setOrigin(nearest);
+    }
+  }, [userLocation, setOrigin]);
 
   const handleFindRoute = () => {
     if (!originStation || !destinationStation) return;
@@ -61,11 +72,6 @@ function MapTopBar() {
 
   const handleLocateMe = () => {
     requestLocation();
-    // If we already have location, find nearest station
-    if (userLocation) {
-      const nearest = MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 1)[0];
-      if (nearest) setOrigin(nearest);
-    }
   };
 
   return (
@@ -287,18 +293,47 @@ function ScaleTracker({ onScale }: { onScale: (s: number) => void }) {
   return null;
 }
 
+const IMAGE_W = 900;
+const IMAGE_H = 900; // approximate, used for initial scale calc
+
 function OfflineMap() {
   const [scale, setScale] = useState(1);
   const [showHint, setShowHint] = useState(true);
+  const { userLocation } = useMetroStore();
+  const [nearestLabel, setNearestLabel] = useState<string | null>(null);
+
+  // Calculate initial scale so the image fits the viewport with a small padding
+  const initialScale = Math.min(
+    (window.innerWidth * 0.95) / IMAGE_W,
+    (window.innerHeight * 0.85) / IMAGE_H,
+    1
+  );
 
   useEffect(() => {
     const t = setTimeout(() => setShowHint(false), 2000);
     return () => clearTimeout(t);
   }, []);
 
+  // Show nearest station when location is available
+  useEffect(() => {
+    if (!userLocation) return;
+    const nearest = MetroDataService.getNearestStations(userLocation.lat, userLocation.lng, 1)[0];
+    if (nearest) {
+      setNearestLabel(nearest.nameFa);
+      const t = setTimeout(() => setNearestLabel(null), 4000);
+      return () => clearTimeout(t);
+    }
+  }, [userLocation]);
+
   return (
     <div className="relative h-full w-full bg-[#0d1117]">
-      <TransformWrapper initialScale={1} minScale={0.3} maxScale={6} centerOnInit>
+      <TransformWrapper
+        initialScale={initialScale}
+        minScale={0.2}
+        maxScale={6}
+        centerOnInit
+        limitToBounds={false}
+      >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <ScaleTracker onScale={setScale} />
@@ -310,7 +345,7 @@ function OfflineMap() {
                 src="/metromap.jpg"
                 alt="نقشه مترو تهران"
                 draggable={false}
-                style={{ width: 900, maxWidth: "none", userSelect: "none" }}
+                style={{ width: IMAGE_W, maxWidth: "none", userSelect: "none" }}
               />
             </TransformComponent>
 
@@ -318,13 +353,31 @@ function OfflineMap() {
             <div className="absolute bottom-2 right-4 flex flex-col gap-1.5 z-10">
               <ZoomBtn icon={<ZoomIn className="h-4 w-4" />} onClick={() => zoomIn()} />
               <ZoomBtn icon={<ZoomOut className="h-4 w-4" />} onClick={() => zoomOut()} />
-              <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform()} />
+              <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform(0, 0, initialScale)} />
             </div>
 
             {/* Scale indicator */}
             <div className="absolute bottom-2 left-4 z-10 rounded-lg bg-black/40 backdrop-blur-xl border border-white/8 px-2 py-1 text-xs text-white/40">
               {Math.round(scale * 100)}%
             </div>
+
+            {/* Nearest station toast */}
+            <AnimatePresence>
+              {nearestLabel && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                  className="absolute top-16 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2 rounded-2xl bg-sky-500/20 backdrop-blur-xl border border-sky-500/30 px-4 py-2.5 shadow-lg pointer-events-none"
+                  dir="rtl"
+                >
+                  <LocateFixed className="h-3.5 w-3.5 text-sky-400 shrink-0" />
+                  <span className="text-xs text-sky-300 font-medium">نزدیک‌ترین ایستگاه:</span>
+                  <span className="text-xs text-white font-semibold">{nearestLabel}</span>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Gesture hint */}
             <AnimatePresence>

@@ -35,28 +35,28 @@ export default defineConfig({
         scope: "/",
         icons: [
           {
-            src: "/icons/icon.jpg",
-            sizes: "512x512",
-            type: "image/jpeg",
+            src: "/icons/icon-192.png",
+            sizes: "192x192",
+            type: "image/png",
             purpose: "any",
           },
           {
-            src: "/icons/icon.jpg",
-            sizes: "192x192",
-            type: "image/jpeg",
+            src: "/icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "/favicon.svg",
-            sizes: "any",
-            type: "image/svg+xml",
+            src: "/icons/icon-512.png",
+            sizes: "512x512",
+            type: "image/png",
             purpose: "any",
           },
         ],
       },
       workbox: {
         // Cache all static assets
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2,webmanifest}"],
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,svg,woff2,webmanifest,json}"],
         // Cache strategies
         runtimeCaching: [
           {

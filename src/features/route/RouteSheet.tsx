@@ -54,6 +54,17 @@ export function RouteSheet() {
     <AnimatePresence>
       {isOpen && currentRoute && (
         <>
+          {/* ── Mobile: backdrop overlay (closes on tap) ── */}
+          <motion.div
+            key="mobile-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden fixed inset-0 z-[34] bg-black/40"
+            onClick={clearRoute}
+          />
+
           {/* ── Mobile: bottom sheet ── */}
           <motion.div
             key="mobile-sheet"

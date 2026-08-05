@@ -3,7 +3,7 @@
  */
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, Moon, Monitor, Waves, Download, CheckCircle, Smartphone } from "lucide-react";
+import { X, Sun, Moon, Monitor, Waves, Download, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 
@@ -25,7 +25,7 @@ const THEMES: { id: ThemeMode; labelFa: string; icon: React.ElementType; accent:
 
 export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: SettingsPopupProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const { state: installState, install, installing } = usePWAInstall();
+  const { state: installState, install, installing, canShow } = usePWAInstall();
 
   // Close on outside click
   useEffect(() => {
@@ -69,43 +69,54 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
           </div>
 
           {/* PWA Install section */}
-          {installState !== "not-available" && (
+          {canShow && (
             <>
               <p className="text-[10px] text-[var(--color-foreground)]/30 uppercase tracking-wider px-1 mb-2">
                 نصب برنامه
               </p>
               <div className="mb-3">
-                {installState === "installed" ? (
-                  <div className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 bg-emerald-500/10 border border-emerald-500/20">
-                    <CheckCircle className="h-4 w-4 text-emerald-400 shrink-0" />
-                    <span className="text-xs text-emerald-400 font-medium">نصب شده</span>
-                  </div>
-                ) : installState === "ios" ? (
-                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-sky-500/10 border border-sky-500/20">
-                    <div className="flex items-center gap-2">
-                      <Smartphone className="h-4 w-4 text-sky-400 shrink-0" />
-                      <span className="text-xs text-sky-400 font-medium">نصب در iOS</span>
-                    </div>
-                    <p className="text-[11px] text-[var(--color-foreground)]/50 leading-relaxed">
-                      Safari → دکمه Share → «Add to Home Screen»
-                    </p>
-                  </div>
-                ) : (
+                {installState === "installed" ? null : installState === "available" ? (
+                  /* Chrome/Android — native prompt */
                   <button
                     onClick={install}
                     disabled={installing}
                     className={cn(
                       "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
                       "bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/25",
-                      "hover:bg-[var(--color-primary)]/15 active:scale-98",
+                      "hover:bg-[var(--color-primary)]/20 active:scale-95",
                       installing && "opacity-60 pointer-events-none"
                     )}
                   >
-                    <Download className={cn("h-4 w-4 shrink-0 text-[var(--color-primary)]", installing && "animate-bounce")} />
+                    <Download className={cn(
+                      "h-4 w-4 shrink-0",
+                      installing ? "animate-bounce text-[var(--color-primary)]" : "text-[var(--color-primary)]"
+                    )} />
                     <span className="flex-1 text-right text-[var(--color-foreground)] font-medium">
                       {installing ? "در حال نصب…" : "نصب برنامه"}
                     </span>
                   </button>
+                ) : installState === "ios" ? (
+                  /* iOS Safari — manual steps */
+                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-sky-500/10 border border-sky-500/20">
+                    <div className="flex items-center gap-2">
+                      <Smartphone className="h-4 w-4 text-sky-400 shrink-0" />
+                      <span className="text-xs text-sky-400 font-medium">نصب در iOS</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--color-foreground)]/50 leading-relaxed">
+                      Safari ← دکمه Share ← «Add to Home Screen»
+                    </p>
+                  </div>
+                ) : (
+                  /* manual — browser supports SW but no auto-prompt yet */
+                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-[var(--color-primary)]/8 border border-[var(--color-primary)]/15">
+                    <div className="flex items-center gap-2">
+                      <Download className="h-4 w-4 text-[var(--color-primary)] shrink-0" />
+                      <span className="text-xs text-[var(--color-foreground)]/80 font-medium">نصب برنامه</span>
+                    </div>
+                    <p className="text-[11px] text-[var(--color-foreground)]/45 leading-relaxed">
+                      منوی مرورگر ← «Install app» یا «Add to Home Screen»
+                    </p>
+                  </div>
                 )}
               </div>
               <div className="h-px bg-[var(--color-border)]/50 mx-1 mb-3" />
