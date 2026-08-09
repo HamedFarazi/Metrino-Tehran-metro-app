@@ -210,7 +210,7 @@ This project is entirely dependent on the data provided by **Tehran Metro Data**
 
 ## 📞 ارتباط
 
-- **ایمیل**: [hamedfarazi23@gmail.com](mailto:hamedfarazi23@gmail.com)
+- **ایمیل**: [📧 تماس با من](mailto:hamedfarazi23@gmail.com)
 - **GitHub Issues**: [گزارش مشکل](https://github.com/HamedFarazi/tehran-metro/issues)
 - **Discussions**: [مباحث](https://github.com/HamedFarazi/tehran-metro/discussions)
 
