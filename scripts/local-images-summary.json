@@ -1,0 +1,15 @@
+{
+  "generated": "2026-08-09T09:40:55.516Z",
+  "source": "pics_clean.json",
+  "stats": {
+    "totalStations": 150,
+    "stationsWithPics": 3,
+    "totalImageUrls": 6,
+    "imagesDownloaded": 0,
+    "imagesFailed": 6,
+    "stationsWithoutImages": 147
+  },
+  "stationsWithImages": 0,
+  "stationsWithoutImages": 147,
+  "imageCount": 0
+}

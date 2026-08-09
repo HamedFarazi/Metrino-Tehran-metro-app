@@ -404,6 +404,7 @@ export default stationImages;
  */
 async function main() {
   try {
+    console.log('🚀 Starting image processing script...');
     await processLocalImages();
     process.exit(0);
   } catch (error) {
@@ -413,8 +414,12 @@ async function main() {
 }
 
 // Run if called directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Simple approach: always run main() when script is executed
+if (process.argv[1] && process.argv[1].includes('process-local-images.ts')) {
+  console.log('📝 Script invoked directly - starting main()');
   main();
+} else {
+  console.log('📝 Script imported as module');
 }
 
 export { processLocalImages };

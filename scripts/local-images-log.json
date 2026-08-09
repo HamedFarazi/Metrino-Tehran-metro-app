@@ -1,0 +1,1160 @@
+{
+  "timestamp": "2026-08-09T09:40:55.511Z",
+  "stats": {
+    "totalStations": 150,
+    "stationsWithPics": 3,
+    "totalImageUrls": 6,
+    "imagesDownloaded": 0,
+    "imagesFailed": 6,
+    "stationsWithoutImages": 138
+  },
+  "results": [
+    {
+      "stationId": "station_1",
+      "stationName": "Tajrish",
+      "stationNameFa": "تجریش",
+      "imageUrls": [
+        "https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station_3.jpg#/media/File:Tajrish_Metro_Station_3.jpg",
+        "https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station.jpg#/media/File:Tajrish_Metro_Station.jpg"
+      ],
+      "downloadedImages": [],
+      "errors": [
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station_3.jpg#/media/File:Tajrish_Metro_Station_3.jpg",
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station.jpg#/media/File:Tajrish_Metro_Station.jpg"
+      ]
+    },
+    {
+      "stationId": "station_2",
+      "stationName": "Gheytariyeh",
+      "stationNameFa": "قیطریه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_3",
+      "stationName": "Shahid Sadr",
+      "stationNameFa": "شهید صدر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_4",
+      "stationName": "Qolhak",
+      "stationNameFa": "قلهک",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_5",
+      "stationName": "Doctor Shariati",
+      "stationNameFa": "دکتر شریعتی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_6",
+      "stationName": "Mirdamad",
+      "stationNameFa": "میرداماد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_7",
+      "stationName": "Shahid Haghani",
+      "stationNameFa": "شهید حقانی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_8",
+      "stationName": "Shahid Hemmat",
+      "stationNameFa": "شهید همت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_9",
+      "stationName": "Mosalla-ye Imam Khomeini",
+      "stationNameFa": "مصلی امام خمینی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_10",
+      "stationName": "Shahid Beheshti",
+      "stationNameFa": "شهید بهشتی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_11",
+      "stationName": "Shahid Mofattah",
+      "stationNameFa": "Shahid Mofattah",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_12",
+      "stationName": "Ayatollah Taleghani",
+      "stationNameFa": "آیت‌الله طالقانی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_13",
+      "stationName": "Darvazeh Dolat",
+      "stationNameFa": "دروازه دولت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_14",
+      "stationName": "Sa'adi",
+      "stationNameFa": "سعدی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_15",
+      "stationName": "Imam Khomeini",
+      "stationNameFa": "امام خمینی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_16",
+      "stationName": "Panzdah-e Khordad",
+      "stationNameFa": "پانزده خرداد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_17",
+      "stationName": "Khayyam",
+      "stationNameFa": "خیام",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_18",
+      "stationName": "Meydan-e Mohammadiyeh",
+      "stationNameFa": "میدان محمدیه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_19",
+      "stationName": "Shoush",
+      "stationNameFa": "شوش",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_20",
+      "stationName": "Payaneh Jonoub(Jonoub Terminal)",
+      "stationNameFa": "پایانه جنوبی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_21",
+      "stationName": "Shahid Bokharaei",
+      "stationNameFa": "شهید بخارایی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_22",
+      "stationName": "Aliabad",
+      "stationNameFa": "علی‌آباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_23",
+      "stationName": "Javanmard-e Ghassab",
+      "stationNameFa": "جوانمرد قصاب",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_24",
+      "stationName": "Shahr-e Rey",
+      "stationNameFa": "شهر ری",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_25",
+      "stationName": "Palayeshgah",
+      "stationNameFa": "پالایشگاه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_26",
+      "stationName": "Shahed - BagherShahr",
+      "stationNameFa": "شاهد - باقرشهر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_27",
+      "stationName": "Namayeshgah-e Shahr-e Aftab",
+      "stationNameFa": "نمایشگاه شهر آفتاب",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_28",
+      "stationName": "Vavan",
+      "stationNameFa": "واوان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_29",
+      "stationName": "Emam Khomeini Airport",
+      "stationNameFa": "فرودگاه امام خمینی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_30",
+      "stationName": "Shahr-e Parand",
+      "stationNameFa": "شهر پرند",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_31",
+      "stationName": "Holy Shrine of Imam Khomeini",
+      "stationNameFa": "حرم مطهر امام خمینی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_32",
+      "stationName": "Kahrizak",
+      "stationNameFa": "کهریزک",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_33",
+      "stationName": "Farhangsara",
+      "stationNameFa": "فرهنگسرا",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_34",
+      "stationName": "Tehranpars",
+      "stationNameFa": "تهرانپارس",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_35",
+      "stationName": "Shahid Bagheri",
+      "stationNameFa": "شهید باقری",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_36",
+      "stationName": "Daneshgah-e Elm-o San'at",
+      "stationNameFa": "دانشگاه علم و صنعت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_37",
+      "stationName": "Sarsabz",
+      "stationNameFa": "سرسبز",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_38",
+      "stationName": "Janbazan",
+      "stationNameFa": "جانبازان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_39",
+      "stationName": "Fadak",
+      "stationNameFa": "فدک",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_40",
+      "stationName": "Sabalan",
+      "stationNameFa": "سبلان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_41",
+      "stationName": "Shahid Madani",
+      "stationNameFa": "شهید مدنی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_42",
+      "stationName": "Imam Hossein",
+      "stationNameFa": "امام حسین",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_43",
+      "stationName": "Darvazeh Shemiran",
+      "stationNameFa": "دروازه شمیران",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_44",
+      "stationName": "Baharistan",
+      "stationNameFa": "بهارستان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_45",
+      "stationName": "Mellat",
+      "stationNameFa": "ملت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_46",
+      "stationName": "Hasan Abad",
+      "stationNameFa": "حسن آباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_47",
+      "stationName": "Daneshgah-e Imam Ali",
+      "stationNameFa": "دانشگاه امام علی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_48",
+      "stationName": "Meydan-e Horr",
+      "stationNameFa": "میدان حر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_49",
+      "stationName": "Shahid Navab-e Safavi",
+      "stationNameFa": "شهید نواب صفوی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_50",
+      "stationName": "Shademan",
+      "stationNameFa": "شادمان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_51",
+      "stationName": "Daneshgah-e Sharif",
+      "stationNameFa": "دانشگاه شریف",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_52",
+      "stationName": "Tarasht",
+      "stationNameFa": "طرشت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_53",
+      "stationName": "Tehran (Sadeghiyeh)",
+      "stationNameFa": "تهران (صادقیه)",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_54",
+      "stationName": "Qa'em",
+      "stationNameFa": "قائم",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_55",
+      "stationName": "Shahid Mahallati",
+      "stationNameFa": "شهید محلاتی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_56",
+      "stationName": "Aghdasiyeh",
+      "stationNameFa": "اقدسیه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_57",
+      "stationName": "Nobonyad",
+      "stationNameFa": "نوبنیاد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_58",
+      "stationName": "Hossein Abad",
+      "stationNameFa": "حسین‌آباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_59",
+      "stationName": "Meydan-e Heravi",
+      "stationNameFa": "میدان هروی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_60",
+      "stationName": "Shahid Zeynoddin",
+      "stationNameFa": "Shahid Zeynoddin",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_61",
+      "stationName": "Khajeh Abdollah-e Ansari",
+      "stationNameFa": "خواجه عبدالله انصاری",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_62",
+      "stationName": "Shahid Sayyad Shirazi",
+      "stationNameFa": "شهید صیاد شیرازی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_63",
+      "stationName": "Shahid Ghodousi",
+      "stationNameFa": "شهید قدوسی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_64",
+      "stationName": "Sohrevardi",
+      "stationNameFa": "سهروردی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_65",
+      "stationName": "Mirza-ye Shirazi",
+      "stationNameFa": "میرزا شیرازی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_66",
+      "stationName": "Meydan-e Jahad",
+      "stationNameFa": "میدان جهاد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_67",
+      "stationName": "Teatr-e Shahr",
+      "stationNameFa": "تئاتر شهر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_68",
+      "stationName": "Moniriyeh",
+      "stationNameFa": "منیریه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_69",
+      "stationName": "Mahdiyeh",
+      "stationNameFa": "مهدیه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_70",
+      "stationName": "Rahahan",
+      "stationNameFa": "راه آهن",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_71",
+      "stationName": "Javadiyeh",
+      "stationNameFa": "جوادیه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_72",
+      "stationName": "Zamzam",
+      "stationNameFa": "زمزم",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_73",
+      "stationName": "Shahrak-e Shariaty",
+      "stationNameFa": "شهرک شریعتی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_74",
+      "stationName": "Abdol Abad",
+      "stationNameFa": "عبدل آباد",
+      "imageUrls": [
+        "https://commons.wikimedia.org/wiki/File:Abdol-Abad_Metro_Station.jpg#/media/File:Abdol-Abad_Metro_Station.jpg",
+        "https://commons.wikimedia.org/wiki/File:Abdol_Abad_Metro_Station.jpg#/media/File:Abdol_Abad_Metro_Station.jpg"
+      ],
+      "downloadedImages": [],
+      "errors": [
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Abdol-Abad_Metro_Station.jpg#/media/File:Abdol-Abad_Metro_Station.jpg",
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Abdol_Abad_Metro_Station.jpg#/media/File:Abdol_Abad_Metro_Station.jpg"
+      ]
+    },
+    {
+      "stationId": "station_75",
+      "stationName": "Nemat Abad",
+      "stationNameFa": "نعمت آباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_76",
+      "stationName": "Azadegan",
+      "stationNameFa": "آزادگان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_77",
+      "stationName": "Shahid Kolahdooz",
+      "stationNameFa": "شهید کلاهدوز",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_78",
+      "stationName": "Nirou Havaei",
+      "stationNameFa": "نیروهوایی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_79",
+      "stationName": "Nabard",
+      "stationNameFa": "نبرد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_80",
+      "stationName": "Piroozi",
+      "stationNameFa": "پیروزی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_81",
+      "stationName": "Ebn-e Sina",
+      "stationNameFa": "ابن سینا",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_82",
+      "stationName": "Ferdowsi",
+      "stationNameFa": "فردوسی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_83",
+      "stationName": "Meydan-e Enghelab-e Eslami",
+      "stationNameFa": "میدان انقلاب اسلامی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_84",
+      "stationName": "Towhid",
+      "stationNameFa": "توحید",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_85",
+      "stationName": "Doctor Habibollah",
+      "stationNameFa": "دکتر حبیب‌الله",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_86",
+      "stationName": "Ostad Mo'in",
+      "stationNameFa": "استاد معین",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_87",
+      "stationName": "Meydan-e Azadi",
+      "stationNameFa": "میدان آزادی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_88",
+      "stationName": "Bimeh",
+      "stationNameFa": "بیمه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_89",
+      "stationName": "Mehrabad Airport Terminal 1&2",
+      "stationNameFa": "پایانه ۱ و ۲ فرودگاه مهرآباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_90",
+      "stationName": "Mehrabad Airport Terminal 4&6",
+      "stationNameFa": "پایانه ۴ و ۶ فرودگاه مهرآباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_91",
+      "stationName": "Shahrak-e Ekbatan",
+      "stationNameFa": "شهرک اکباتان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_92",
+      "stationName": "Allameh Jafari",
+      "stationNameFa": "علامه جعفری",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_93",
+      "stationName": "Chaharbagh",
+      "stationNameFa": "چهارباغ",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_94",
+      "stationName": "Eram-e Sabz",
+      "stationNameFa": "ارم سبز",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_95",
+      "stationName": "Varzeshgah-e Azadi",
+      "stationNameFa": "ورزشگاه آزادی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_96",
+      "stationName": "Chitgar",
+      "stationNameFa": "چیتگر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_97",
+      "stationName": "Iran Khodro",
+      "stationNameFa": "ایران‌خودرو",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_98",
+      "stationName": "Vardavard",
+      "stationNameFa": "وردآورد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_99",
+      "stationName": "Garmdareh",
+      "stationNameFa": "گرم‌دره",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_100",
+      "stationName": "Atmosphere",
+      "stationNameFa": "اتمسفر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_101",
+      "stationName": "Karaj",
+      "stationNameFa": "کرج",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_102",
+      "stationName": "Mohammadshahr",
+      "stationNameFa": "محمدشهر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_103",
+      "stationName": "Golshahr",
+      "stationNameFa": "گلشهر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_104",
+      "stationName": "Shahid Sepahbod Qasem Soleimani",
+      "stationNameFa": "شهید سپهبد قاسم سلیمانی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_105",
+      "stationName": "Haram-e Hazrat-e Abdol Azim",
+      "stationNameFa": "حرم حضرت عبدالعظیم",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_106",
+      "stationName": "Meydan-e Hazrat-e Abdol Azim",
+      "stationNameFa": "میدان حضرت عبدالعظیم",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_107",
+      "stationName": "Ebn-e Babviyeh",
+      "stationNameFa": "ابن بابویه",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_108",
+      "stationName": "Cheshmeh Ali",
+      "stationNameFa": "چشمه علی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_109",
+      "stationName": "Shohada-ye Dowlat Abad",
+      "stationNameFa": "شهدای دولت‌آباد",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_110",
+      "stationName": "Kiyan Shahr",
+      "stationNameFa": "کیان شهر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_111",
+      "stationName": "Be'sat",
+      "stationNameFa": "بعثت",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_112",
+      "stationName": "Shahid Rezaei",
+      "stationNameFa": "شهید رضایی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_113",
+      "stationName": "Meydan-e Khorasan",
+      "stationNameFa": "میدان خراسان",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_114",
+      "stationName": "Shohada-ye Hefdah-e Shahrivar",
+      "stationNameFa": "شهدای هفده شهریور",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_115",
+      "stationName": "Amirkabir",
+      "stationNameFa": "امیرکبیر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_116",
+      "stationName": "Meydan-e Shohada",
+      "stationNameFa": "میدان شهدا",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_117",
+      "stationName": "Sarbaz",
+      "stationNameFa": "سرباز",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_118",
+      "stationName": "Bahar Shiraz (Khanevadeh Hospital)",
+      "stationNameFa": "بهار شیراز (بیمارستان خانواده)",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_119",
+      "stationName": "Shohada-ye Haftom-e Tir",
+      "stationNameFa": "شهدای هفتم تیر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_120",
+      "stationName": "Maryam-e Moghaddas",
+      "stationNameFa": "مریم مقدس (س)",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_121",
+      "stationName": "Meydan-e Hazrat Vali Asr",
+      "stationNameFa": "میدان حضرت ولیعصر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_122",
+      "stationName": "Bustan-e Laleh",
+      "stationNameFa": "بوستان لاله",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_123",
+      "stationName": "Karagar",
+      "stationNameFa": "کارگر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_124",
+      "stationName": "Daneshgah-e Tarbiat Modarres",
+      "stationNameFa": "دانشگاه تربیت مدرس",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_125",
+      "stationName": "Shahrak-e Azmayesh",
+      "stationNameFa": "شهرک آزمایش",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_126",
+      "stationName": "Marzdaran",
+      "stationNameFa": "مرزداران",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_127",
+      "stationName": "Yadegar-e Imam",
+      "stationNameFa": "یادگار امام",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_128",
+      "stationName": "Shahid Ashrafi Esfahani",
+      "stationNameFa": "شهید اشرفی اصفهانی",
+      "imageUrls": [
+        "https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_1.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_1.jpg",
+        "https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_2.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_2.jpg"
+      ],
+      "downloadedImages": [],
+      "errors": [
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_1.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_1.jpg",
+        "Failed to download: https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_2.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_2.jpg"
+      ]
+    },
+    {
+      "stationId": "station_129",
+      "stationName": "Shahid Sattari",
+      "stationNameFa": "شهید ستاری",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_130",
+      "stationName": "Ayatollah Kashani",
+      "stationNameFa": "آیت‌الله کاشانی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_131",
+      "stationName": "Shahr-e Ziba",
+      "stationNameFa": "شهر زیبا",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_132",
+      "stationName": "Shahran",
+      "stationNameFa": "شهران",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_133",
+      "stationName": "Shohada-ye Kan",
+      "stationNameFa": "شهدای کن",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_134",
+      "stationName": "Kouhsar",
+      "stationNameFa": "کوهسار",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_135",
+      "stationName": "Varzeshgah-e Takhti",
+      "stationNameFa": "ورزشگاه تختی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_136",
+      "stationName": "Basij",
+      "stationNameFa": "بسیج",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_137",
+      "stationName": "Ahang",
+      "stationNameFa": "آهنگ",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_138",
+      "stationName": "Chehel Tan-e Doulab",
+      "stationNameFa": "چهل تن دولاب",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_139",
+      "stationName": "Meydan-e Giyam",
+      "stationNameFa": "میدان قیام",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_140",
+      "stationName": "Mowlavi",
+      "stationNameFa": "مولوی",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    },
+    {
+      "stationId": "station_141",
+      "stationName": "Helal Ahmar",
+      "stationNameFa": "هلال احمر",
+      "imageUrls": [],
+      "downloadedImages": [],
+      "errors": []
+    }
+  ],
+  "stationImages": {}
+}
