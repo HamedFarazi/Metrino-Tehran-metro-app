@@ -7,13 +7,18 @@ import App from "@/App";
 (function initTheme() {
   const saved = localStorage.getItem("metro-theme") ?? "dark";
   const root = document.documentElement;
-  if (saved === "darya") {
-    root.classList.add("theme-darya");
+
+  // Apply theme class — all themes use theme-* prefix
+  root.classList.add(`theme-${saved}`);
+
+  // color-scheme hint
+  if (saved === "darya" || saved === "light") {
+    root.style.colorScheme = "light";
   } else if (saved === "system") {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    root.classList.toggle("dark", prefersDark);
+    root.style.colorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  } else {
+    root.style.colorScheme = "dark";
   }
-  // "dark" is default — no class needed
 })();
 
 createRoot(document.getElementById("root")!).render(

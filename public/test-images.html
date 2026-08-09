@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Station Images</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .stats {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .station-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .station-card {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        
+        .station-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.25);
+        }
+        
+        .station-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .station-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .station-info {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .success {
+            color: #4ade80;
+        }
+        
+        .error {
+            color: #f87171;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚇 Test Station Images</h1>
+        
+        <div class="stats">
+            <h2>📊 Statistics</h2>
+            <p>Total stations with images: <strong>3</strong> out of 150 (2.0% coverage)</p>
+            <p>Total images downloaded: <strong>6</strong></p>
+            <p>All images are stored locally in <code>/public/stations/</code></p>
+        </div>
+        
+        <div class="station-grid">
+            <!-- Tajrish (station_1) -->
+            <div class="station-card">
+                <div class="station-name">تجریش (Tajrish)</div>
+                <img src="/stations/1.webp" alt="Tajrish Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('tajrish-error').style.display='block'">
+                <div id="tajrish-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>1.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY-SA 4.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Kasir</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="tajrish-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+            
+            <!-- Tajrish second image -->
+            <div class="station-card">
+                <div class="station-name">تجریش (Tajrish) #2</div>
+                <img src="/stations/1-1.webp" alt="Tajrish Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('tajrish2-error').style.display='block'">
+                <div id="tajrish2-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>1-1.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY-SA 3.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Kasir</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="tajrish2-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+            
+            <!-- Abdol Abad (station_74) -->
+            <div class="station-card">
+                <div class="station-name">عبدل آباد (Abdol Abad)</div>
+                <img src="/stations/74.webp" alt="Abdol Abad Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('abdol-error').style.display='block'">
+                <div id="abdol-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>74.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY-SA 4.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Youna75</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="abdol-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+            
+            <!-- Abdol Abad second image -->
+            <div class="station-card">
+                <div class="station-name">عبدل آباد (Abdol Abad) #2</div>
+                <img src="/stations/74-1.webp" alt="Abdol Abad Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('abdol2-error').style.display='block'">
+                <div id="abdol2-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>74-1.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY-SA 4.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Youna75</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="abdol2-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+            
+            <!-- Shahid Ashrafi Esfahani (station_128) -->
+            <div class="station-card">
+                <div class="station-name">شهید اشرفی اصفهانی</div>
+                <img src="/stations/128.webp" alt="Shahid Ashrafi Esfahani Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('ashrafi-error').style.display='block'">
+                <div id="ashrafi-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>128.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY 4.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Mostafa Tehrani</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="ashrafi-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+            
+            <!-- Shahid Ashrafi Esfahani second image -->
+            <div class="station-card">
+                <div class="station-name">شهید اشرفی اصفهانی #2</div>
+                <img src="/stations/128-1.webp" alt="Shahid Ashrafi Esfahani Metro Station" class="station-image" onerror="this.onerror=null; this.style.display='none'; document.getElementById('ashrafi2-error').style.display='block'">
+                <div id="ashrafi2-error" style="display: none; color: #f87171; text-align: center; padding: 20px; background: rgba(248, 113, 113, 0.1); border-radius: 10px;">
+                    ❌ Image failed to load
+                </div>
+                <div class="station-info">
+                    <div class="info-row"><span>File:</span> <span>128-1.webp</span></div>
+                    <div class="info-row"><span>License:</span> <span class="success">CC BY 4.0</span></div>
+                    <div class="info-row"><span>Author:</span> <span>Mostafa Tehrani</span></div>
+                    <div class="info-row"><span>Status:</span> <span id="ashrafi2-status" class="success">Loading...</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 40px; padding: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 15px;">
+            <h2>✅ Implementation Summary</h2>
+            <p>The station image system has been successfully implemented with the following features:</p>
+            <ul>
+                <li><strong>Wikimedia Commons API integration</strong> - Properly resolves file page URLs to direct image URLs</li>
+                <li><strong>Local storage</strong> - All images are downloaded and stored locally in WebP format</li>
+                <li><strong>License validation</strong> - Each image has verified license information (CC BY-SA 4.0, CC BY-SA 3.0, CC BY 4.0)</li>
+                <li><strong>Attribution support</strong> - Proper author and source information for each image</li>
+                <li><strong>Offline support</strong> - Images work in offline mode since they're stored locally</li>
+                <li><strong>Image optimization</strong> - Converted to WebP with appropriate resizing</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Test image loading
+        const images = [
+            { id: 'tajrish-status', src: '/stations/1.webp' },
+            { id: 'tajrish2-status', src: '/stations/1-1.webp' },
+            { id: 'abdol-status', src: '/stations/74.webp' },
+            { id: 'abdol2-status', src: '/stations/74-1.webp' },
+            { id: 'ashrafi-status', src: '/stations/128.webp' },
+            { id: 'ashrafi2-status', src: '/stations/128-1.webp' }
+        ];
+        
+        images.forEach(image => {
+            const img = new Image();
+            img.onload = () => {
+                document.getElementById(image.id).textContent = '✅ Loaded successfully';
+                document.getElementById(image.id).className = 'success';
+            };
+            img.onerror = () => {
+                document.getElementById(image.id).textContent = '❌ Failed to load';
+                document.getElementById(image.id).className = 'error';
+            };
+            img.src = image.src;
+        });
+        
+        // Check if images are accessible
+        console.log('Testing station image URLs...');
+        images.forEach(image => {
+            console.log(`Testing: ${image.src}`);
+        });
+    </script>
+</body>
+</html>

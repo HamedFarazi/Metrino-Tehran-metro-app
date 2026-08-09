@@ -3,6 +3,7 @@
  * 
  * Service for accessing station images from Wikimedia Commons.
  * Provides methods to get images for stations and manage image metadata.
+ * cd ":\\metroapp"; npx tsx scripts/process-all-station-images.ts
  */
 
 import type { Station } from '@/types/metro';

@@ -211,6 +211,7 @@ This project is entirely dependent on the data provided by **Tehran Metro Data**
 ## 📞 ارتباط
 
 - **ایمیل**: [📧 تماس با من](mailto:hamedfarazi23@gmail.com)
+- **LinkedIn**: [💼 Hamed Farazi](https://www.linkedin.com/in/hamed-farazi-a465b92b5/)
 - **GitHub Issues**: [گزارش مشکل](../../issues)
 - **Discussions**: [مباحث](../../discussions)
 

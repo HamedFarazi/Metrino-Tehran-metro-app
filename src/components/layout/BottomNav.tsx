@@ -13,24 +13,27 @@ import { useMetroStore } from "@/store/metro.store";
 
 // ── Simple theme manager (persisted to localStorage) ──────────────────────────
 
-const ALL_THEME_CLASSES = ["theme-darya"] as const;
+const ALL_THEME_CLASSES = [
+  "theme-dark",
+  "theme-light",
+  "theme-system",
+  "theme-darya",
+] as const;
 
 function applyTheme(theme: ThemeMode) {
   const root = document.documentElement;
 
-  // Remove all custom theme classes first
+  // Remove all theme classes first
   root.classList.remove(...ALL_THEME_CLASSES);
 
-  if (theme === "darya") {
-    root.classList.add("theme-darya");
-  } else if (theme === "system") {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    root.classList.toggle("dark", prefersDark);
-    root.classList.toggle("light", !prefersDark);
-  } else {
-    root.classList.toggle("dark", theme === "dark");
-    root.classList.toggle("light", theme === "light");
-  }
+  // Apply the correct class (dark is the base default, but we still mark it)
+  root.classList.add(`theme-${theme}`);
+
+  // color-scheme hint for browser chrome (scrollbars, inputs, etc.)
+  root.style.colorScheme =
+    theme === "darya" || theme === "light" ? "light"
+    : theme === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : "dark";
 
   localStorage.setItem("metro-theme", theme);
 }

@@ -1,12 +1,13 @@
 ﻿/**
  * MapPage — Three map modes: Offline SVG | Street vector | Satellite
  */
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, ZoomIn, ZoomOut, Maximize2,
   Map, Satellite, Layers,
   ArrowLeftRight, MapPin, Navigation, Route, X, LocateFixed,
+  CloudSun, CloudRain, Cloud, Sun, CloudSnow, Wind,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -43,6 +44,7 @@ function MapTopBar() {
     setCurrentRoute, addRecentRoute,
     currentRoute, clearRoute,
     userLocation, setOrigin,
+    isStationSheetOpen: sidebarOpen,
   } = useMetroStore();
   const { request: requestLocation, loading: locLoading } = useGeolocation();
 
@@ -76,7 +78,11 @@ function MapTopBar() {
 
   return (
     <div className="absolute top-0 inset-x-0 z-20 px-3 pt-3 pointer-events-none">
-      <div className="pointer-events-auto flex-1 max-w-sm">
+      {/* On desktop, shrink available width when sidebar is open to avoid overlap */}
+      <div
+        className="pointer-events-auto flex-1 max-w-sm transition-[margin] duration-300 ease-in-out"
+        style={{ marginRight: sidebarOpen ? "380px" : undefined }}
+      >
         {!routeMode ? (
           <div className="flex gap-2">
             <button
@@ -206,6 +212,7 @@ export function MapPage() {
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 0 }} className="flex flex-col bg-[#1a1c2e]">
       <MapTopBar />
+      <WeatherWidget />
       <div className="absolute inset-0">
         <div className="absolute inset-0 transition-opacity duration-300"
           style={{ opacity: mode === "offline" ? 1 : 0, zIndex: mode === "offline" ? 2 : 1, pointerEvents: mode === "offline" ? "auto" : "none" }}>
@@ -218,6 +225,88 @@ export function MapPage() {
         )}
       </div>
       <LayerSwitcher mode={mode} onChange={setMode} />
+    </div>
+  );
+}
+
+// ─── Weather Widget ───────────────────────────────────────────────────────────
+
+interface WeatherData {
+  temp: number;
+  description: string;
+  code: number;
+}
+
+function getWeatherIcon(code: number, className = "h-4 w-4") {
+  if (code >= 200 && code < 300) return <CloudRain className={className} />;
+  if (code >= 300 && code < 600) return <CloudRain className={className} />;
+  if (code >= 600 && code < 700) return <CloudSnow className={className} />;
+  if (code >= 700 && code < 800) return <Wind className={className} />;
+  if (code === 800) return <Sun className={className} />;
+  if (code === 801 || code === 802) return <CloudSun className={className} />;
+  return <Cloud className={className} />;
+}
+
+function WeatherWidget() {
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Open-Meteo — free, no API key, Tehran coords
+    const TEHRAN_LAT = 35.6892;
+    const TEHRAN_LNG = 51.389;
+    fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${TEHRAN_LAT}&longitude=${TEHRAN_LNG}&current_weather=true&hourly=precipitation_probability&forecast_days=1`
+    )
+      .then((r) => r.json())
+      .then((data) => {
+        const cw = data.current_weather;
+        if (!cw) return;
+        // Map WMO weather code to a rough OWM-style code for icon
+        const wmo = cw.weathercode as number;
+        let code = 800;
+        if (wmo === 0) code = 800;
+        else if (wmo <= 3) code = 801 + wmo;
+        else if (wmo <= 49) code = 741;
+        else if (wmo <= 67) code = 501;
+        else if (wmo <= 77) code = 601;
+        else if (wmo <= 82) code = 521;
+        else if (wmo <= 99) code = 211;
+
+        const descMap: Record<number, string> = {
+          0: "آفتابی", 1: "کمی ابری", 2: "نیمه ابری", 3: "ابری",
+          45: "مه", 48: "مه یخ‌زده",
+          51: "نم‌نم باران", 53: "باران ملایم", 55: "باران",
+          61: "باران سبک", 63: "باران متوسط", 65: "باران شدید",
+          71: "برف سبک", 73: "برف", 75: "برف شدید",
+          80: "رگبار سبک", 81: "رگبار", 82: "رگبار شدید",
+          95: "طوفان",
+        };
+        setWeather({
+          temp: Math.round(cw.temperature),
+          description: descMap[wmo] ?? "نامشخص",
+          code,
+        });
+      })
+      .catch(() => { /* silently fail */ })
+      .finally(() => setLoading(false));
+  }, []);
+
+  if (loading || !weather) return null;
+
+  return (
+    <div
+      className={cn(
+        "absolute top-[52px] left-3 z-20 pointer-events-none",
+        "flex items-center gap-1.5 rounded-2xl px-2.5 py-1.5",
+        "bg-black/35 backdrop-blur-xl border border-white/[0.09]",
+        "shadow-[0_2px_12px_rgba(0,0,0,0.4)]",
+        "select-none",
+      )}
+    >
+      <span className="text-white/60">{getWeatherIcon(weather.code, "h-3.5 w-3.5")}</span>
+      <span className="text-[13px] font-semibold text-white/90 tabular-nums">{weather.temp}°</span>
+      <span className="text-[11px] text-white/40 hidden xs:inline">{weather.description}</span>
     </div>
   );
 }
@@ -442,136 +531,76 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
   const mapRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
   const { openStationSheet, currentRoute, selectedStationCoordinates, isStationSheetOpen } = useMetroStore();
+  // Keep animation frame id in a ref so cleanup is always up-to-date
+  const targetAnimRef = useRef<number | null>(null);
 
   const stations = MetroDataService.getAllStations().filter(
     (s) => !s.isDisabled && s.coordinates.lat !== 0 && s.coordinates.lng !== 0
   );
 
+  // Helper: remove target layers/source unconditionally
+  const removeTargetLayers = useCallback(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (targetAnimRef.current !== null) {
+      cancelAnimationFrame(targetAnimRef.current);
+      targetAnimRef.current = null;
+    }
+    const LAYERS = ["station-target-outer", "station-target-inner", "station-target-center"] as const;
+    LAYERS.forEach((id) => { try { if (map.getLayer(id)) map.removeLayer(id); } catch {} });
+    try { if (map.getSource("station-target")) map.removeSource("station-target"); } catch {}
+  }, []);
+
   // Selected station target effect — desktop only
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
-    
-    // Remove existing target layers
-    ["station-target-outer", "station-target-inner", "station-target-center"].forEach((id) => {
-      if (map.getLayer(id)) map.removeLayer(id);
-      if (map.getSource(id)) map.removeSource(id);
-    });
-    
-    if (!selectedStationCoordinates || !isStationSheetOpen || window.innerWidth < 768) return;
-    
+
+    // Clean up whatever was previously rendered
+    removeTargetLayers();
+
+    if (!selectedStationCoordinates || !isStationSheetOpen || window.innerWidth < 768) {
+      return removeTargetLayers;
+    }
+
     const { lng, lat } = selectedStationCoordinates;
-    
-    // Add target effect layers
-    map.addSource("station-target", {
-      type: "geojson",
-      data: {
-        type: "FeatureCollection",
-        features: [{
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [lng, lat] },
-          properties: {}
-        }]
-      }
-    });
-    
-    // Outer pulsating circle
-    map.addLayer({
-      id: "station-target-outer",
-      type: "circle",
-      source: "station-target",
-      paint: {
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10, 15,
-          15, 25,
-          18, 40
-        ],
-        "circle-color": "#ffffff",
-        "circle-opacity": 0.3,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-opacity": 0.5,
-        "circle-translate": [0, 0]
-      }
-    });
-    
-    // Middle circle
-    map.addLayer({
-      id: "station-target-inner",
-      type: "circle",
-      source: "station-target",
-      paint: {
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10, 8,
-          15, 15,
-          18, 25
-        ],
-        "circle-color": "#ffffff",
-        "circle-opacity": 0.6,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#ffffff",
-        "circle-stroke-opacity": 0.8
-      }
-    });
-    
-    // Center dot
-    map.addLayer({
-      id: "station-target-center",
-      type: "circle",
-      source: "station-target",
-      paint: {
-        "circle-radius": [
-          "interpolate",
-          ["linear"],
-          ["zoom"],
-          10, 3,
-          15, 5,
-          18, 8
-        ],
-        "circle-color": "#ffffff",
-        "circle-opacity": 1,
-        "circle-stroke-width": 2,
-        "circle-stroke-color": "#10b981"
-      }
-    });
-    
-    // Add pulsing animation
-    let animationId: number;
+
+    try {
+      map.addSource("station-target", {
+        type: "geojson",
+        data: { type: "FeatureCollection", features: [{ type: "Feature", geometry: { type: "Point", coordinates: [lng, lat] }, properties: {} }] },
+      });
+      map.addLayer({ id: "station-target-outer", type: "circle", source: "station-target",
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 15, 15, 25, 18, 40],
+          "circle-color": "#ffffff", "circle-opacity": 0.25, "circle-stroke-width": 2, "circle-stroke-color": "#ffffff", "circle-stroke-opacity": 0.5 } });
+      map.addLayer({ id: "station-target-inner", type: "circle", source: "station-target",
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 8, 15, 15, 18, 25],
+          "circle-color": "#ffffff", "circle-opacity": 0.6, "circle-stroke-width": 2, "circle-stroke-color": "#ffffff", "circle-stroke-opacity": 0.8 } });
+      map.addLayer({ id: "station-target-center", type: "circle", source: "station-target",
+        paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 10, 3, 15, 5, 18, 8],
+          "circle-color": "#ffffff", "circle-opacity": 1, "circle-stroke-width": 2, "circle-stroke-color": "#10b981" } });
+    } catch {
+      return removeTargetLayers;
+    }
+
+    // Pulsing animation — ID stored in ref so cleanup is always current
     let time = 0;
-    
     const animate = () => {
       time += 0.05;
       const pulse = 0.5 + 0.3 * Math.sin(time);
-      
-      map.setPaintProperty("station-target-outer", "circle-opacity", 0.2 * pulse);
-      map.setPaintProperty("station-target-outer", "circle-radius", [
-        "interpolate",
-        ["linear"],
-        ["zoom"],
-        10, 12 + 3 * pulse,
-        15, 20 + 5 * pulse,
-        18, 35 + 5 * pulse
-      ]);
-      
-      animationId = requestAnimationFrame(animate);
+      try {
+        map.setPaintProperty("station-target-outer", "circle-opacity", 0.15 + 0.15 * pulse);
+        map.setPaintProperty("station-target-outer", "circle-radius", ["interpolate", ["linear"], ["zoom"], 10, 12 + 3 * pulse, 15, 20 + 5 * pulse, 18, 35 + 5 * pulse]);
+      } catch {}
+      targetAnimRef.current = requestAnimationFrame(animate);
     };
-    
-    animate();
-    
-    return () => {
-      if (animationId) cancelAnimationFrame(animationId);
-      ["station-target-outer", "station-target-inner", "station-target-center"].forEach((id) => {
-        if (map.getLayer(id)) map.removeLayer(id);
-        if (map.getSource(id)) map.removeSource(id);
-      });
-    };
-  }, [selectedStationCoordinates, isStationSheetOpen, ready]);
+    targetAnimRef.current = requestAnimationFrame(animate);
+
+    // Fly to station on desktop
+    map.flyTo({ center: [lng, lat], zoom: Math.max(map.getZoom(), 14), duration: 700, essential: true });
+
+    return removeTargetLayers;
+  }, [selectedStationCoordinates, isStationSheetOpen, ready, removeTargetLayers]);
   
   // Route overlay — desktop only
   useEffect(() => {

@@ -6,14 +6,19 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, X, MapPin, ArrowRight, Clock } from "lucide-react";
 import { MetroDataService } from "@/services/metro-data.service";
+import { MetroRouteService } from "@/services/metro-route.service";
 import { useMetroStore } from "@/store/metro.store";
 import type { Station } from "@/types/metro";
 import { cn } from "@/lib/utils";
 import { LineBadge } from "@/components/shared/LineBadge";
 
 export function SearchPanel() {
-  const { isSearchOpen, searchMode, closeSearch, setOrigin, setDestination, openStationSheet } =
-    useMetroStore();
+  const {
+    isSearchOpen, searchMode, closeSearch,
+    setOrigin, setDestination, openStationSheet,
+    originStation, destinationStation,
+    setCurrentRoute, addRecentRoute,
+  } = useMetroStore();
 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Station[]>([]);
@@ -46,14 +51,33 @@ export function SearchPanel() {
     (station: Station) => {
       if (searchMode === "origin") {
         setOrigin(station);
+        // If destination already set, auto-calculate route
+        if (destinationStation) {
+          const route = MetroRouteService.calculate(station.id, destinationStation.id);
+          if (route) {
+            setCurrentRoute(route);
+            addRecentRoute(station.id, destinationStation.id);
+          }
+        }
       } else if (searchMode === "destination") {
         setDestination(station);
+        // If origin already set, auto-calculate route
+        if (originStation) {
+          const route = MetroRouteService.calculate(originStation.id, station.id);
+          if (route) {
+            setCurrentRoute(route);
+            addRecentRoute(originStation.id, station.id);
+          }
+        }
       } else {
         openStationSheet(station);
       }
       closeSearch();
     },
-    [searchMode, setOrigin, setDestination, openStationSheet, closeSearch]
+    [
+      searchMode, setOrigin, setDestination, openStationSheet, closeSearch,
+      originStation, destinationStation, setCurrentRoute, addRecentRoute,
+    ]
   );
 
   // Keyboard navigation
