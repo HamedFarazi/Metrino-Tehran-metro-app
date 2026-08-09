@@ -12,29 +12,13 @@
 </div>
 
 ## 📱 پیش‌نمایش برنامه
-
-### صفحه اصلی - نقشه مترو تهران
 ![صفحه اصلی](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_34_15.png)
-
-### انتخاب ایستگاه مبدا
 ![انتخاب مبدا](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_35_18.png)
-
-### انتخاب ایستگاه مقصد
 ![انتخاب مقصد](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_36_09.png)
-
-### نمایش مسیر پیشنهادی
 ![مسیر پیشنهادی](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_37_02.png)
-
-### جزئیات مسیر
 ![جزئیات مسیر](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_37_21.png)
-
-### رابط کاربری فارسی
 ![رابط فارسی](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_38_55.png)
-
-### طراحی واکنش‌گرا
 ![طراحی واکنش‌گرا](./public/readmePics/Screenshot%202026-08-09%20123542.png)
-
-### حالت تاریک
 ![حالت تاریک](./public/readmePics/Screenshot%202026-08-09%20123634.png)
 
 ## ✨ ویژگی‌ها
