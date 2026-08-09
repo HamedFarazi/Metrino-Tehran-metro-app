@@ -302,9 +302,9 @@ function OfflineMap() {
   const { userLocation } = useMetroStore();
   const [nearestLabel, setNearestLabel] = useState<string | null>(null);
 
-  // Calculate initial scale so the image fits the viewport with a small padding
+  // Calculate initial scale so the image fits the viewport with padding
   const initialScale = Math.min(
-    (window.innerWidth * 0.95) / IMAGE_W,
+    (window.innerWidth * 0.9) / IMAGE_W,
     (window.innerHeight * 0.85) / IMAGE_H,
     1
   );
@@ -333,19 +333,30 @@ function OfflineMap() {
         maxScale={6}
         centerOnInit
         limitToBounds={false}
+        centerZoomedOut={true}
       >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
             <ScaleTracker onScale={setScale} />
             <TransformComponent
               wrapperStyle={{ width: "100%", height: "100%" }}
-              contentStyle={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+              contentStyle={{ 
+                display: "flex", 
+                alignItems: "center", 
+                justifyContent: "center",
+                width: "100%",
+                height: "100%"
+              }}
             >
               <img
                 src="/metromap.jpg"
                 alt="نقشه مترو تهران"
                 draggable={false}
-                style={{ width: IMAGE_W, maxWidth: "none", userSelect: "none" }}
+                style={{ 
+                  width: IMAGE_W, 
+                  maxWidth: "none", 
+                  userSelect: "none"
+                }}
               />
             </TransformComponent>
 
