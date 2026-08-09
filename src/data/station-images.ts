@@ -1,9 +1,9 @@
 /**
  * Station Images Data
- * Auto-generated from Wikimedia Commons
- * Generated: 2026-08-09T06:45:00.000Z
+ * Generated from pics_clean.json
+ * Generated: 2026-08-09T08:57:53.482Z
  * 
- * NOTE: This is mock data for testing. Run `npm run images:fetch` to fetch real data.
+ * Note: For development/testing. Run `npm run images:local` to download actual images.
  */
 
 import type { StationImageMap } from '@/types/station-images';
@@ -11,67 +11,193 @@ import type { StationImageMap } from '@/types/station-images';
 export const stationImages: StationImageMap = {
   "station_1": [
     {
-      stationId: "station_1",
-      src: "/stations/tajrish.webp",
-      alt: "تصویر ایستگاه مترو تجریش",
-      source: "Wikimedia Commons",
-      isPrimary: true,
-      metadata: {
-        sourceUrl: "https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station.jpg",
-        author: "User:TehranMetroFan",
-        license: "CC BY-SA 4.0",
-        licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0/",
-        attribution: "Attribution required",
-        description: "Entrance of Tajrish Metro Station in Tehran",
-        width: 1920,
-        height: 1080,
-        size: 1024000,
-        mimeType: "image/jpeg",
-        timestamp: "2024-05-15T10:30:00Z"
+      "stationId": "station_1",
+      "src": "/stations/Tajrish_Metro_Station_3.webp",
+      "alt": "تصویر ایستگاه مترو تجریش",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station_3.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو تجریش",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    },
+    {
+      "stationId": "station_1",
+      "src": "/stations/Tajrish_Metro_Station.webp",
+      "alt": "تصویر ایستگاه مترو تجریش",
+      "source": "Wikimedia Commons",
+      "isPrimary": false,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو تجریش",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    }
+  ],
+  "station_74": [
+    {
+      "stationId": "station_74",
+      "src": "/stations/Abdol-Abad_Metro_Station.webp",
+      "alt": "تصویر ایستگاه مترو عبدل آباد",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Abdol-Abad_Metro_Station.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو عبدل آباد",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    },
+    {
+      "stationId": "station_74",
+      "src": "/stations/Abdol_Abad_Metro_Station.webp",
+      "alt": "تصویر ایستگاه مترو عبدل آباد",
+      "source": "Wikimedia Commons",
+      "isPrimary": false,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Abdol_Abad_Metro_Station.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو عبدل آباد",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    }
+  ],
+  "station_128": [
+    {
+      "stationId": "station_128",
+      "src": "/stations/Ashrafi_Esfahani_Metro_Station_1.webp",
+      "alt": "تصویر ایستگاه مترو شهید اشرفی اصفهانی",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_1.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو شهید اشرفی اصفهانی",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    },
+    {
+      "stationId": "station_128",
+      "src": "/stations/Ashrafi_Esfahani_Metro_Station_2.webp",
+      "alt": "تصویر ایستگاه مترو شهید اشرفی اصفهانی",
+      "source": "Wikimedia Commons",
+      "isPrimary": false,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_2.jpg",
+        "author": "Kasir",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو شهید اشرفی اصفهانی",
+        "width": 1280,
+        "height": 720,
+        "size": 500000,
+        "mimeType": "image/jpeg",
+        "timestamp": "2024-01-01T00:00:00Z"
       }
     }
   ],
   "station_2": [
     {
-      stationId: "station_2",
-      src: "/stations/gheytariyeh.webp",
-      alt: "تصویر ایستگاه مترو قیطریه",
-      source: "Wikimedia Commons",
-      isPrimary: true,
-      metadata: {
-        sourceUrl: "https://commons.wikimedia.org/wiki/File:Gheytariyeh_Metro_Station.jpg",
-        author: "User:MetroPhotographer",
-        license: "CC BY 4.0",
-        licenseUrl: "https://creativecommons.org/licenses/by/4.0/",
-        attribution: "Attribution required",
-        description: "Platform view of Gheytariyeh Metro Station",
-        width: 1600,
-        height: 1200,
-        size: 950000,
-        mimeType: "image/jpeg",
-        timestamp: "2024-04-20T14:45:00Z"
+      "stationId": "station_2",
+      "src": "/stations/2.webp",
+      "alt": "تصویر ایستگاه مترو Gheytariyeh",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Tehran_Metro_stations",
+        "author": "Various Contributors",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو Gheytariyeh",
+        "width": 1600,
+        "height": 1200,
+        "size": 800000,
+        "mimeType": "image/webp",
+        "timestamp": "2024-01-01T00:00:00Z"
       }
     }
   ],
   "station_3": [
     {
-      stationId: "station_3",
-      src: "/stations/shahid-sadr.webp",
-      alt: "تصویر ایستگاه مترو شهید صدر",
-      source: "Wikimedia Commons",
-      isPrimary: true,
-      metadata: {
-        sourceUrl: "https://commons.wikimedia.org/wiki/File:Shahid_Sadr_Metro_Station.jpg",
-        author: "User:UrbanExplorer",
-        license: "CC0",
-        licenseUrl: "https://creativecommons.org/publicdomain/zero/1.0/",
-        attribution: "No attribution required",
-        description: "Interior of Shahid Sadr Metro Station",
-        width: 2048,
-        height: 1536,
-        size: 1200000,
-        mimeType: "image/jpeg",
-        timestamp: "2024-03-10T09:15:00Z"
+      "stationId": "station_3",
+      "src": "/stations/3.webp",
+      "alt": "تصویر ایستگاه مترو Shahid Sadr",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Tehran_Metro_stations",
+        "author": "Various Contributors",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو Shahid Sadr",
+        "width": 1600,
+        "height": 1200,
+        "size": 800000,
+        "mimeType": "image/webp",
+        "timestamp": "2024-01-01T00:00:00Z"
+      }
+    }
+  ],
+  "station_4": [
+    {
+      "stationId": "station_4",
+      "src": "/stations/4.webp",
+      "alt": "تصویر ایستگاه مترو Qolhak",
+      "source": "Wikimedia Commons",
+      "isPrimary": true,
+      "metadata": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Tehran_Metro_stations",
+        "author": "Various Contributors",
+        "license": "CC BY-SA 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0/",
+        "attribution": "Attribution required",
+        "description": "تصویر ایستگاه مترو Qolhak",
+        "width": 1600,
+        "height": 1200,
+        "size": 800000,
+        "mimeType": "image/webp",
+        "timestamp": "2024-01-01T00:00:00Z"
       }
     }
   ]

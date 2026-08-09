@@ -79,6 +79,6 @@ export default defineConfig([
 
 ## Acknowledgment / تقدیر
 
-This project is entirely dependent on the data provided by **Tehran Metro Data**. Without the **mostafa-kheibary** project, MetroYab would not exist. We appreciate the efforts and hard work of **mostafa-kheibary** for collecting and updating this data, and we hope this collaboration can help improve Tehran Metro services.
+This project is entirely dependent on the data provided by **Tehran Metro Data**. Without the **mostafa-kheibary** project, Metrino would not exist. We appreciate the efforts and hard work of **mostafa-kheibary** for collecting and updating this data, and we hope this collaboration can help improve Tehran Metro services.
 
-این پروژه به طور کامل وابسته به داده‌های ارائه‌شده توسط **Tehran Metro Data** است. اگر پروژه **mostafa-kheibary** نبود، MetroYab نیز وجود نداشت. ما از زحمات و تلاش‌های **mostafa-kheibary** برای جمع‌آوری و به‌روزرسانی این داده‌ها قدردانی می‌کنیم و امیدواریم این همکاری بتواند به بهبود خدمات مترو تهران کمک کند.
+این پروژه به طور کامل وابسته به داده‌های ارائه‌شده توسط **Tehran Metro Data** است. اگر پروژه **mostafa-kheibary** نبود، Metrino نیز وجود نداشت. ما از زحمات و تلاش‌های **mostafa-kheibary** برای جمع‌آوری و به‌روزرسانی این داده‌ها قدردانی می‌کنیم و امیدواریم این همکاری بتواند به بهبود خدمات مترو تهران کمک کند.

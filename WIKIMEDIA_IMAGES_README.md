@@ -31,8 +31,17 @@ npm run images:test-api
 # تولید نگاشت نام‌های ایستگاه‌ها
 tsx scripts/station-name-mapper.ts
 
-# دریافت تصاویر ایستگاه‌ها
+# دریافت تصاویر از ویکی‌مدیا (API)
 npm run images:fetch
+
+# پردازش تصاویر محلی از pics_clean.json
+npm run images:local
+
+# تولید داده تصاویر برای توسعه
+tsx scripts/generate-station-images.ts
+
+# اضافه کردن عکس جدید به pics_clean.json
+tsx scripts/add-station-image.ts
 ```
 
 ## 🔧 نحوه کار
