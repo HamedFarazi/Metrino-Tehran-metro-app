@@ -9,7 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "migrate-data": "node scripts/migrate-direct.cjs",
-    "demo": "tsx src/demo/MetroDemo.ts"
+    "demo": "tsx src/demo/MetroDemo.ts",
+    "images:test-api": "tsx scripts/test-wikimedia-api.ts",
+    "images:fetch": "tsx scripts/fetch-station-images.ts",
+    "images:local": "tsx scripts/process-local-images.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.7.1",

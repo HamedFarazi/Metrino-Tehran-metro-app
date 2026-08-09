@@ -35,6 +35,10 @@ interface MetroState {
   // ── Station Detail ─────────────────────────────────────────────────────────
   selectedStation: Station | null;
   setSelectedStation: (station: Station | null) => void;
+  
+  // ── Selected Station Coordinates ───────────────────────────────────────────
+  selectedStationCoordinates: { lng: number; lat: number } | null;
+  setSelectedStationCoordinates: (coords: { lng: number; lat: number } | null) => void;
 
   // ── Map Mode ────────────────────────────────────────────────────────────────
   mapMode: MapMode;
@@ -96,6 +100,12 @@ export const useMetroStore = create<MetroState>()(
       // ── Station Detail ──────────────────────────────────────────────────────
       selectedStation: null,
       setSelectedStation: (station) => set({ selectedStation: station }),
+      
+
+      
+      // ── Selected Station Coordinates ───────────────────────────────────────
+      selectedStationCoordinates: null,
+      setSelectedStationCoordinates: (coords) => set({ selectedStationCoordinates: coords }),
 
       // ── Map Mode ────────────────────────────────────────────────────────────
       mapMode: "offline",
@@ -147,8 +157,15 @@ export const useMetroStore = create<MetroState>()(
       // ── Station Sheet ───────────────────────────────────────────────────────
       isStationSheetOpen: false,
       openStationSheet: (station) =>
-        set({ selectedStation: station, isStationSheetOpen: true }),
-      closeStationSheet: () => set({ isStationSheetOpen: false }),
+        set({ 
+          selectedStation: station, 
+          isStationSheetOpen: true,
+          selectedStationCoordinates: { lng: station.coordinates.lng, lat: station.coordinates.lat }
+        }),
+      closeStationSheet: () => set({ 
+        isStationSheetOpen: false,
+        selectedStationCoordinates: null
+      }),
     }),
     {
       name: "tehran-metro-store",

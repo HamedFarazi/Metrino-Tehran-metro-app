@@ -1,0 +1,912 @@
+{
+	"Tajrish": {
+		"name": "Tajrish",
+		"translations": {
+			"fa": "تجریش",
+			"pic": [
+				"https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station_3.jpg#/media/File:Tajrish_Metro_Station_3.jpg",
+				"https://commons.wikimedia.org/wiki/File:Tajrish_Metro_Station.jpg#/media/File:Tajrish_Metro_Station.jpg"
+			]
+		}
+	},
+	"Gheytariyeh": {
+		"name": "Gheytariyeh",
+		"translations": {
+			"fa": "قیطریه",
+			"pic": ["", ""]
+		}
+	},
+	"Shahid Sadr": {
+		"name": "Shahid Sadr",
+		"translations": {
+			"fa": "شهید صدر",
+			"pic": ["", ""]
+		}
+	},
+	"Qolhak": {
+		"name": "Qolhak",
+		"translations": {
+			"fa": "قلهک",
+			"pic": ["", ""]
+		}
+	},
+	"Doctor Shariati": {
+		"name": "Doctor Shariati",
+		"translations": {
+			"fa": "دکتر شریعتی",
+			"pic": ["", ""]
+		}
+	},
+	"Mirdamad": {
+		"name": "Mirdamad",
+		"translations": {
+			"fa": "میرداماد",
+			"pic": ["", ""]
+		}
+	},
+	"Shahid Haghani": {
+		"name": "Shahid Haghani",
+		"translations": {
+			"fa": "شهید حقانی",
+			"pic": ["", ""]
+		}
+	},
+	"Shahid Hemmat": {
+		"name": "Shahid Hemmat",
+		"translations": {
+			"fa": "شهید همت"
+		}
+	},
+	"Mosalla-ye Imam Khomeini": {
+		"name": "Mosalla-ye Imam Khomeini",
+		"translations": {
+			"fa": "مصلی امام خمینی"
+		}
+	},
+	"Shahid Beheshti": {
+		"name": "Shahid Beheshti",
+		"translations": {
+			"fa": "شهید بهشتی"
+		}
+	},
+	"Shahid Mofattah": {
+		"name": "Shahid Mofattah"
+	},
+	"Ayatollah Taleghani": {
+		"name": "Ayatollah Taleghani",
+		"translations": {
+			"fa": "آیت‌الله طالقانی"
+		}
+	},
+	"Darvazeh Dolat": {
+		"name": "Darvazeh Dolat",
+		"translations": {
+			"fa": "دروازه دولت"
+		}
+	},
+	"Sa'adi": {
+		"name": "Sa'adi",
+		"translations": {
+			"fa": "سعدی"
+		}
+	},
+	"Imam Khomeini": {
+		"name": "Imam Khomeini",
+		"translations": {
+			"fa": "امام خمینی"
+		}
+	},
+	"Panzdah-e Khordad": {
+		"name": "Panzdah-e Khordad",
+		"translations": {
+			"fa": "پانزده خرداد"
+		}
+	},
+	"Khayyam": {
+		"name": "Khayyam",
+		"translations": {
+			"fa": "خیام"
+		}
+	},
+	"Meydan-e Mohammadiyeh": {
+		"name": "Meydan-e Mohammadiyeh",
+		"translations": {
+			"fa": "میدان محمدیه"
+		}
+	},
+	"Shoush": {
+		"name": "Shoush",
+		"translations": {
+			"fa": "شوش"
+		}
+	},
+	"Payaneh Jonoub(Jonoub Terminal)": {
+		"name": "Payaneh Jonoub(Jonoub Terminal)",
+		"translations": {
+			"fa": "پایانه جنوبی"
+		}
+	},
+	"Shahid Bokharaei": {
+		"name": "Shahid Bokharaei",
+		"translations": {
+			"fa": "شهید بخارایی"
+		}
+	},
+	"Aliabad": {
+		"name": "Aliabad",
+		"translations": {
+			"fa": "علی‌آباد"
+		}
+	},
+	"Javanmard-e Ghassab": {
+		"name": "Javanmard-e Ghassab",
+		"translations": {
+			"fa": "جوانمرد قصاب"
+		}
+	},
+	"Shahr-e Rey": {
+		"name": "Shahr-e Rey",
+		"translations": {
+			"fa": "شهر ری"
+		}
+	},
+	"Palayeshgah": {
+		"name": "Palayeshgah",
+		"translations": {
+			"fa": "پالایشگاه"
+		}
+	},
+	"Shahed - BagherShahr": {
+		"name": "Shahed - BagherShahr",
+		"translations": {
+			"fa": "شاهد - باقرشهر"
+		}
+	},
+	"Namayeshgah-e Shahr-e Aftab": {
+		"name": "Namayeshgah-e Shahr-e Aftab",
+		"translations": {
+			"fa": "نمایشگاه شهر آفتاب"
+		}
+	},
+	"Vavan": {
+		"name": "Vavan",
+		"translations": {
+			"fa": "واوان"
+		}
+	},
+	"Emam Khomeini Airport": {
+		"name": "Emam Khomeini Airport",
+		"translations": {
+			"fa": "فرودگاه امام خمینی"
+		}
+	},
+	"Shahr-e Parand": {
+		"name": "Shahr-e Parand",
+		"translations": {
+			"fa": "شهر پرند"
+		}
+	},
+	"Holy Shrine of Imam Khomeini": {
+		"name": "Holy Shrine of Imam Khomeini",
+		"translations": {
+			"fa": "حرم مطهر امام خمینی"
+		}
+	},
+	"Kahrizak": {
+		"name": "Kahrizak",
+		"translations": {
+			"fa": "کهریزک"
+		}
+	},
+	"Farhangsara": {
+		"name": "Farhangsara",
+		"translations": {
+			"fa": "فرهنگسرا"
+		}
+	},
+	"Tehranpars": {
+		"name": "Tehranpars",
+		"translations": {
+			"fa": "تهرانپارس"
+		}
+	},
+	"Shahid Bagheri": {
+		"name": "Shahid Bagheri",
+		"translations": {
+			"fa": "شهید باقری"
+		}
+	},
+	"Daneshgah-e Elm-o San'at": {
+		"name": "Daneshgah-e Elm-o San'at",
+		"translations": {
+			"fa": "دانشگاه علم و صنعت"
+		}
+	},
+	"Sarsabz": {
+		"name": "Sarsabz",
+		"translations": {
+			"fa": "سرسبز"
+		}
+	},
+	"Janbazan": {
+		"name": "Janbazan",
+		"translations": {
+			"fa": "جانبازان"
+		}
+	},
+	"Fadak": {
+		"name": "Fadak",
+		"translations": {
+			"fa": "فدک"
+		}
+	},
+	"Sabalan": {
+		"name": "Sabalan",
+		"translations": {
+			"fa": "سبلان"
+		}
+	},
+	"Shahid Madani": {
+		"name": "Shahid Madani",
+		"translations": {
+			"fa": "شهید مدنی"
+		}
+	},
+	"Imam Hossein": {
+		"name": "Imam Hossein",
+		"translations": {
+			"fa": "امام حسین"
+		}
+	},
+	"Darvazeh Shemiran": {
+		"name": "Darvazeh Shemiran",
+		"translations": {
+			"fa": "دروازه شمیران"
+		}
+	},
+	"Baharistan": {
+		"name": "Baharistan",
+		"translations": {
+			"fa": "بهارستان"
+		}
+	},
+	"Mellat": {
+		"name": "Mellat",
+		"translations": {
+			"fa": "ملت"
+		}
+	},
+	"Hasan Abad": {
+		"name": "Hasan Abad",
+		"translations": {
+			"fa": "حسن آباد"
+		}
+	},
+	"Daneshgah-e Imam Ali": {
+		"name": "Daneshgah-e Imam Ali",
+		"translations": {
+			"fa": "دانشگاه امام علی"
+		}
+	},
+	"Meydan-e Horr": {
+		"name": "Meydan-e Horr",
+		"translations": {
+			"fa": "میدان حر"
+		}
+	},
+	"Shahid Navab-e Safavi": {
+		"name": "Shahid Navab-e Safavi",
+		"translations": {
+			"fa": "شهید نواب صفوی"
+		}
+	},
+	"Shademan": {
+		"name": "Shademan",
+		"translations": {
+			"fa": "شادمان"
+		}
+	},
+	"Daneshgah-e Sharif": {
+		"name": "Daneshgah-e Sharif",
+		"translations": {
+			"fa": "دانشگاه شریف"
+		}
+	},
+	"Tarasht": {
+		"name": "Tarasht",
+		"translations": {
+			"fa": "طرشت"
+		}
+	},
+	"Tehran (Sadeghiyeh)": {
+		"name": "Tehran (Sadeghiyeh)",
+		"translations": {
+			"fa": "تهران (صادقیه)"
+		}
+	},
+	"Qa'em": {
+		"name": "Qa'em",
+		"translations": {
+			"fa": "قائم"
+		}
+	},
+	"Shahid Mahallati": {
+		"name": "Shahid Mahallati",
+		"translations": {
+			"fa": "شهید محلاتی"
+		}
+	},
+	"Aghdasiyeh": {
+		"name": "Aghdasiyeh",
+		"translations": {
+			"fa": "اقدسیه"
+		}
+	},
+	"Nobonyad": {
+		"name": "Nobonyad",
+		"translations": {
+			"fa": "نوبنیاد"
+		}
+	},
+	"Hossein Abad": {
+		"name": "Hossein Abad",
+		"translations": {
+			"fa": "حسین‌آباد"
+		}
+	},
+	"Meydan-e Heravi": {
+		"name": "Meydan-e Heravi",
+		"translations": {
+			"fa": "میدان هروی"
+		}
+	},
+	"Shahid Zeynoddin": {},
+	"Khajeh Abdollah-e Ansari": {
+		"name": "Khajeh Abdollah-e Ansari",
+		"translations": {
+			"fa": "خواجه عبدالله انصاری"
+		}
+	},
+	"Shahid Sayyad Shirazi": {
+		"name": "Shahid Sayyad Shirazi",
+		"translations": {
+			"fa": "شهید صیاد شیرازی"
+		}
+	},
+	"Shahid Ghodousi": {
+		"name": "Shahid Ghodousi",
+		"translations": {
+			"fa": "شهید قدوسی"
+		}
+	},
+	"Sohrevardi": {
+		"name": "Sohrevardi",
+		"translations": {
+			"fa": "سهروردی"
+		}
+	},
+	"Mirza-ye Shirazi": {
+		"name": "Mirza-ye Shirazi",
+		"translations": {
+			"fa": "میرزا شیرازی"
+		}
+	},
+	"Meydan-e Jahad": {
+		"name": "Meydan-e Jahad",
+		"translations": {
+			"fa": "میدان جهاد"
+		}
+	},
+	"Teatr-e Shahr": {
+		"name": "Teatr-e Shahr",
+		"translations": {
+			"fa": "تئاتر شهر"
+		}
+	},
+	"Moniriyeh": {
+		"name": "Moniriyeh",
+		"translations": {
+			"fa": "منیریه"
+		}
+	},
+	"Mahdiyeh": {
+		"name": "Mahdiyeh",
+		"translations": {
+			"fa": "مهدیه"
+		}
+	},
+	"Rahahan": {
+		"name": "Rahahan",
+		"translations": {
+			"fa": "راه آهن"
+		}
+	},
+	"Javadiyeh": {
+		"name": "Javadiyeh",
+		"translations": {
+			"fa": "جوادیه"
+		}
+	},
+	"Zamzam": {
+		"name": "Zamzam",
+		"translations": {
+			"fa": "زمزم"
+		}
+	},
+	"Shahrak-e Shariaty": {
+		"name": "Shahrak-e Shariaty",
+		"translations": {
+			"fa": "شهرک شریعتی"
+		}
+	},
+	"Abdol Abad": {
+		"name": "Abdol Abad",
+		"translations": {
+			"fa": "عبدل آباد",
+			"pic": [
+				"https://commons.wikimedia.org/wiki/File:Abdol-Abad_Metro_Station.jpg#/media/File:Abdol-Abad_Metro_Station.jpg",
+				"https://commons.wikimedia.org/wiki/File:Abdol_Abad_Metro_Station.jpg#/media/File:Abdol_Abad_Metro_Station.jpg"
+			]
+		}
+	},
+	"Nemat Abad": {
+		"name": "Nemat Abad",
+		"translations": {
+			"fa": "نعمت آباد"
+		}
+	},
+	"Azadegan": {
+		"name": "Azadegan",
+		"translations": {
+			"fa": "آزادگان"
+		}
+	},
+	"Shahid Kolahdooz": {
+		"name": "Shahid Kolahdooz",
+		"translations": {
+			"fa": "شهید کلاهدوز"
+		}
+	},
+	"Nirou Havaei": {
+		"name": "Nirou Havaei",
+		"translations": {
+			"fa": "نیروهوایی"
+		}
+	},
+	"Nabard": {
+		"name": "Nabard",
+		"translations": {
+			"fa": "نبرد"
+		}
+	},
+	"Piroozi": {
+		"name": "Piroozi",
+		"translations": {
+			"fa": "پیروزی"
+		}
+	},
+	"Ebn-e Sina": {
+		"name": "Ebn-e Sina",
+		"translations": {
+			"fa": "ابن سینا"
+		}
+	},
+	"Ferdowsi": {
+		"name": "Ferdowsi",
+		"translations": {
+			"fa": "فردوسی"
+		}
+	},
+	"Meydan-e Enghelab-e Eslami": {
+		"name": "Meydan-e Enghelab-e Eslami",
+		"translations": {
+			"fa": "میدان انقلاب اسلامی"
+		}
+	},
+	"Towhid": {
+		"name": "Towhid",
+		"translations": {
+			"fa": "توحید"
+		}
+	},
+	"Doctor Habibollah": {
+		"name": "Doctor Habibollah",
+		"translations": {
+			"fa": "دکتر حبیب‌الله"
+		}
+	},
+	"Ostad Mo'in": {
+		"name": "Ostad Mo'in",
+		"translations": {
+			"fa": "استاد معین"
+		}
+	},
+	"Meydan-e Azadi": {
+		"name": "Meydan-e Azadi",
+		"translations": {
+			"fa": "میدان آزادی"
+		}
+	},
+	"Bimeh": {
+		"name": "Bimeh",
+		"translations": {
+			"fa": "بیمه"
+		}
+	},
+	"Mehrabad Airport Terminal 1&2": {
+		"name": "Mehrabad Airport Terminal 1&2",
+		"translations": {
+			"fa": "پایانه ۱ و ۲ فرودگاه مهرآباد"
+		}
+	},
+	"Mehrabad Airport Terminal 4&6": {
+		"name": "Mehrabad Airport Terminal 4&6",
+		"translations": {
+			"fa": "پایانه ۴ و ۶ فرودگاه مهرآباد"
+		}
+	},
+	"Shahrak-e Ekbatan": {
+		"name": "Shahrak-e Ekbatan",
+		"translations": {
+			"fa": "شهرک اکباتان"
+		}
+	},
+	"Allameh Jafari": {
+		"name": "Allameh Jafari",
+		"translations": {
+			"fa": "علامه جعفری"
+		}
+	},
+	"Chaharbagh": {
+		"name": "Chaharbagh",
+		"translations": {
+			"fa": "چهارباغ"
+		}
+	},
+	"Eram-e Sabz": {
+		"name": "Eram-e Sabz",
+		"translations": {
+			"fa": "ارم سبز"
+		}
+	},
+	"Varzeshgah-e Azadi": {
+		"name": "Varzeshgah-e Azadi",
+		"translations": {
+			"fa": "ورزشگاه آزادی"
+		}
+	},
+	"Chitgar": {
+		"name": "Chitgar",
+		"translations": {
+			"fa": "چیتگر"
+		}
+	},
+	"Iran Khodro": {
+		"name": "Iran Khodro",
+		"translations": {
+			"fa": "ایران‌خودرو"
+		}
+	},
+	"Vardavard": {
+		"name": "Vardavard",
+		"translations": {
+			"fa": "وردآورد"
+		}
+	},
+	"Garmdareh": {
+		"name": "Garmdareh",
+		"translations": {
+			"fa": "گرم‌دره"
+		}
+	},
+	"Atmosphere": {
+		"name": "Atmosphere",
+		"translations": {
+			"fa": "اتمسفر"
+		}
+	},
+	"Karaj": {
+		"name": "Karaj",
+		"translations": {
+			"fa": "کرج"
+		}
+	},
+	"Mohammadshahr": {
+		"name": "Mohammadshahr",
+		"translations": {
+			"fa": "محمدشهر"
+		}
+	},
+	"Golshahr": {
+		"name": "Golshahr",
+		"translations": {
+			"fa": "گلشهر"
+		}
+	},
+	"Shahid Sepahbod Qasem Soleimani": {
+		"name": "Shahid Sepahbod Qasem Soleimani",
+		"translations": {
+			"fa": "شهید سپهبد قاسم سلیمانی"
+		}
+	},
+	"Haram-e Hazrat-e Abdol Azim": {
+		"name": "Haram-e Hazrat-e Abdol Azim",
+		"translations": {
+			"fa": "حرم حضرت عبدالعظیم"
+		}
+	},
+	"Meydan-e Hazrat-e Abdol Azim": {
+		"name": "Meydan-e Hazrat-e Abdol Azim",
+		"translations": {
+			"fa": "میدان حضرت عبدالعظیم"
+		}
+	},
+	"Ebn-e Babviyeh": {
+		"name": "Ebn-e Babviyeh",
+		"translations": {
+			"fa": "ابن بابویه"
+		}
+	},
+	"Cheshmeh Ali": {
+		"name": "Cheshmeh Ali",
+		"translations": {
+			"fa": "چشمه علی"
+		}
+	},
+	"Shohada-ye Dowlat Abad": {
+		"name": "Shohada-ye Dowlat Abad",
+		"translations": {
+			"fa": "شهدای دولت‌آباد"
+		}
+	},
+	"Kiyan Shahr": {
+		"name": "Kiyan Shahr",
+		"translations": {
+			"fa": "کیان شهر"
+		}
+	},
+	"Be'sat": {
+		"name": "Be'sat",
+		"translations": {
+			"fa": "بعثت"
+		}
+	},
+	"Shahid Rezaei": {
+		"name": "Shahid Rezaei",
+		"translations": {
+			"fa": "شهید رضایی"
+		}
+	},
+	"Meydan-e Khorasan": {
+		"name": "Meydan-e Khorasan",
+		"translations": {
+			"fa": "میدان خراسان"
+		}
+	},
+	"Shohada-ye Hefdah-e Shahrivar": {
+		"name": "Shohada-ye Hefdah-e Shahrivar",
+		"translations": {
+			"fa": "شهدای هفده شهریور"
+		}
+	},
+	"Amirkabir": {
+		"name": "Amirkabir",
+		"translations": {
+			"fa": "امیرکبیر"
+		}
+	},
+	"Meydan-e Shohada": {
+		"name": "Meydan-e Shohada",
+		"translations": {
+			"fa": "میدان شهدا"
+		}
+	},
+	"Sarbaz": {
+		"name": "Sarbaz",
+		"translations": {
+			"fa": "سرباز"
+		}
+	},
+	"Bahar Shiraz (Khanevadeh Hospital)": {
+		"name": "Bahar Shiraz (Khanevadeh Hospital)",
+		"translations": {
+			"fa": "بهار شیراز (بیمارستان خانواده)"
+		}
+	},
+	"Shohada-ye Haftom-e Tir": {
+		"name": "Shohada-ye Haftom-e Tir",
+		"translations": {
+			"fa": "شهدای هفتم تیر"
+		}
+	},
+	"Maryam-e Moghaddas": {
+		"name": "Maryam-e Moghaddas",
+		"translations": {
+			"fa": "مریم مقدس (س)"
+		}
+	},
+	"Meydan-e Hazrat Vali Asr": {
+		"name": "Meydan-e Hazrat Vali Asr",
+		"translations": {
+			"fa": "میدان حضرت ولیعصر"
+		}
+	},
+	"Bustan-e Laleh": {
+		"name": "Bustan-e Laleh",
+		"translations": {
+			"fa": "بوستان لاله"
+		}
+	},
+	"Karagar": {
+		"name": "Karagar",
+		"translations": {
+			"fa": "کارگر"
+		}
+	},
+	"Daneshgah-e Tarbiat Modarres": {
+		"name": "Daneshgah-e Tarbiat Modarres",
+		"translations": {
+			"fa": "دانشگاه تربیت مدرس"
+		}
+	},
+	"Shahrak-e Azmayesh": {
+		"name": "Shahrak-e Azmayesh",
+		"translations": {
+			"fa": "شهرک آزمایش"
+		}
+	},
+	"Marzdaran": {
+		"name": "Marzdaran",
+		"translations": {
+			"fa": "مرزداران"
+		}
+	},
+	"Yadegar-e Imam": {
+		"name": "Yadegar-e Imam",
+		"translations": {
+			"fa": "یادگار امام"
+		}
+	},
+	"Shahid Ashrafi Esfahani": {
+		"name": "Shahid Ashrafi Esfahani",
+		"translations": {
+			"fa": "شهید اشرفی اصفهانی",
+			"pic": [
+				"https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_1.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_1.jpg",
+				"https://commons.wikimedia.org/wiki/File:Ashrafi_Esfahani_Metro_Station_2.jpg#/media/File:Ashrafi_Esfahani_Metro_Station_2.jpg"
+			]
+		}
+	},
+	"Shahid Sattari": {
+		"name": "Shahid Sattari",
+		"translations": {
+			"fa": "شهید ستاری"
+		}
+	},
+	"Ayatollah Kashani": {
+		"name": "Ayatollah Kashani",
+		"translations": {
+			"fa": "آیت‌الله کاشانی"
+		}
+	},
+	"Shahr-e Ziba": {
+		"name": "Shahr-e Ziba",
+		"translations": {
+			"fa": "شهر زیبا"
+		}
+	},
+	"Shahran": {
+		"name": "Shahran",
+		"translations": {
+			"fa": "شهران"
+		}
+	},
+	"Shohada-ye Kan": {
+		"name": "Shohada-ye Kan",
+		"translations": {
+			"fa": "شهدای کن"
+		}
+	},
+	"Kouhsar": {
+		"name": "Kouhsar",
+		"translations": {
+			"fa": "کوهسار"
+		}
+	},
+	"Varzeshgah-e Takhti": {
+		"name": "Varzeshgah-e Takhti",
+		"translations": {
+			"fa": "ورزشگاه تختی"
+		}
+	},
+	"Basij": {
+		"name": "Basij",
+		"translations": {
+			"fa": "بسیج"
+		}
+	},
+	"Ahang": {
+		"name": "Ahang",
+		"translations": {
+			"fa": "آهنگ"
+		}
+	},
+	"Chehel Tan-e Doulab": {
+		"name": "Chehel Tan-e Doulab",
+		"translations": {
+			"fa": "چهل تن دولاب"
+		}
+	},
+	"Meydan-e Giyam": {
+		"name": "Meydan-e Giyam",
+		"translations": {
+			"fa": "میدان قیام"
+		}
+	},
+	"Mowlavi": {
+		"name": "Mowlavi",
+		"translations": {
+			"fa": "مولوی"
+		}
+	},
+	"Helal Ahmar": {
+		"name": "Helal Ahmar",
+		"translations": {
+			"fa": "هلال احمر"
+		}
+	},
+	"Beryanak": {
+		"name": "Beryanak",
+		"translations": {
+			"fa": "بریانک"
+		}
+	},
+	"Komeyl": {
+		"name": "Komeyl",
+		"translations": {
+			"fa": "کمیل"
+		}
+	},
+	"Roudaki": {
+		"name": "Roudaki",
+		"translations": {
+			"fa": "رودکی"
+		}
+	},
+	"Modafean-e Salamat": {
+		"name": "Modafean-e Salamat",
+		"translations": {
+			"fa": "مدافعان سلامت"
+		}
+	},
+	"Boostan-e Goftegou": {
+		"name": "Boostan-e Goftegou",
+		"translations": {
+			"fa": "بوستان گفتگو"
+		}
+	},
+	"Milad Tower": {
+		"name": "Milad Tower",
+		"translations": {
+			"fa": "برج میلاد"
+		}
+	},
+	"Meydan-e San'at": {
+		"name": "Meydan-e San'at",
+		"translations": {
+			"fa": "میدان صنعت"
+		}
+	},
+	"Shahid Dadman": {
+		"name": "Shahid Dadman",
+		"translations": {
+			"fa": "شهید دادمان"
+		}
+	},
+	"Meydan-e Ketab": {
+		"name": "Meydan-e Ketab",
+		"translations": {
+			"fa": "میدان کتاب"
+		}
+	}
+}

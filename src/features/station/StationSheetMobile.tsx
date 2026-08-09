@@ -11,6 +11,8 @@ import { LineBadge } from "@/components/shared/LineBadge";
 import type { AmenityKey } from "@/types/metro";
 import { cn } from "@/lib/utils";
 import { AmenityIcon } from "./AmenityIcon";
+import { StationImageHeader } from "./StationImage";
+import { stationImagesService } from "@/services/station-images.service";
 
 export function StationSheetMobile() {
   const {
@@ -74,6 +76,14 @@ export function StationSheetMobile() {
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1 sticky top-0 bg-card/80 backdrop-blur-2xl z-10">
               <div className="h-1 w-12 rounded-full bg-white/20" />
+            </div>
+
+            {/* Station Image */}
+            <div className="px-5 pt-4 pb-3">
+              <StationImageHeader 
+                station={selectedStation} 
+                stationImage={stationImagesService.getImageForStation(selectedStation)}
+              />
             </div>
 
             {/* Header */}

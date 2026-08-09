@@ -441,12 +441,138 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const mapRef = useRef<any>(null);
   const [ready, setReady] = useState(false);
-  const { openStationSheet, currentRoute } = useMetroStore();
+  const { openStationSheet, currentRoute, selectedStationCoordinates, isStationSheetOpen } = useMetroStore();
 
   const stations = MetroDataService.getAllStations().filter(
     (s) => !s.isDisabled && s.coordinates.lat !== 0 && s.coordinates.lng !== 0
   );
 
+  // Selected station target effect — desktop only
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    
+    // Remove existing target layers
+    ["station-target-outer", "station-target-inner", "station-target-center"].forEach((id) => {
+      if (map.getLayer(id)) map.removeLayer(id);
+      if (map.getSource(id)) map.removeSource(id);
+    });
+    
+    if (!selectedStationCoordinates || !isStationSheetOpen || window.innerWidth < 768) return;
+    
+    const { lng, lat } = selectedStationCoordinates;
+    
+    // Add target effect layers
+    map.addSource("station-target", {
+      type: "geojson",
+      data: {
+        type: "FeatureCollection",
+        features: [{
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [lng, lat] },
+          properties: {}
+        }]
+      }
+    });
+    
+    // Outer pulsating circle
+    map.addLayer({
+      id: "station-target-outer",
+      type: "circle",
+      source: "station-target",
+      paint: {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 15,
+          15, 25,
+          18, 40
+        ],
+        "circle-color": "#ffffff",
+        "circle-opacity": 0.3,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-opacity": 0.5,
+        "circle-translate": [0, 0]
+      }
+    });
+    
+    // Middle circle
+    map.addLayer({
+      id: "station-target-inner",
+      type: "circle",
+      source: "station-target",
+      paint: {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 8,
+          15, 15,
+          18, 25
+        ],
+        "circle-color": "#ffffff",
+        "circle-opacity": 0.6,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-opacity": 0.8
+      }
+    });
+    
+    // Center dot
+    map.addLayer({
+      id: "station-target-center",
+      type: "circle",
+      source: "station-target",
+      paint: {
+        "circle-radius": [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 3,
+          15, 5,
+          18, 8
+        ],
+        "circle-color": "#ffffff",
+        "circle-opacity": 1,
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#10b981"
+      }
+    });
+    
+    // Add pulsing animation
+    let animationId: number;
+    let time = 0;
+    
+    const animate = () => {
+      time += 0.05;
+      const pulse = 0.5 + 0.3 * Math.sin(time);
+      
+      map.setPaintProperty("station-target-outer", "circle-opacity", 0.2 * pulse);
+      map.setPaintProperty("station-target-outer", "circle-radius", [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        10, 12 + 3 * pulse,
+        15, 20 + 5 * pulse,
+        18, 35 + 5 * pulse
+      ]);
+      
+      animationId = requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      if (animationId) cancelAnimationFrame(animationId);
+      ["station-target-outer", "station-target-inner", "station-target-center"].forEach((id) => {
+        if (map.getLayer(id)) map.removeLayer(id);
+        if (map.getSource(id)) map.removeSource(id);
+      });
+    };
+  }, [selectedStationCoordinates, isStationSheetOpen, ready]);
+  
   // Route overlay — desktop only
   useEffect(() => {
     const map = mapRef.current;
@@ -560,9 +686,27 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
     map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 13,
       layout: { "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": ["interpolate", ["linear"], ["zoom"], 13, 10, 16, 13], "text-offset": [0, 1.2], "text-anchor": "top", "text-allow-overlap": false },
       paint: { "text-color": "#fff", "text-halo-color": "rgba(0,0,0,0.85)", "text-halo-width": 1.5 } });
-    map.on("click", "stations-circle", (e: { features?: Array<{ properties?: { id?: string } }> }) => {
+    map.on("click", "stations-circle", (e: any) => {
       const id = e.features?.[0]?.properties?.id;
-      if (id) { const s = MetroDataService.getStation(id); if (s) openStationSheet(s); }
+      if (id) { 
+        const s = MetroDataService.getStation(id); 
+        if (s) {
+          openStationSheet(s);
+          
+          // Zoom to the station with smooth animation
+          const coordinates = e.lngLat;
+          const currentZoom = map.getZoom();
+          const targetZoom = Math.max(15, currentZoom + 2);
+          
+          map.flyTo({
+            center: [coordinates.lng, coordinates.lat],
+            zoom: targetZoom,
+            duration: 800,
+            essential: true,
+            curve: 1.2
+          });
+        }
+      }
     });
     map.on("mouseenter", "stations-circle", () => { map.getCanvas().style.cursor = "pointer"; });
     map.on("mouseleave", "stations-circle", () => { map.getCanvas().style.cursor = ""; });
