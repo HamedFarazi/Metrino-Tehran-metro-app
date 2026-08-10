@@ -15,8 +15,13 @@ import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { useIsDesktop, useMediaQuery } from "@/hooks/useMediaQuery";
 import { LINE_COLORS } from "@/types/metro";
 import { cn, formatDuration } from "@/lib/utils";
+
+/** Desktop route sidebar = `md` + w-80; station sidebar = `lg` + ~356px */
+const ROUTE_SIDEBAR_OFFSET_PX = 336;
+const STATION_SIDEBAR_OFFSET_PX = 380;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mgl = () => (window as any).maplibregl as typeof import("maplibre-gl");
@@ -44,14 +49,24 @@ function MapTopBar() {
     setCurrentRoute, addRecentRoute,
     currentRoute, clearRoute,
     userLocation, setOrigin,
-    isStationSheetOpen: sidebarOpen,
+    isStationSheetOpen,
   } = useMetroStore();
   const { request: requestLocation, loading: locLoading } = useGeolocation();
+  const isMdUp = useMediaQuery("(min-width: 768px)"); // RouteSheet desktop sidebar
+  const isLgUp = useIsDesktop(); // Station DesktopSidebar
 
   const [routeMode, setRouteMode] = useState(false);
   const canRoute = !!originStation && !!destinationStation;
   // Track previous userLocation to detect when it's freshly set
   const prevLocationRef = useRef(userLocation);
+
+  // Push top controls left when a desktop right sidebar is open
+  const topBarOffsetPx =
+    isLgUp && isStationSheetOpen
+      ? STATION_SIDEBAR_OFFSET_PX
+      : isMdUp && !!currentRoute
+        ? ROUTE_SIDEBAR_OFFSET_PX
+        : 0;
 
   // When userLocation changes (after requestLocation resolves), find nearest station
   useEffect(() => {
@@ -78,10 +93,10 @@ function MapTopBar() {
 
   return (
     <div className="absolute top-0 inset-x-0 z-20 px-3 pt-3 pointer-events-none">
-      {/* On desktop, shrink available width when sidebar is open to avoid overlap */}
+      {/* On desktop, shift away from route/station sidebars so controls stay visible */}
       <div
         className="pointer-events-auto flex-1 max-w-sm transition-[margin] duration-300 ease-in-out"
-        style={{ marginRight: sidebarOpen ? "380px" : undefined }}
+        style={{ marginRight: topBarOffsetPx ? topBarOffsetPx : undefined }}
       >
         {!routeMode ? (
           <div className="flex gap-2">
