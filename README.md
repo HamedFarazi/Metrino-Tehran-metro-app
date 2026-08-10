@@ -22,16 +22,16 @@
 
 ## 📱 Screenshots
 
-| Home (light) | Home (dark) | Static metro map |
-|:---:|:---:|:---:|
+|                                                       Home (light)                                                       |                                                              Home (dark)                                                              |                                                         Static metro map                                                          |
+| :----------------------------------------------------------------------------------------------------------------------: | :-----------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------: |
 | ![Tehran Metro home screen with route planner](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_34_15.png) | ![Tehran Metro home screen in dark mode with network stats](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_35_18.png) | ![Offline Tehran Metro schematic map with pan and zoom](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_36_09.png) |
 
-| Interactive map (Fiord) | Interactive map (Liberty) | Route on map |
-|:---:|:---:|:---:|
+|                                                     Interactive map (Fiord)                                                     |                                                     Interactive map (Liberty)                                                      |                                                              Route on map                                                               |
+| :-----------------------------------------------------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------------------: |
 | ![Tehran Metro map with OpenFreeMap Fiord dark style](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_37_02.png) | ![Tehran Metro map with OpenFreeMap Liberty light style](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_37_21.png) | ![Route highlighted on Tehran Metro map with details sidebar](./public/readmePics/screencapture-localhost-5173-2026-08-09-12_38_55.png) |
 
-| Dark mode home (mobile) | Map layer switcher |
-|:---:|:---:|
+|                                          Dark mode home (mobile)                                          |                                                      Map layer switcher                                                       |
+| :-------------------------------------------------------------------------------------------------------: | :---------------------------------------------------------------------------------------------------------------------------: |
 | ![Tehran Metro mobile home screen in dark mode](./public/readmePics/Screenshot%202026-08-09%20123542.png) | ![Map layer menu showing Metro, OpenFreeMap, and Satellite options](./public/readmePics/Screenshot%202026-08-09%20123634.png) |
 
 ---
@@ -69,14 +69,14 @@
 
 **Tehran Metro** is a public-transportation web application for exploring the **Tehran Subway** network. It helps riders search stations, plan trips between origin and destination, inspect transfers, and view the network on a static metro schematic or an interactive geographic map.
 
-| | |
-|---|---|
-| **Category** | Public transportation / metro navigation / route planning |
-| **Platform** | Web application (installable PWA) |
-| **Primary location** | Tehran, Iran |
-| **UI language** | Persian (Farsi), RTL |
-| **Core purpose** | Tehran Metro map + route planner |
-| **Stack** | React + TypeScript + Vite |
+|                      |                                                           |
+| -------------------- | --------------------------------------------------------- |
+| **Category**         | Public transportation / metro navigation / route planning |
+| **Platform**         | Web application (installable PWA)                         |
+| **Primary location** | Tehran, Iran                                              |
+| **UI language**      | Persian (Farsi), RTL                                      |
+| **Core purpose**     | Tehran Metro map + route planner                          |
+| **Stack**            | React + TypeScript + Vite                                 |
 
 **🇮🇷 فارسی**
 
@@ -87,6 +87,7 @@
 ## ✨ Features
 
 ### 🚇 Metro Map
+
 - Static **Tehran Metro lines map** (`metromap.jpg`) with zoom/pan (works without live tiles)
 - Interactive geographic map with MapLibre GL
 - Layer switcher: Metro schematic, OpenFreeMap Fiord/Liberty, MapTiler Satellite
@@ -94,6 +95,7 @@
 - Route polyline overlay on the map (desktop)
 
 ### 🧭 Route Planning
+
 - Choose **origin** and **destination** stations
 - Shortest path by fewest station hops (BFS)
 - Route summary: estimated travel time, distance, station count, transfer count
@@ -103,27 +105,32 @@
 - Recent routes saved locally (up to 10)
 
 ### 🚉 Stations
+
 - **150** stations in the dataset (**135** active)
 - Coordinates, addresses, line membership, and amenities
 - Station detail sheets (mobile + desktop layouts)
 - Optional station photos when available (local WebP assets)
 
 ### 🔎 Search
+
 - Fast station search by Persian and English names
 - Dedicated search panel for origin, destination, or browse mode
 
 ### ⭐ Favorites & Personalization
+
 - Favorite stations persisted in local storage
 - Favorites page for quick access
 - Themes: light, dark, system, and **دریا (Darya)**
 - Geolocation → nearest stations (“موقعیت من”)
 
 ### 📱 Responsive UI
+
 - Mobile-first layout with bottom navigation
 - Desktop floating dock
 - Bottom sheets / side panels adapted by viewport
 
 ### 📲 PWA
+
 - Web app manifest (Persian, RTL)
 - Service worker via `vite-plugin-pwa`
 - Install prompt support (where the browser allows it)
@@ -134,15 +141,15 @@
 
 This app provides **limited offline support**, not a fully offline product.
 
-| Capability | Offline | Online |
-|---|:---:|:---:|
-| App shell (JS/CSS/HTML) after first visit | ✅ (PWA cache) | ✅ |
-| Bundled metro JSON (stations, lines, connections) | ✅ | ✅ |
-| Route calculation (local graph) | ✅ | ✅ |
-| Static metro schematic map | ✅ | ✅ |
-| OpenFreeMap / MapTiler tiles & satellite | ❌ (needs network; tiles may fall back from cache) | ✅ |
-| Tehran weather (Open-Meteo) | ❌ | ✅ |
-| Connectivity status UI (`navigator.onLine`) | — | Not implemented |
+| Capability                                        |                      Offline                       |     Online      |
+| ------------------------------------------------- | :------------------------------------------------: | :-------------: |
+| App shell (JS/CSS/HTML) after first visit         |                   ✅ (PWA cache)                   |       ✅        |
+| Bundled metro JSON (stations, lines, connections) |                         ✅                         |       ✅        |
+| Route calculation (local graph)                   |                         ✅                         |       ✅        |
+| Static metro schematic map                        |                         ✅                         |       ✅        |
+| OpenFreeMap / MapTiler tiles & satellite          | ❌ (needs network; tiles may fall back from cache) |       ✅        |
+| Tehran weather (Open-Meteo)                       |                         ❌                         |       ✅        |
+| Connectivity status UI (`navigator.onLine`)       |                         —                          | Not implemented |
 
 **Note:** In the UI, “آفلاین / Offline” refers to the **static metro map layer mode**, not automatic network detection.
 
@@ -154,12 +161,12 @@ Pathfinding uses **Breadth-First Search (BFS)** over an unweighted station graph
 
 ### Graph model
 
-| Concept | Implementation |
-|---|---|
-| **Nodes** | Station IDs |
-| **Edges** | Bidirectional links from `connectedStationIds` / connections |
-| **Edge weights** | None in BFS (hop count) |
-| **Transfers** | Detected when consecutive hops change metro lines |
+| Concept           | Implementation                                                          |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Nodes**         | Station IDs                                                             |
+| **Edges**         | Bidirectional links from `connectedStationIds` / connections            |
+| **Edge weights**  | None in BFS (hop count)                                                 |
+| **Transfers**     | Detected when consecutive hops change metro lines                       |
 | **Time estimate** | Haversine distance @ ~40 km/h + ~30s dwell/station + 3 min per transfer |
 
 Travel times are **estimates**, not official Tehran Metro schedules.
@@ -209,21 +216,21 @@ src/
 
 ## 🛠️ Tech Stack
 
-| Technology | Purpose |
-|---|---|
-| **React 19** | UI library |
-| **TypeScript** | Type safety |
-| **Vite 8** | Dev server & production build |
-| **React Compiler** | Compile-time optimization (Babel preset) |
-| **Tailwind CSS 4** | Styling |
-| **shadcn/ui + Radix** | Accessible UI primitives |
-| **Zustand** | Client state + persistence |
-| **Framer Motion** | Page/sheet animations |
-| **MapLibre GL** | Interactive geographic map |
-| **react-zoom-pan-pinch** | Static metro map gestures |
-| **Lucide React / Tabler Icons** | Icons |
-| **vite-plugin-pwa** | Progressive Web App |
-| **Vercel** | Deployment config (`vercel.json`) |
+| Technology                      | Purpose                                  |
+| ------------------------------- | ---------------------------------------- |
+| **React 19**                    | UI library                               |
+| **TypeScript**                  | Type safety                              |
+| **Vite 8**                      | Dev server & production build            |
+| **React Compiler**              | Compile-time optimization (Babel preset) |
+| **Tailwind CSS 4**              | Styling                                  |
+| **shadcn/ui + Radix**           | Accessible UI primitives                 |
+| **Zustand**                     | Client state + persistence               |
+| **Framer Motion**               | Page/sheet animations                    |
+| **MapLibre GL**                 | Interactive geographic map               |
+| **react-zoom-pan-pinch**        | Static metro map gestures                |
+| **Lucide React / Tabler Icons** | Icons                                    |
+| **vite-plugin-pwa**             | Progressive Web App                      |
+| **Vercel**                      | Deployment config (`vercel.json`)        |
 
 ---
 
@@ -231,13 +238,13 @@ src/
 
 Processed Tehran Metro dataset lives in `src/data/processed/`:
 
-| Metric | Value |
-|---|---|
-| Stations | **150** total (**135** active) |
-| Lines | **7** (Lines 1–7) |
-| Connections | **160** |
-| Interchanges | **18** |
-| Terminals | **16** |
+| Metric       | Value                          |
+| ------------ | ------------------------------ |
+| Stations     | **150** total (**135** active) |
+| Lines        | **7** (Lines 1–7)              |
+| Connections  | **160**                        |
+| Interchanges | **18**                         |
+| Terminals    | **16**                         |
 
 **Station fields include:** id, English/Persian names, lines, coordinates, address, amenities, disabled flag, and connected station IDs.
 
@@ -251,15 +258,15 @@ Station photos are optional local WebP files under `public/stations/` (currently
 
 ## 🙏 Data Attribution
 
-| Asset | Source / notes |
-|---|---|
-| **Application code** | © Hamed Farazi — this repository |
-| **Metro network data** | Derived from [mostafa-kheibary/tehran-metro-data](https://github.com/mostafa-kheibary/tehran-metro-data) (vendored under `githubfile/`) |
-| **Upstream data license** | ODbL — see `githubfile/LICENSE.md` |
-| **Map tiles / styles** | [OpenFreeMap](https://openfreemap.org/) styles; satellite via [MapTiler](https://www.maptiler.com/) |
-| **Map data** | © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (via OpenFreeMap / OpenMapTiles) |
-| **Station images** | Wikimedia Commons (where present); respect individual file licenses |
-| **Weather** | [Open-Meteo](https://open-meteo.com/) |
+| Asset                     | Source / notes                                                                                                                          |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| **Application code**      | © Hamed Farazi — this repository                                                                                                        |
+| **Metro network data**    | Derived from [mostafa-kheibary/tehran-metro-data](https://github.com/mostafa-kheibary/tehran-metro-data) (vendored under `githubfile/`) |
+| **Upstream data license** | ODbL — see `githubfile/LICENSE.md`                                                                                                      |
+| **Map tiles / styles**    | [OpenFreeMap](https://openfreemap.org/) styles; satellite via [MapTiler](https://www.maptiler.com/)                                     |
+| **Map data**              | © [OpenStreetMap](https://www.openstreetmap.org/copyright) contributors (via OpenFreeMap / OpenMapTiles)                                |
+| **Station images**        | Wikimedia Commons (where present); respect individual file licenses                                                                     |
+| **Weather**               | [Open-Meteo](https://open-meteo.com/)                                                                                                   |
 
 ---
 
@@ -342,12 +349,12 @@ Other package managers also work (`npm install` / `yarn`), but pnpm is preferred
 
 ### Scripts
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Development server (Vite) |
-| `pnpm build` | Typecheck + production build |
+| Command        | Description                  |
+| -------------- | ---------------------------- |
+| `pnpm dev`     | Development server (Vite)    |
+| `pnpm build`   | Typecheck + production build |
 | `pnpm preview` | Preview the production build |
-| `pnpm lint` | ESLint |
+| `pnpm lint`    | ESLint                       |
 
 Optional data/image tooling: `migrate-data`, `images:fetch`, `images:local` (see `package.json` and `WIKIMEDIA_IMAGES_README.md`).
 
@@ -357,12 +364,12 @@ Optional data/image tooling: `migrate-data`, `images:fetch`, `images:local` (see
 
 Create a `.env` in the project root if you need online map extras:
 
-| Variable | Required | Description |
-|---|---|---|
-| `VITE_MAPTILER_KEY` | For satellite / MapTiler fonts | MapTiler API key |
-| `VITE_MAP_LAYER_DEFAULT_URL` | Optional | Default map style URL override |
-| `VITE_MAP_LAYER_DEFAULT_TYPE` | Optional | Default layer type |
-| `VITE_MAP_LAYER_DEFAULT_NAME` | Optional | Default layer label |
+| Variable                      | Required                       | Description                    |
+| ----------------------------- | ------------------------------ | ------------------------------ |
+| `VITE_MAPTILER_KEY`           | For satellite / MapTiler fonts | MapTiler API key               |
+| `VITE_MAP_LAYER_DEFAULT_URL`  | Optional                       | Default map style URL override |
+| `VITE_MAP_LAYER_DEFAULT_TYPE` | Optional                       | Default layer type             |
+| `VITE_MAP_LAYER_DEFAULT_NAME` | Optional                       | Default layer label            |
 
 Core route planning and the static metro map work without these keys. **Do not commit secrets.**
 
@@ -371,6 +378,7 @@ Core route planning and the static metro map work without these keys. **Do not c
 ## 🗺️ Roadmap
 
 ### ✅ Completed
+
 - Persian RTL home / map / favorites experience
 - BFS route planner with transfers, time & distance estimates
 - Station search (FA/EN)
@@ -382,10 +390,12 @@ Core route planning and the static metro map work without these keys. **Do not c
 - Processed 7-line Tehran Metro dataset
 
 ### 🚧 In Progress
+
 - Broader station image coverage
 - Polishing map UX across mobile/desktop
 
 ### 🗺️ Planned
+
 - Weighted routing (travel-time / transfer-aware Dijkstra or A*)
 - Richer connectivity indicators (true online/offline status)
 - Walking directions to the nearest station
@@ -411,6 +421,7 @@ Contributions are welcome.
 10. Open a Pull Request against `main`
 
 **Conventions**
+
 - TypeScript for application code
 - Match existing feature-folder structure and UI patterns
 - Keep the UI Persian/RTL-friendly (Vazirmatn)
