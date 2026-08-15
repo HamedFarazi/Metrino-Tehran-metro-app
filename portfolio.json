@@ -4,5 +4,7 @@
   "category": "Frontend",
   "featured": true,
   "demo": "https://metrino.vercel.app",
-  "image": "readmePics/tehran-metro-linkedin-promo-02-routing.png"
+  "image": "readmePics/tehran-metro-linkedin-promo-02-routing.png",
+  "description": "اپ فارسی متروی تهران؛ جستجوی ایستگاه، نقشه‌ی تعاملی و مسیریابی هوشمند کوتاه‌ترین مسیر.",
+  "technologies": ["React", "TypeScript", "Tailwind CSS"]
 }
