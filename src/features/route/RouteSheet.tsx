@@ -94,11 +94,16 @@ export function RouteSheet() {
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 380 }}
-            className="md:hidden fixed bottom-0 inset-x-0 z-[35] max-h-[72vh] overflow-y-auto rounded-t-3xl bg-black/60 backdrop-blur-2xl border-t border-white/8 shadow-[0_-20px_60px_rgba(0,0,0,0.6)]"
+            className="md:hidden fixed bottom-0 inset-x-0 z-[35] max-h-[72vh] overflow-y-auto rounded-t-3xl backdrop-blur-2xl shadow-[0_-20px_60px_rgba(0,0,0,0.6)]"
+            style={{
+              background: "rgba(0, 0, 0, 0.60)",
+              borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+              color: "#F8FAFF",
+            }}
           >
             {/* Handle */}
             <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-12 rounded-full bg-white/20" />
+              <div className="h-1 w-12 rounded-full" style={{ background: "rgba(255, 255, 255, 0.20)" }} />
             </div>
             <RouteHeader route={currentRoute} onClose={clearRoute} />
             <RouteTimeline route={currentRoute} />
@@ -112,7 +117,13 @@ export function RouteSheet() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 340 }}
-            className="hidden md:flex fixed right-0 top-0 bottom-0 z-[35] w-80 flex-col bg-black/55 backdrop-blur-2xl border-l border-white/8 shadow-[-20px_0_60px_rgba(0,0,0,0.5)]"
+            className="hidden md:flex fixed right-0 top-0 bottom-0 z-[35] w-80 flex-col backdrop-blur-2xl"
+            style={{
+              background: "rgba(0, 0, 0, 0.55)",
+              borderLeft: "1px solid rgba(255, 255, 255, 0.08)",
+              boxShadow: "-20px 0 60px rgba(0,0,0,0.5)",
+              color: "#F8FAFF",
+            }}
           >
             {/* Header */}
             <div className="flex-shrink-0">
@@ -146,16 +157,19 @@ function RouteHeader({
     <div
       className={cn(
         "flex items-start justify-between px-5 py-4",
-        sidebar && "border-b border-white/8 pt-16"
+        sidebar && "pt-16"
       )}
+      style={{
+        borderBottom: sidebar ? "1px solid rgba(255, 255, 255, 0.08)" : undefined,
+      }}
       dir="rtl"
     >
       <div className="flex-1 min-w-0">
         {/* Origin → Destination */}
-        <div className="flex items-center gap-2 text-sm text-foreground/60 mb-3 flex-wrap">
-          <span className="text-foreground font-semibold truncate">{route.origin.nameFa}</span>
-          <ArrowLeftRight className="h-3.5 w-3.5 shrink-0 rotate-90 text-foreground/30" />
-          <span className="text-foreground font-semibold truncate">{route.destination.nameFa}</span>
+        <div className="flex items-center gap-2 text-sm mb-3 flex-wrap" style={{ color: "rgba(248, 250, 255, 0.6)" }}>
+          <span className="font-semibold truncate" style={{ color: "#F8FAFF" }}>{route.origin.nameFa}</span>
+          <ArrowLeftRight className="h-3.5 w-3.5 shrink-0 rotate-90" style={{ color: "rgba(248, 250, 255, 0.3)" }} />
+          <span className="font-semibold truncate" style={{ color: "#F8FAFF" }}>{route.destination.nameFa}</span>
         </div>
 
         {/* Stats */}
@@ -171,7 +185,19 @@ function RouteHeader({
 
       <button
         onClick={onClose}
-        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/8 text-foreground/40 hover:text-foreground hover:bg-white/15 transition-all mr-3 mt-1"
+        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full transition-all mr-3 mt-1"
+        style={{
+          background: "rgba(255, 255, 255, 0.08)",
+          color: "rgba(248, 250, 255, 0.4)",
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.15)";
+          e.currentTarget.style.color = "#F8FAFF";
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
+          e.currentTarget.style.color = "rgba(248, 250, 255, 0.4)";
+        }}
       >
         <X className="h-4 w-4" />
       </button>
@@ -180,9 +206,15 @@ function RouteHeader({
 }
 
 function Chip({ icon, value, color }: { icon: React.ReactNode; value: string; color: "emerald" | "cyan" | "amber" | "default" }) {
-  const c = { emerald: "text-emerald-400", cyan: "text-cyan-400", amber: "text-amber-400", default: "text-foreground/50" }[color];
+  const colorMap = {
+    emerald: "#14E6B5",
+    cyan: "#22D3EE",
+    amber: "#FBBF24",
+    default: "rgba(248, 250, 255, 0.5)",
+  };
+  
   return (
-    <div className={cn("flex items-center gap-1", c)}>
+    <div className="flex items-center gap-1" style={{ color: colorMap[color] }}>
       {icon}
       <span className="text-xs font-medium">{value}</span>
     </div>
@@ -263,7 +295,7 @@ function TimelineItem({
         />
         {showConnector && (
           transfer
-            ? <div className="flex-1 w-0.5 mt-1 border-l-2 border-dashed border-white/15" />
+            ? <div className="flex-1 w-0.5 mt-1 border-l-2 border-dashed" style={{ borderColor: "rgba(255, 255, 255, 0.15)" }} />
             : <div className="flex-1 w-0.5 mt-1" style={{ backgroundColor: `${lineColor}50` }} />
         )}
       </div>
@@ -271,11 +303,13 @@ function TimelineItem({
       {/* Content */}
       <div className="flex-1 pb-3">
         <div className="flex items-center justify-between py-2">
-          <span className={cn(
-            "text-sm leading-tight",
-            isFirst || isLast ? "font-semibold text-foreground" :
-            isTransfer ? "font-medium text-amber-300" : "text-foreground/70"
-          )}>
+          <span
+            className="text-sm leading-tight"
+            style={{
+              fontWeight: isFirst || isLast ? 600 : isTransfer ? 500 : 400,
+              color: isFirst || isLast ? "#F8FAFF" : isTransfer ? "#FCD34D" : "rgba(248, 250, 255, 0.7)",
+            }}
+          >
             {station.nameFa}
           </span>
           <div className="flex items-center gap-1 shrink-0 mr-2">
@@ -285,12 +319,18 @@ function TimelineItem({
 
         {/* Transfer badge with direction */}
         {transfer && (
-          <div className="mb-2 flex items-center gap-2 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5">
-            <ArrowLeftRight className="h-3 w-3 text-amber-400 shrink-0" />
-            <span className="text-xs text-amber-400 flex-1">
+          <div
+            className="mb-2 flex items-center gap-2 rounded-lg px-2.5 py-1.5"
+            style={{
+              background: "rgba(245, 158, 11, 0.10)",
+              border: "1px solid rgba(245, 158, 11, 0.20)",
+            }}
+          >
+            <ArrowLeftRight className="h-3 w-3 shrink-0" style={{ color: "#FBBF24" }} />
+            <span className="text-xs flex-1" style={{ color: "#FBBF24" }}>
               {getTransferLabel(station.id, transfer.toLineId, stationSequence)}
             </span>
-            <span className="text-xs text-foreground/30 whitespace-nowrap">~۳ دقیقه</span>
+            <span className="text-xs whitespace-nowrap" style={{ color: "rgba(248, 250, 255, 0.3)" }}>~۳ دقیقه</span>
           </div>
         )}
       </div>

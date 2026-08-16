@@ -206,9 +206,9 @@ function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataServi
         </motion.div>
 
         <motion.div variants={fadeUp} custom={2} className="flex items-center gap-4 mt-4">
-          <StatPill value={stats.totalStations} label="ایستگاه" icon="📍" color="#22D3EE" isLight={isLight} />
-          <StatPill value={stats.totalLines} label="خط" icon="🚇" color="#8B5CF6" isLight={isLight} />
-          <StatPill value={stats.interchangeCount} label="تبادل" icon="🔄" color="#14E6B5" isLight={isLight} />
+          <StatPill value={stats.totalStations} label="ایستگاه" icon={<MapPin className="h-3.5 w-3.5" />} color="#22D3EE" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#8B5CF6" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#14E6B5" isLight={isLight} />
         </motion.div>
       </motion.div>
     </div>
@@ -268,23 +268,6 @@ function DesktopStatCard({
         {count}
       </p>
       <p className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{label}</p>
-
-      <div className="mt-4 h-8 flex items-end gap-0.5">
-        {[...Array(12)].map((_, i) => {
-          const height = 20 + ((i * 37) % 80);
-          return (
-            <div
-              key={i}
-              className="flex-1 rounded-t-sm"
-              style={{
-                height: `${height}%`,
-                background: `${accent}30`,
-                minHeight: "4px",
-              }}
-            />
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -376,9 +359,9 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
         </motion.div>
 
         <motion.div variants={fadeUp} custom={2} className="flex justify-center gap-2 sm:gap-3 mt-5 sm:mt-6 flex-wrap px-2">
-          <StatPill value={stats.totalStations} label="ایستگاه" icon="📍" color="#22D3EE" isLight={isLight} />
-          <StatPill value={stats.totalLines} label="خط" icon="🚇" color="#8B5CF6" isLight={isLight} />
-          <StatPill value={stats.interchangeCount} label="تبادل" icon="🔄" color="#14E6B5" isLight={isLight} />
+          <StatPill value={stats.totalStations} label="ایستگاه" icon={<MapPin className="h-3.5 w-3.5" />} color="#22D3EE" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#8B5CF6" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#14E6B5" isLight={isLight} />
         </motion.div>
       </motion.div>
     </div>
@@ -394,7 +377,7 @@ function StatPill({
 }: {
   value: number;
   label: string;
-  icon: string;
+  icon: React.ReactNode;
   color: string;
   isLight?: boolean;
 }) {
@@ -416,7 +399,7 @@ function StatPill({
             }
       }
     >
-      <span className="text-xs sm:text-sm">{icon}</span>
+      <span style={{ color }}>{icon}</span>
       <span
         className="text-sm sm:text-base font-bold tabular-nums"
         style={{ color: isLight ? "#11152B" : "#F8FAFF" }}
