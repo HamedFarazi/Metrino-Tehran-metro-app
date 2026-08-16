@@ -1,8 +1,9 @@
 /**
  * MetroRouteService — Calculates routes between stations.
  * Uses BFS for shortest path, then constructs full Route object.
+ * Now supports multiple alternative routes with scoring.
  */
-import type { Route, RouteSegment, RouteTransfer, Station } from "@/types/metro";
+import type { Route, RouteSegment, RouteTransfer, Station, RouteOption } from "@/types/metro";
 import { MetroDataService } from "./metro-data.service";
 
 const TRANSFER_PENALTY_MIN = 3;  // minutes per transfer
@@ -12,44 +13,135 @@ const AVG_SPEED_KMH = 40;        // average train speed
 class MetroRouteServiceClass {
   /**
    * Calculate the best route between two stations.
+   * (Legacy method - returns single route for backward compatibility)
    */
   calculate(originId: string, destinationId: string): Route | null {
+    const routes = this.calculateMultiple(originId, destinationId);
+    return routes.length > 0 ? routes[0].route : null;
+  }
+
+  /**
+   * Calculate multiple alternative routes between two stations.
+   * Returns array of RouteOption sorted by quality.
+   */
+  calculateMultiple(originId: string, destinationId: string, maxRoutes = 5): RouteOption[] {
     const origin = MetroDataService.getStation(originId);
     const destination = MetroDataService.getStation(destinationId);
 
-    if (!origin || !destination) return null;
-    if (originId === destinationId) return null;
+    if (!origin || !destination) return [];
+    if (originId === destinationId) return [];
 
-    const path = MetroDataService.findPath(originId, destinationId);
-    if (!path || path.length === 0) return null;
+    // Find multiple paths using K-shortest paths
+    const paths = MetroDataService.findMultiplePaths(originId, destinationId, maxRoutes);
+    if (paths.length === 0) return [];
 
-    const stationSequence = path
-      .map((id) => MetroDataService.getStation(id))
-      .filter((s): s is Station => s !== undefined);
+    // Build Route objects for each path
+    const routes: Route[] = [];
+    for (const path of paths) {
+      const stationSequence = path
+        .map((id) => MetroDataService.getStation(id))
+        .filter((s): s is Station => s !== undefined);
 
-    if (stationSequence.length < 2) return null;
+      if (stationSequence.length < 2) continue;
 
-    const { segments, transfers } = this._buildSegmentsAndTransfers(stationSequence);
+      const { segments, transfers } = this._buildSegmentsAndTransfers(stationSequence);
 
-    const totalStations = stationSequence.length;
-    const totalDistanceKm = this._calculateTotalDistance(stationSequence);
-    const travelTimeMin = Math.ceil((totalDistanceKm / AVG_SPEED_KMH) * 60);
-    const dwellTimeMin = Math.ceil((totalStations * STATION_DWELL_SEC) / 60);
-    const transferTimeMin = transfers.length * TRANSFER_PENALTY_MIN;
-    const totalTimeMin = travelTimeMin + dwellTimeMin + transferTimeMin;
+      const totalStations = stationSequence.length;
+      const totalDistanceKm = this._calculateTotalDistance(stationSequence);
+      const travelTimeMin = Math.ceil((totalDistanceKm / AVG_SPEED_KMH) * 60);
+      const dwellTimeMin = Math.ceil((totalStations * STATION_DWELL_SEC) / 60);
+      const transferTimeMin = transfers.length * TRANSFER_PENALTY_MIN;
+      const totalTimeMin = travelTimeMin + dwellTimeMin + transferTimeMin;
 
-    return {
-      id: `route_${originId}_${destinationId}_${Date.now()}`,
-      origin,
-      destination,
-      segments,
-      transfers,
-      totalStations,
-      totalTimeMin,
-      totalDistanceKm: parseFloat(totalDistanceKm.toFixed(2)),
-      transferCount: transfers.length,
-      stationSequence,
-    };
+      routes.push({
+        id: `route_${originId}_${destinationId}_${routes.length}_${Date.now()}`,
+        origin,
+        destination,
+        segments,
+        transfers,
+        totalStations,
+        totalTimeMin,
+        totalDistanceKm: parseFloat(totalDistanceKm.toFixed(2)),
+        transferCount: transfers.length,
+        stationSequence,
+      });
+    }
+
+    // Score and classify routes
+    return this._scoreAndClassifyRoutes(routes);
+  }
+
+  /**
+   * Score routes and assign types (fastest, fewest-transfers, shortest, balanced)
+   */
+  private _scoreAndClassifyRoutes(routes: Route[]): RouteOption[] {
+    if (routes.length === 0) return [];
+
+    // Calculate scores
+    const scored = routes.map(route => {
+      // Comfort score: lower transfers + reasonable time/distance balance
+      const transferPenalty = route.transferCount * 15;
+      const timeFactor = route.totalTimeMin;
+      const stationFactor = route.totalStations * 0.5;
+      const comfortScore = 100 - transferPenalty - (timeFactor / 2) - stationFactor;
+
+      return {
+        route: { ...route, comfortScore },
+        timeScore: route.totalTimeMin,
+        transferScore: route.transferCount,
+        stationScore: route.totalStations,
+        balancedScore: route.totalTimeMin * 0.4 + route.transferCount * 12 + route.totalStations * 0.3,
+      };
+    });
+
+    // Find best in each category
+    const fastest = scored.reduce((a, b) => a.timeScore < b.timeScore ? a : b);
+    const fewestTransfers = scored.reduce((a, b) => a.transferScore < b.transferScore ? a : b);
+    const shortest = scored.reduce((a, b) => a.stationScore < b.stationScore ? a : b);
+    const balanced = scored.reduce((a, b) => a.balancedScore < b.balancedScore ? a : b);
+
+    // Create route options with labels
+    const options: RouteOption[] = [];
+    const addedRouteIds = new Set<string>();
+
+    // Add best routes with labels
+    const candidates = [
+      { scored: fastest, type: "fastest" as const, label: "Fastest", labelFa: "سریع‌ترین", icon: "⚡", desc: "Shortest travel time", descFa: "کمترین زمان سفر" },
+      { scored: fewestTransfers, type: "fewest-transfers" as const, label: "Fewest Transfers", labelFa: "کمترین تبادل", icon: "🎯", desc: "Minimum transfers", descFa: "کمترین تعداد تبادل" },
+      { scored: shortest, type: "shortest" as const, label: "Shortest", labelFa: "کوتاه‌ترین", icon: "🚀", desc: "Fewest stations", descFa: "کمترین ایستگاه" },
+      { scored: balanced, type: "balanced" as const, label: "Balanced", labelFa: "متعادل", icon: "⚖️", desc: "Best overall", descFa: "بهترین حالت کلی" },
+    ];
+
+    for (const { scored: s, type, label, labelFa, icon, desc, descFa } of candidates) {
+      if (!addedRouteIds.has(s.route.id)) {
+        options.push({
+          route: { ...s.route, routeType: type, rank: options.length + 1 },
+          label,
+          labelFa,
+          icon,
+          description: desc,
+          descriptionFa: descFa,
+        });
+        addedRouteIds.add(s.route.id);
+      }
+    }
+
+    // Add remaining routes as alternatives
+    for (const s of scored) {
+      if (!addedRouteIds.has(s.route.id) && options.length < 5) {
+        options.push({
+          route: { ...s.route, routeType: "balanced", rank: options.length + 1 },
+          label: "Alternative",
+          labelFa: "جایگزین",
+          icon: "🔄",
+          description: "Alternative route",
+          descriptionFa: "مسیر جایگزین",
+        });
+        addedRouteIds.add(s.route.id);
+      }
+    }
+
+    return options;
   }
 
   // ── Private ───────────────────────────────────────────────────────────────

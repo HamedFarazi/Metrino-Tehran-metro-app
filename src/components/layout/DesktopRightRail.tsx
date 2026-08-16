@@ -17,6 +17,7 @@ export function DesktopRightRail() {
     openStationSheet,
     setOriginAndDestination,
     setCurrentRoute,
+    setAlternativeRoutes,
   } = useMetroStore();
 
   // Popular/Nearby stations
@@ -112,8 +113,11 @@ export function DesktopRightRail() {
                     }}
                     onClick={() => {
                       setOriginAndDestination(origin, dest);
-                      const route = MetroRouteService.calculate(origin.id, dest.id);
-                      if (route) setCurrentRoute(route);
+                      const routes = MetroRouteService.calculateMultiple(origin.id, dest.id);
+                      if (routes.length > 0) {
+                        setAlternativeRoutes(routes);
+                        setCurrentRoute(routes[0].route);
+                      }
                     }}
                   >
                     <div

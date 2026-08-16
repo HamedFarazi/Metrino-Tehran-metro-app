@@ -161,6 +161,19 @@ export interface Route {
   totalDistanceKm: number;
   transferCount: number;
   stationSequence: Station[];
+  // Multi-route scoring
+  routeType?: "fastest" | "fewest-transfers" | "shortest" | "balanced";
+  comfortScore?: number;
+  rank?: number;
+}
+
+export interface RouteOption {
+  route: Route;
+  label: string;
+  labelFa: string;
+  icon: string;
+  description: string;
+  descriptionFa: string;
 }
 
 // ─── Search ───────────────────────────────────────────────────────────────────

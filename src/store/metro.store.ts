@@ -1,12 +1,14 @@
 /**
  * Global Metro App State — Zustand store.
  * Handles: route query, selected station, favorites, recent routes, UI state.
+ * Now supports multiple alternative routes.
  */
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type {
   Station,
   Route,
+  RouteOption,
   FavoriteStation,
   RecentRoute,
   AppTab,
@@ -28,9 +30,12 @@ interface MetroState {
   swapOriginDestination: () => void;
   clearRoute: () => void;
 
-  // ── Calculated Route ───────────────────────────────────────────────────────
+  // ── Calculated Routes ──────────────────────────────────────────────────────
   currentRoute: Route | null;
   setCurrentRoute: (route: Route | null) => void;
+  alternativeRoutes: RouteOption[];
+  setAlternativeRoutes: (routes: RouteOption[]) => void;
+  selectRouteOption: (option: RouteOption) => void;
 
   // ── Station Detail ─────────────────────────────────────────────────────────
   selectedStation: Station | null;
@@ -91,11 +96,14 @@ export const useMetroStore = create<MetroState>()(
           destinationStation: state.originStation,
         })),
       clearRoute: () =>
-        set({ originStation: null, destinationStation: null, currentRoute: null }),
+        set({ originStation: null, destinationStation: null, currentRoute: null, alternativeRoutes: [] }),
 
-      // ── Calculated Route ────────────────────────────────────────────────────
+      // ── Calculated Routes ───────────────────────────────────────────────────
       currentRoute: null,
       setCurrentRoute: (route) => set({ currentRoute: route }),
+      alternativeRoutes: [],
+      setAlternativeRoutes: (routes) => set({ alternativeRoutes: routes }),
+      selectRouteOption: (option) => set({ currentRoute: option.route }),
 
       // ── Station Detail ──────────────────────────────────────────────────────
       selectedStation: null,

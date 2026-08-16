@@ -30,6 +30,7 @@ export function DesktopSidebar() {
     closeStationSheet,
     openSearch,
     setCurrentRoute,
+    setAlternativeRoutes,
     addRecentRoute,
   } = useMetroStore();
 
@@ -59,9 +60,10 @@ export function DesktopSidebar() {
   const handleRouteTo = () => {
     setDestination(selectedStation);
     if (originStation) {
-      const route = MetroRouteService.calculate(originStation.id, selectedStation.id);
-      if (route) {
-        setCurrentRoute(route);
+      const routes = MetroRouteService.calculateMultiple(originStation.id, selectedStation.id);
+      if (routes.length > 0) {
+        setAlternativeRoutes(routes);
+        setCurrentRoute(routes[0].route);
         addRecentRoute(originStation.id, selectedStation.id);
       }
     }

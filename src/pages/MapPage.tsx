@@ -46,7 +46,7 @@ function MapTopBar() {
   const {
     originStation, destinationStation,
     openSearch, swapOriginDestination,
-    setCurrentRoute, addRecentRoute,
+    setCurrentRoute, setAlternativeRoutes, addRecentRoute,
     currentRoute, clearRoute,
     userLocation, setOrigin,
     isStationSheetOpen,
@@ -79,9 +79,10 @@ function MapTopBar() {
 
   const handleFindRoute = () => {
     if (!originStation || !destinationStation) return;
-    const route = MetroRouteService.calculate(originStation.id, destinationStation.id);
-    if (route) {
-      setCurrentRoute(route);
+    const routes = MetroRouteService.calculateMultiple(originStation.id, destinationStation.id);
+    if (routes.length > 0) {
+      setAlternativeRoutes(routes);
+      setCurrentRoute(routes[0].route);
       addRecentRoute(originStation.id, destinationStation.id);
       setRouteMode(false);
     }

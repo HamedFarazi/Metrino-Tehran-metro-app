@@ -427,7 +427,7 @@ function RoutePlannerCard({
   onOpenDestination: () => void;
   onSwap: () => void;
 }) {
-  const { setCurrentRoute, addRecentRoute } = useMetroStore();
+  const { setCurrentRoute, addRecentRoute, setAlternativeRoutes } = useMetroStore();
   const [routeError, setRouteError] = useState(false);
 
   const canRoute = origin && destination;
@@ -435,9 +435,10 @@ function RoutePlannerCard({
   const handleRoute = () => {
     if (!origin || !destination) return;
     setRouteError(false);
-    const route = MetroRouteService.calculate(origin.id, destination.id);
-    if (route) {
-      setCurrentRoute(route);
+    const routes = MetroRouteService.calculateMultiple(origin.id, destination.id);
+    if (routes.length > 0) {
+      setAlternativeRoutes(routes);
+      setCurrentRoute(routes[0].route);
       addRecentRoute(origin.id, destination.id);
     } else {
       setRouteError(true);
@@ -671,7 +672,7 @@ function FavoritesSection() {
 // ─── Recent Routes ─────────────────────────────────────────────────────────
 
 function RecentRoutesSection() {
-  const { recentRoutes, setOriginAndDestination, setCurrentRoute } = useMetroStore();
+  const { recentRoutes, setOriginAndDestination, setCurrentRoute, setAlternativeRoutes } = useMetroStore();
 
   if (recentRoutes.length === 0) return null;
 
@@ -693,8 +694,11 @@ function RecentRoutesSection() {
               }}
               onClick={() => {
                 setOriginAndDestination(origin, dest);
-                const route = MetroRouteService.calculate(origin.id, dest.id);
-                if (route) setCurrentRoute(route);
+                const routes = MetroRouteService.calculateMultiple(origin.id, dest.id);
+                if (routes.length > 0) {
+                  setAlternativeRoutes(routes);
+                  setCurrentRoute(routes[0].route);
+                }
               }}
             >
               <div

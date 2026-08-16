@@ -259,6 +259,153 @@ class MetroDataServiceClass {
     return null;
   }
 
+  /**
+   * Find multiple alternative paths using modified Yen's K-Shortest Paths algorithm.
+   * Returns up to K different paths, ordered by a composite score.
+   */
+  findMultiplePaths(fromId: string, toId: string, k = 5): string[][] {
+    if (fromId === toId) return [[fromId]];
+
+    const paths: string[][] = [];
+    const candidates: Array<{ path: string[]; cost: number }> = [];
+
+    // Find first shortest path (BFS)
+    const firstPath = this.findPath(fromId, toId);
+    if (!firstPath) return [];
+    paths.push(firstPath);
+
+    // Generate alternative paths
+    for (let i = 0; i < k - 1; i++) {
+      const prevPath = paths[paths.length - 1];
+
+      // Try to find variations by removing edges from previous path
+      for (let j = 0; j < prevPath.length - 1; j++) {
+        const spurNode = prevPath[j];
+        const rootPath = prevPath.slice(0, j + 1);
+
+        // Temporarily remove edges used in previous paths
+        const removedEdges: Array<[string, string]> = [];
+        
+        for (const path of paths) {
+          if (path.length > j && path.slice(0, j + 1).join() === rootPath.join()) {
+            const from = path[j];
+            const to = path[j + 1];
+            if (to) {
+              this._removeEdgeTemporarily(from, to);
+              removedEdges.push([from, to]);
+            }
+          }
+        }
+
+        // Find path from spur node to destination
+        const spurPath = this._findPathBFS(spurNode, toId, new Set(rootPath.slice(0, -1)));
+        
+        // Restore removed edges
+        for (const [from, to] of removedEdges) {
+          this._restoreEdge(from, to);
+        }
+
+        if (spurPath) {
+          const totalPath = [...rootPath.slice(0, -1), ...spurPath];
+          const cost = this._calculatePathCost(totalPath);
+          
+          // Check if this path is unique
+          const isUnique = !candidates.some(c => c.path.join() === totalPath.join()) &&
+                           !paths.some(p => p.join() === totalPath.join());
+          
+          if (isUnique) {
+            candidates.push({ path: totalPath, cost });
+          }
+        }
+      }
+
+      if (candidates.length === 0) break;
+
+      // Sort candidates by cost and pick best
+      candidates.sort((a, b) => a.cost - b.cost);
+      const best = candidates.shift()!;
+      paths.push(best.path);
+    }
+
+    return paths;
+  }
+
+  private _findPathBFS(fromId: string, toId: string, excludeNodes: Set<string>): string[] | null {
+    if (fromId === toId) return [fromId];
+
+    const visited = new Set<string>(excludeNodes);
+    const queue: Array<{ id: string; path: string[] }> = [
+      { id: fromId, path: [fromId] },
+    ];
+    visited.add(fromId);
+
+    while (queue.length > 0) {
+      const { id, path } = queue.shift()!;
+      const neighbors = this._adjacency.get(id) ?? [];
+
+      for (const neighbor of neighbors) {
+        if (neighbor === toId) return [...path, neighbor];
+        if (!visited.has(neighbor)) {
+          visited.add(neighbor);
+          queue.push({ id: neighbor, path: [...path, neighbor] });
+        }
+      }
+    }
+
+    return null;
+  }
+
+  private _tempRemovedEdges = new Map<string, Set<string>>();
+
+  private _removeEdgeTemporarily(from: string, to: string) {
+    const neighbors = this._adjacency.get(from);
+    if (!neighbors) return;
+    
+    const index = neighbors.indexOf(to);
+    if (index === -1) return;
+
+    if (!this._tempRemovedEdges.has(from)) {
+      this._tempRemovedEdges.set(from, new Set());
+    }
+    this._tempRemovedEdges.get(from)!.add(to);
+
+    neighbors.splice(index, 1);
+  }
+
+  private _restoreEdge(from: string, to: string) {
+    if (!this._tempRemovedEdges.get(from)?.has(to)) return;
+
+    const neighbors = this._adjacency.get(from);
+    if (neighbors && !neighbors.includes(to)) {
+      neighbors.push(to);
+    }
+
+    this._tempRemovedEdges.get(from)!.delete(to);
+  }
+
+  private _calculatePathCost(path: string[]): number {
+    let cost = 0;
+    let currentLine: number | null = null;
+
+    for (let i = 0; i < path.length - 1; i++) {
+      const from = this._stationMap.get(path[i]);
+      const to = this._stationMap.get(path[i + 1]);
+      if (!from || !to) continue;
+
+      // Add distance cost
+      cost += this._haversine(from.coordinates.lat, from.coordinates.lng, to.coordinates.lat, to.coordinates.lng);
+
+      // Add transfer penalty
+      const commonLine = from.lines.find(l => to.lines.includes(l));
+      if (currentLine !== null && commonLine !== currentLine) {
+        cost += 5; // Transfer penalty (5km equivalent)
+      }
+      currentLine = commonLine ?? to.lines[0];
+    }
+
+    return cost;
+  }
+
   // ── Stats ─────────────────────────────────────────────────────────────────
 
   getStats() {

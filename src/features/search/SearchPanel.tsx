@@ -17,7 +17,7 @@ export function SearchPanel() {
     isSearchOpen, searchMode, closeSearch,
     setOrigin, setDestination, openStationSheet,
     originStation, destinationStation,
-    setCurrentRoute, addRecentRoute,
+    setCurrentRoute, setAlternativeRoutes, addRecentRoute,
   } = useMetroStore();
 
   const [query, setQuery] = useState("");
@@ -53,9 +53,10 @@ export function SearchPanel() {
         setOrigin(station);
         // If destination already set, auto-calculate route
         if (destinationStation) {
-          const route = MetroRouteService.calculate(station.id, destinationStation.id);
-          if (route) {
-            setCurrentRoute(route);
+          const routes = MetroRouteService.calculateMultiple(station.id, destinationStation.id);
+          if (routes.length > 0) {
+            setAlternativeRoutes(routes);
+            setCurrentRoute(routes[0].route);
             addRecentRoute(station.id, destinationStation.id);
           }
         }
@@ -63,9 +64,10 @@ export function SearchPanel() {
         setDestination(station);
         // If origin already set, auto-calculate route
         if (originStation) {
-          const route = MetroRouteService.calculate(originStation.id, station.id);
-          if (route) {
-            setCurrentRoute(route);
+          const routes = MetroRouteService.calculateMultiple(originStation.id, station.id);
+          if (routes.length > 0) {
+            setAlternativeRoutes(routes);
+            setCurrentRoute(routes[0].route);
             addRecentRoute(originStation.id, station.id);
           }
         }
@@ -76,7 +78,7 @@ export function SearchPanel() {
     },
     [
       searchMode, setOrigin, setDestination, openStationSheet, closeSearch,
-      originStation, destinationStation, setCurrentRoute, addRecentRoute,
+      originStation, destinationStation, setCurrentRoute, setAlternativeRoutes, addRecentRoute,
     ]
   );
 
