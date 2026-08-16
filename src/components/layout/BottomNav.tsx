@@ -82,12 +82,10 @@ export function BottomNav() {
         <item.icon
           className="h-full w-full transition-colors"
           style={{
-            color: isActive 
-              ? "var(--component-active-color-default)" 
-              : theme === "darya" 
-                ? "#1a1a1a"  // مشکی کلفت برای تم دریا
-                : "hsl(var(--foreground) / 0.4)",
-            strokeWidth: theme === "darya" ? 2.5 : 2,  // ضخامت بیشتر در تم دریا
+            color: isActive
+              ? "var(--component-active-color-default)"
+              : "var(--component-inactive-color)",
+            strokeWidth: theme === "darya" ? 2.5 : 2,
           }}
         />
       ),

@@ -4,6 +4,7 @@
  * Desktop: right sidebar (slide in from right)
  * Transfer direction labels based on next station.
  */
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, MapPin, ArrowLeftRight, Train } from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
@@ -70,7 +71,38 @@ function getTransferLabel(
 
 export function RouteSheet() {
   const { currentRoute, clearRoute } = useMetroStore();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const isOpen = !!currentRoute;
+
+  const handleDragEnd = (_: any, info: { offset: { y: number }; velocity: { y: number } }) => {
+    const { offset, velocity } = info;
+    
+    // If dragging down with velocity or past threshold, close
+    if (velocity.y > 500 || offset.y > 150) {
+      clearRoute();
+      return;
+    }
+    
+    // If dragging up with velocity or past threshold, expand
+    if (velocity.y < -500 || offset.y < -100) {
+      setIsExpanded(true);
+      return;
+    }
+    
+    // Otherwise collapse
+    setIsExpanded(false);
+  };
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const target = e.currentTarget;
+    // If scrolled to top and already at top, expand
+    if (target.scrollTop === 0 && !isExpanded) {
+      // User is trying to scroll up but already at top
+      // We could expand here, but it might be jarring
+      // Better to just expand on handle drag
+    }
+  };
 
   return (
     <AnimatePresence>
@@ -87,27 +119,47 @@ export function RouteSheet() {
             onClick={clearRoute}
           />
 
-          {/* ── Mobile: bottom sheet ── */}
+          {/* ── Mobile: bottom sheet with drag ── */}
           <motion.div
             key="mobile-sheet"
             initial={{ y: "100%" }}
-            animate={{ y: 0 }}
+            animate={{ 
+              y: 0,
+              height: isExpanded ? "95vh" : "65vh"
+            }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 32, stiffness: 380 }}
-            className="md:hidden fixed bottom-0 inset-x-0 z-[35] max-h-[72vh] overflow-y-auto rounded-t-3xl backdrop-blur-2xl shadow-[0_-20px_60px_rgba(0,0,0,0.6)]"
+            className="md:hidden fixed bottom-0 inset-x-0 z-[35] rounded-t-3xl backdrop-blur-2xl shadow-[0_-20px_60px_rgba(0,0,0,0.6)] flex flex-col"
             style={{
               background: "rgba(0, 0, 0, 0.60)",
               borderTop: "1px solid rgba(255, 255, 255, 0.08)",
               color: "#F8FAFF",
             }}
           >
-            {/* Handle */}
-            <div className="flex justify-center pt-3 pb-1">
-              <div className="h-1 w-12 rounded-full" style={{ background: "rgba(255, 255, 255, 0.20)" }} />
+            {/* Handle - Draggable area */}
+            <motion.div 
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={{ top: 0.1, bottom: 0.2 }}
+              dragMomentum={false}
+              onDragEnd={handleDragEnd}
+              className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing flex-shrink-0"
+              style={{ touchAction: 'none' }}
+            >
+              <div className="h-1 w-12 rounded-full" style={{ background: "rgba(255, 255, 255, 0.2)" }} />
+            </motion.div>
+            
+            <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+              <RouteHeader route={currentRoute} onClose={clearRoute} />
+              <div 
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="flex-1 overflow-y-auto scrollbar-thin"
+              >
+                <RouteTimeline route={currentRoute} />
+                <div className="h-6" />
+              </div>
             </div>
-            <RouteHeader route={currentRoute} onClose={clearRoute} />
-            <RouteTimeline route={currentRoute} />
-            <div className="h-6" />
           </motion.div>
 
           {/* ── Desktop: right sidebar ── */}

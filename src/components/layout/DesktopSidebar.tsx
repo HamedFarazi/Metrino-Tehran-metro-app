@@ -73,12 +73,14 @@ export function DesktopSidebar() {
       }}
     >
       <div className="flex items-center justify-center h-16 mb-4">
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ background: "linear-gradient(135deg, #8B5CF6, #22D3EE)" }}
-        >
-          <span className="text-white text-xl font-bold">M</span>
-        </div>
+        <img
+          src="/icons/icon-192.png"
+          alt="مترو تهران"
+          className="w-12 h-12 rounded-xl"
+          style={{
+            objectFit: "contain",
+          }}
+        />
       </div>
 
       <nav className="flex-1 flex flex-col gap-2">
@@ -200,12 +202,12 @@ export function DesktopSidebar() {
               initial={{ opacity: 0, scale: 0.94, x: 6 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.94, x: 6 }}
-              className="absolute right-full bottom-0 mr-3 z-[200] w-56 rounded-[18px] p-4"
+              className="absolute right-full bottom-0 mr-3 z-[200] w-56 rounded-[20px] p-4 border"
               style={{
-                background: "var(--glass-bg)",
-                border: "1px solid var(--glass-border)",
-                backdropFilter: "blur(20px)",
-                boxShadow: "var(--shadow-card-soft, 0 12px 40px rgba(31,41,75,0.12))",
+                background: "var(--popup-bg)",
+                borderColor: "var(--popup-border)",
+                backdropFilter: "blur(28px)",
+                boxShadow: "var(--popup-shadow)",
               }}
               dir="rtl"
             >

@@ -75,13 +75,17 @@ export function SettingsPopup({
             x: placement === "aside" ? 8 : 0,
           }}
           transition={{ type: "spring", damping: 24, stiffness: 320 }}
-          className={cn("w-60 rounded-[20px] p-4 shadow-xl", positionClass)}
+          className={cn(
+            "w-60 rounded-[22px] p-4 border",
+            positionClass
+          )}
           dir="rtl"
           style={{
-            background: "var(--glass-bg, rgba(11, 21, 42, 0.92))",
-            border: "1px solid var(--glass-border, rgba(130, 150, 200, 0.22))",
-            backdropFilter: "blur(24px)",
-            boxShadow: "var(--shadow-nav, 0 -10px 40px rgba(0, 0, 0, 0.35))",
+            background: "var(--popup-bg)",
+            borderColor: "var(--popup-border)",
+            backdropFilter: "blur(28px) saturate(160%)",
+            WebkitBackdropFilter: "blur(28px) saturate(160%)",
+            boxShadow: "var(--popup-shadow)",
             color: "var(--text-primary)",
           }}
         >

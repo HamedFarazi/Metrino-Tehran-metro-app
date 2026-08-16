@@ -256,7 +256,7 @@ function DesktopStatCard({
   return (
     <div
       ref={ref}
-      className="rounded-[20px] p-5 transition-all duration-200"
+      className="rounded-[20px] p-5 transition-all duration-200 flex flex-col items-center justify-center text-center"
       style={{
         background: "var(--color-card)",
         border: "1px solid var(--color-border)",
@@ -282,8 +282,9 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
       className="relative overflow-hidden px-4 pt-12 pb-16 sm:pt-14 sm:pb-20"
       style={{
         minHeight: "340px",
+        backgroundColor: isLight ? "#EEF5FF" : undefined,
         backgroundImage: isLight ? "url(/herosecLight1.png)" : "url(/herosecBack1.png)",
-        backgroundSize: isLight ? "cover" : "contain",
+        backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundAttachment: "scroll",
@@ -293,7 +294,7 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
         className="absolute inset-0"
         style={{
           background: isLight
-            ? "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 45%, rgba(246,247,252,0.85) 100%)"
+            ? "linear-gradient(to bottom, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, rgba(246,247,252,0.55) 100%)"
             : "linear-gradient(to bottom, rgba(3, 8, 23, 0.85) 0%, rgba(3, 8, 23, 0.65) 50%, rgba(3, 8, 23, 0.95) 100%)",
         }}
       />
