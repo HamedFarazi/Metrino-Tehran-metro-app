@@ -224,8 +224,24 @@ function MapTopBar() {
 export function MapPage() {
   const [mode, setMode] = useState<ViewMode>("offline");
 
+  // Add/remove body class based on offline map visibility
+  useEffect(() => {
+    if (mode === "offline") {
+      document.body.classList.add("showing-offline-map");
+    } else {
+      document.body.classList.remove("showing-offline-map");
+    }
+    return () => {
+      document.body.classList.remove("showing-offline-map");
+    };
+  }, [mode]);
+
   return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 0 }} className="flex flex-col bg-[#1a1c2e]">
+    <div 
+      style={{ position: "fixed", inset: 0, zIndex: 0 }} 
+      className="flex flex-col bg-[#1a1c2e]"
+      data-map-mode={mode}
+    >
       <MapTopBar />
       <WeatherWidget />
       <div className="absolute inset-0">

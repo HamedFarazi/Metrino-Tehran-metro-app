@@ -72,26 +72,28 @@ export function BottomNav() {
     { label: "settings",  labelFa: "تنظیمات",      icon: Settings, onClick: handleSettingsClick },
   ];
 
-  const dockItems = menuItems.map((item) => ({
-    title: item.labelFa,
-    href: "#",
-    icon: (
-      <item.icon
-        className="h-full w-full"
-        style={{
-          color:
-            item.label === "settings"
-              ? settingsOpen
-                ? "oklch(66% 0.17 163)"
-                : "oklch(55% 0.01 260)"
-              : activeTab === item.label
-              ? "oklch(66% 0.17 163)"
-              : "oklch(55% 0.01 260)",
-        }}
-      />
-    ),
-    onClick: item.onClick,
-  }));
+  const dockItems = menuItems.map((item) => {
+    const isActive = item.label === "settings" ? settingsOpen : activeTab === item.label;
+    
+    return {
+      title: item.labelFa,
+      href: "#",
+      icon: (
+        <item.icon
+          className="h-full w-full transition-colors"
+          style={{
+            color: isActive 
+              ? "var(--component-active-color-default)" 
+              : theme === "darya" 
+                ? "#1a1a1a"  // مشکی کلفت برای تم دریا
+                : "hsl(var(--foreground) / 0.4)",
+            strokeWidth: theme === "darya" ? 2.5 : 2,  // ضخامت بیشتر در تم دریا
+          }}
+        />
+      ),
+      onClick: item.onClick,
+    };
+  });
 
   return (
     <nav
@@ -108,11 +110,11 @@ export function BottomNav() {
         />
 
         {/* Mobile */}
-        <div className="md:hidden">
+        <div className="md:hidden" data-active-tab={activeTab}>
           <InteractiveMenu items={menuItems} activeIndex={activeIndex >= 0 ? activeIndex : 0} />
         </div>
         {/* Desktop */}
-        <div className="hidden md:block">
+        <div className="hidden md:block" data-active-tab={activeTab}>
           <FloatingDock items={dockItems} />
         </div>
       </div>

@@ -9,9 +9,9 @@ import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
 import { LineBadge } from "@/components/shared/LineBadge";
-import { SparkleButton } from "@/components/ui/sparkle-button";
 import { MetroLinesAnimation } from "@/components/ui/metro-lines-animation";
 import { useGeolocation } from "@/hooks/useGeolocation";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import type { Station } from "@/types/metro";
 import { cn } from "@/lib/utils";
 
@@ -39,93 +39,391 @@ export function HomePage() {
   const stats = MetroDataService.getStats();
 
   return (
-    <div className="flex min-h-full flex-col pb-24" dir="rtl">
-      {/* Hero Section */}
-      <HeroSection stats={stats} />
+    <>
+      {/* Mobile/Tablet Layout */}
+      <div className="lg:hidden flex min-h-full flex-col pb-24" dir="rtl">
+        {/* Hero Section */}
+        <HeroSection stats={stats} />
 
-      {/* Route Planner Card */}
-      <motion.div
-        className="px-4 -mt-6 relative z-10"
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-        custom={0}
-      >
-        <RoutePlannerCard
-          origin={originStation}
-          destination={destinationStation}
-          onOpenOrigin={() => openSearch("origin")}
-          onOpenDestination={() => openSearch("destination")}
-          onSwap={swapOriginDestination}
-        />
-      </motion.div>
+        {/* Route Planner Card */}
+        <motion.div
+          className="px-4 -mt-4 sm:-mt-6 relative z-10"
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          custom={0}
+        >
+          <RoutePlannerCard
+            origin={originStation}
+            destination={destinationStation}
+            onOpenOrigin={() => openSearch("origin")}
+            onOpenDestination={() => openSearch("destination")}
+            onSwap={swapOriginDestination}
+          />
+        </motion.div>
 
-      {/* Content Sections */}
-      <motion.div
-        className="mt-6 px-4 space-y-6"
-        initial="hidden"
-        animate="visible"
-        variants={stagger}
-      >
-        <NearbyStationsSection />
-        <FavoritesSection />
-        <RecentRoutesSection />
-        <QuickStatsSection stats={stats} />
-      </motion.div>
-    </div>
+        {/* Content Sections */}
+        <motion.div
+          className="mt-6 px-4 space-y-6"
+          initial="hidden"
+          animate="visible"
+          variants={stagger}
+        >
+          <NearbyStationsSection />
+          <FavoritesSection />
+          <RecentRoutesSection />
+          <QuickStatsSection stats={stats} />
+        </motion.div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden lg:block min-h-screen" dir="rtl">
+        {/* Hero Section - Full Width */}
+        <DesktopHeroSection stats={stats} />
+
+        {/* Main Content Grid */}
+        <div className="mt-4 px-4 space-y-4">
+          {/* Route Planner Card */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={fadeUp}
+            custom={0}
+          >
+            <RoutePlannerCard
+              origin={originStation}
+              destination={destinationStation}
+              onOpenOrigin={() => openSearch("origin")}
+              onOpenDestination={() => openSearch("destination")}
+              onSwap={swapOriginDestination}
+            />
+          </motion.div>
+
+          {/* Current Stations */}
+          <NearbyStationsSection />
+
+          {/* Statistics - 4 columns */}
+          <DesktopStatsSection stats={stats} />
+        </div>
+      </div>
+    </>
   );
 }
 
-// ─── Hero Section ──────────────────────────────────────────────────────────
+// ─── Desktop Hero Section ─────────────────────────────────────────────────
 
-function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
+function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
+  const { isLight } = useThemeMode();
+
   return (
-    <div className="relative overflow-hidden px-4 pt-14 pb-14">
-      {/* Animated metro lines — full bleed background */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-35 pointer-events-none select-none">
+    <div
+      className="relative overflow-hidden rounded-[28px] mx-4"
+      style={{
+        height: "300px",
+        backgroundImage: isLight ? "url(/herosecLight1.png)" : "url(/herosecBack1.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background: isLight
+            ? "linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.30), rgba(255,255,255,0.05))"
+            : "linear-gradient(90deg, rgba(3, 8, 23, 0.15), rgba(3, 8, 23, 0.35), rgba(3, 8, 23, 0.10))",
+        }}
+      />
+      {isLight && (
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(255,255,255,0.90), rgba(255,255,255,0.35) 45%, transparent 75%)",
+            opacity: 0.55,
+          }}
+        />
+      )}
+
+      <div className="absolute inset-0 flex items-center justify-center opacity-20 pointer-events-none select-none">
         <MetroLinesAnimation className="w-full h-full" />
       </div>
 
-      {/* Gradient overlays: fade edges so lines disappear naturally */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background pointer-events-none" />
-      <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-background/80 pointer-events-none" />
-
       <motion.div
-        className="relative"
+        className="relative z-10 flex flex-col items-center justify-center h-full px-8"
         initial="hidden"
         animate="visible"
         variants={stagger}
       >
-        {/* Title */}
-        <motion.div variants={fadeUp} custom={0} className="text-center mb-2">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1 text-xs text-emerald-400 mb-4">
-            <Zap className="h-3 w-3" />
-            <span>مترو تهران</span>
+        <motion.div variants={fadeUp} custom={0} className="mb-4">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium"
+            style={
+              isLight
+                ? {
+                    background: "rgba(255,255,255,0.70)",
+                    border: "1px solid rgba(124,92,252,0.18)",
+                    color: "#6652D8",
+                    boxShadow: "0 5px 20px rgba(90,80,180,0.06)",
+                    backdropFilter: "blur(12px)",
+                  }
+                : {
+                    background: "rgba(20, 230, 181, 0.08)",
+                    border: "1px solid rgba(20, 230, 181, 0.30)",
+                    color: "#14E6B5",
+                    boxShadow: "0 0 25px rgba(20, 230, 181, 0.08)",
+                  }
+            }
+          >
+            <Zap className="h-3.5 w-3.5" />
+            <span>محدوده تهران</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-foreground">
+        </motion.div>
+
+        <motion.div variants={fadeUp} custom={1} className="text-center mb-3">
+          <h1
+            className="text-5xl font-extrabold tracking-tight mb-2"
+            style={{
+              backgroundImage: isLight
+                ? "linear-gradient(90deg, #11152B, #7C5CFC)"
+                : "linear-gradient(90deg, #F8FAFF, #C4B5FD, #8B5CF6)",
+              backgroundColor: "transparent",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              lineHeight: "1.1",
+            }}
+          >
             مسیریابی مترو
           </h1>
-          <p className="mt-2 text-base text-foreground/50">
+          <p
+            className="text-base font-normal"
+            style={{ color: isLight ? "#667089" : "#8E9AB5", opacity: 0.9 }}
+          >
             سریع‌ترین مسیر رو پیدا کن
           </p>
         </motion.div>
 
-        {/* Stats pills */}
-        <motion.div variants={fadeUp} custom={1} className="flex justify-center gap-3 mt-5 flex-wrap">
-          <StatPill value={stats.totalStations} label="ایستگاه" />
-          <StatPill value={stats.totalLines} label="خط" />
-          <StatPill value={stats.interchangeCount} label="تبادلی" />
+        <motion.div variants={fadeUp} custom={2} className="flex items-center gap-4 mt-4">
+          <StatPill value={stats.totalStations} label="ایستگاه" icon="📍" color="#22D3EE" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon="🚇" color="#8B5CF6" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon="🔄" color="#14E6B5" isLight={isLight} />
         </motion.div>
       </motion.div>
     </div>
   );
 }
 
-function StatPill({ value, label }: { value: number; label: string }) {
+// ─── Desktop Stats Section ────────────────────────────────────────────────
+
+function DesktopStatsSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
   return (
-    <div className="flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5">
-      <span className="text-sm font-semibold text-foreground">{value}</span>
-      <span className="text-xs text-foreground/40">{label}</span>
+    <motion.section variants={fadeUp}>
+      <div className="flex items-center gap-2 mb-3">
+        <Zap className="h-4 w-4" style={{ color: "var(--color-primary)" }} />
+        <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>آمار سریع</h2>
+      </div>
+      <div className="grid grid-cols-4 gap-3">
+        <DesktopStatCard label="ایستگاه تبادلی" value={stats.interchangeCount} color="amber" />
+        <DesktopStatCard label="ایستگاه فعال"   value={stats.activeStations}   color="emerald" />
+        <DesktopStatCard label="اتصالات"         value={stats.totalConnections} color="purple" />
+        <DesktopStatCard label="ایستگاه پایانه" value={stats.terminalCount}    color="cyan" />
+      </div>
+    </motion.section>
+  );
+}
+
+function DesktopStatCard({
+  label,
+  value,
+  color,
+}: {
+  label: string;
+  value: number;
+  color: "emerald" | "cyan" | "amber" | "purple";
+}) {
+  const colorMap = {
+    emerald: { accent: '#14E6B5', glow: 'rgba(20, 230, 181, 0.12)' },
+    cyan: { accent: '#38BDF8', glow: 'rgba(56, 189, 248, 0.12)' },
+    amber: { accent: '#F59E0B', glow: 'rgba(245, 158, 11, 0.12)' },
+    purple: { accent: '#A855F7', glow: 'rgba(168, 85, 247, 0.12)' },
+  };
+  
+  const { accent } = colorMap[color];
+  const { count, ref } = useCountUp(value);
+
+  return (
+    <div
+      ref={ref}
+      className="rounded-[20px] p-5 transition-all duration-200"
+      style={{
+        background: "var(--color-card)",
+        border: "1px solid var(--color-border)",
+        height: "160px",
+        boxShadow: "var(--shadow-card-soft, 0 8px 30px rgba(38,48,80,0.06))",
+      }}
+    >
+      <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: accent }}>
+        {count}
+      </p>
+      <p className="text-xs font-medium" style={{ color: "var(--text-muted)" }}>{label}</p>
+
+      <div className="mt-4 h-8 flex items-end gap-0.5">
+        {[...Array(12)].map((_, i) => {
+          const height = 20 + ((i * 37) % 80);
+          return (
+            <div
+              key={i}
+              className="flex-1 rounded-t-sm"
+              style={{
+                height: `${height}%`,
+                background: `${accent}30`,
+                minHeight: "4px",
+              }}
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ─── Mobile/Tablet Hero Section ────────────────────────────────────────────
+
+function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
+  const { isLight } = useThemeMode();
+
+  return (
+    <div
+      className="relative overflow-hidden px-4 pt-12 pb-16 sm:pt-14 sm:pb-20"
+      style={{
+        minHeight: "340px",
+        backgroundImage: isLight ? "url(/herosecLight1.png)" : "url(/herosecBack1.png)",
+        backgroundSize: isLight ? "cover" : "contain",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundAttachment: "scroll",
+      }}
+    >
+      <div
+        className="absolute inset-0"
+        style={{
+          background: isLight
+            ? "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.25) 45%, rgba(246,247,252,0.85) 100%)"
+            : "linear-gradient(to bottom, rgba(3, 8, 23, 0.85) 0%, rgba(3, 8, 23, 0.65) 50%, rgba(3, 8, 23, 0.95) 100%)",
+        }}
+      />
+
+      <div className="absolute inset-0 flex items-center justify-center opacity-20 sm:opacity-25 pointer-events-none select-none">
+        <MetroLinesAnimation className="w-full h-full" />
+      </div>
+
+      <motion.div
+        className="relative z-10"
+        initial="hidden"
+        animate="visible"
+        variants={stagger}
+      >
+        <motion.div variants={fadeUp} custom={0} className="flex justify-center mb-5 sm:mb-6">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 sm:px-4 sm:py-2 text-xs font-medium"
+            style={
+              isLight
+                ? {
+                    background: "rgba(255,255,255,0.70)",
+                    border: "1px solid rgba(124,92,252,0.18)",
+                    color: "#6652D8",
+                    boxShadow: "0 5px 20px rgba(90,80,180,0.06)",
+                    backdropFilter: "blur(12px)",
+                  }
+                : {
+                    background: "rgba(20, 230, 181, 0.08)",
+                    border: "1px solid rgba(20, 230, 181, 0.30)",
+                    color: "#14E6B5",
+                    boxShadow: "0 0 25px rgba(20, 230, 181, 0.08)",
+                  }
+            }
+          >
+            <Zap className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+            <span>محدوده تهران</span>
+          </div>
+        </motion.div>
+
+        <motion.div variants={fadeUp} custom={1} className="text-center mb-2 sm:mb-3 px-2">
+          <h1
+            className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-2 sm:mb-3"
+            style={{
+              backgroundImage: isLight
+                ? "linear-gradient(90deg, #11152B, #7C5CFC)"
+                : "linear-gradient(90deg, #F8FAFF, #C4B5FD, #8B5CF6)",
+              backgroundColor: "transparent",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              color: "transparent",
+              lineHeight: "1.1",
+            }}
+          >
+            مسیریابی مترو
+          </h1>
+          <p
+            className="text-sm sm:text-base font-normal"
+            style={{ color: isLight ? "#667089" : "#8E9AB5", opacity: 0.9 }}
+          >
+            سریع‌ترین مسیر رو پیدا کن
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeUp} custom={2} className="flex justify-center gap-2 sm:gap-3 mt-5 sm:mt-6 flex-wrap px-2">
+          <StatPill value={stats.totalStations} label="ایستگاه" icon="📍" color="#22D3EE" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon="🚇" color="#8B5CF6" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon="🔄" color="#14E6B5" isLight={isLight} />
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
+function StatPill({
+  value,
+  label,
+  icon,
+  color,
+  isLight = false,
+}: {
+  value: number;
+  label: string;
+  icon: string;
+  color: string;
+  isLight?: boolean;
+}) {
+  return (
+    <div
+      className="flex items-center gap-1.5 sm:gap-2 rounded-full px-3 py-1.5 sm:px-4 sm:py-2"
+      style={
+        isLight
+          ? {
+              background: "rgba(255,255,255,0.78)",
+              border: "1px solid rgba(100,110,150,0.12)",
+              boxShadow: "0 5px 18px rgba(40,50,80,0.05)",
+              backdropFilter: "blur(14px)",
+            }
+          : {
+              background: "rgba(15, 25, 48, 0.75)",
+              border: "1px solid rgba(140, 150, 200, 0.18)",
+              backdropFilter: "blur(14px)",
+            }
+      }
+    >
+      <span className="text-xs sm:text-sm">{icon}</span>
+      <span
+        className="text-sm sm:text-base font-bold tabular-nums"
+        style={{ color: isLight ? "#11152B" : "#F8FAFF" }}
+      >
+        {value}
+      </span>
+      <span className="text-[10px] sm:text-xs" style={{ color }}>{label}</span>
     </div>
   );
 }
@@ -164,73 +462,124 @@ function RoutePlannerCard({
   };
 
   return (
-    <div className="rounded-2xl border border-border/60 bg-card/80 p-4 shadow-2xl backdrop-blur-xl">
+    <div
+      className="rounded-[26px] p-5"
+      style={{
+        background: "var(--glass-bg)",
+        border: "1px solid var(--color-border)",
+        boxShadow: "var(--shadow-card, 0 15px 45px rgba(38,48,80,0.08))",
+        backdropFilter: "blur(20px)",
+      }}
+    >
       {/* Origin */}
       <button
         onClick={onOpenOrigin}
-        className={cn(
-          "flex w-full items-center gap-3 rounded-xl p-3 text-right transition-all duration-200",
-          origin ? "bg-emerald-500/10 border border-emerald-500/20" : "bg-surface hover:bg-white/5 border border-transparent"
-        )}
+        className="flex w-full items-center gap-3 rounded-xl p-3.5 text-right transition-all duration-200"
+        style={{
+          background: origin ? "rgba(20, 230, 181, 0.13)" : "var(--input-bg)",
+          border: origin ? "1px solid rgba(20, 230, 181, 0.35)" : "1px solid var(--input-border)",
+        }}
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-500/20">
-          <div className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+          style={{
+            background: "rgba(20, 230, 181, 0.13)",
+            boxShadow: origin ? "0 0 20px rgba(20, 230, 181, 0.18)" : "none",
+          }}
+        >
+          <div className="h-3 w-3 rounded-full" style={{ background: "#14E6B5" }} />
         </div>
         {origin ? (
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-emerald-400/70 mb-0.5">مبدا</p>
-            <p className="text-sm font-medium text-foreground truncate">{origin.nameFa}</p>
+            <p className="text-xs mb-0.5" style={{ color: "#14E6B5" }}>مبدا</p>
+            <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{origin.nameFa}</p>
           </div>
         ) : (
-          <p className="flex-1 text-sm text-foreground/40">مبدا را انتخاب کنید</p>
+          <p className="flex-1 text-sm" style={{ color: "var(--text-muted)" }}>مبدا را انتخاب کنید</p>
         )}
-        <Search className="h-4 w-4 shrink-0 text-foreground/30" />
+        <Search className="h-4 w-4 shrink-0" style={{ color: "var(--text-muted)" }} />
       </button>
 
       {/* Swap & connector */}
-      <div className="relative flex items-center justify-center my-2">
-        <div className="absolute inset-x-6 h-px bg-border/50" />
+      <div className="relative flex items-center justify-center my-3">
+        <div className="absolute inset-x-8 h-px" style={{ background: "var(--color-border)" }} />
         <button
           onClick={onSwap}
-          className="relative z-10 flex h-7 w-7 items-center justify-center rounded-full border border-border bg-card hover:bg-surface transition-colors"
+          className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
+          style={{
+            background: "var(--swap-bg)",
+            border: "1px solid rgba(139, 92, 246, 0.35)",
+            boxShadow: "0 5px 16px rgba(40,50,80,0.08)",
+          }}
         >
-          <ArrowLeftRight className="h-3.5 w-3.5 text-foreground/50 rotate-90" />
+          <ArrowLeftRight className="h-4 w-4 rotate-90" style={{ color: "#6652D8" }} />
         </button>
       </div>
 
       {/* Destination */}
       <button
         onClick={onOpenDestination}
-        className={cn(
-          "flex w-full items-center gap-3 rounded-xl p-3 text-right transition-all duration-200",
-          destination ? "bg-cyan-500/10 border border-cyan-500/20" : "bg-surface hover:bg-white/5 border border-transparent"
-        )}
+        className="flex w-full items-center gap-3 rounded-xl p-3.5 text-right transition-all duration-200"
+        style={{
+          background: destination ? "rgba(34, 211, 238, 0.13)" : "var(--input-bg)",
+          border: destination ? "1px solid rgba(34, 211, 238, 0.35)" : "1px solid var(--input-border)",
+        }}
       >
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cyan-500/20">
-          <MapPin className="h-4 w-4 text-cyan-400" />
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+          style={{ background: "rgba(34, 211, 238, 0.13)" }}
+        >
+          <MapPin className="h-5 w-5" style={{ color: "#22D3EE" }} />
         </div>
         {destination ? (
           <div className="flex-1 min-w-0">
-            <p className="text-xs text-cyan-400/70 mb-0.5">مقصد</p>
-            <p className="text-sm font-medium text-foreground truncate">{destination.nameFa}</p>
+            <p className="text-xs mb-0.5" style={{ color: "#22D3EE" }}>مقصد</p>
+            <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{destination.nameFa}</p>
           </div>
         ) : (
-          <p className="flex-1 text-sm text-foreground/40">مقصد را انتخاب کنید</p>
+          <p className="flex-1 text-sm" style={{ color: "var(--text-muted)" }}>مقصد را انتخاب کنید</p>
         )}
-        <Search className="h-4 w-4 shrink-0 text-foreground/30" />
+        <Search className="h-4 w-4 shrink-0" style={{ color: "var(--text-muted)" }} />
       </button>
 
       {/* Route Button */}
-      <SparkleButton
+      <button
         onClick={handleRoute}
         disabled={!canRoute}
+        className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-base font-bold transition-all duration-200 disabled:cursor-not-allowed"
+        style={{
+          background: canRoute ? "var(--gradient-cta)" : "var(--input-bg)",
+          color: canRoute ? "#FFFFFF" : "var(--text-muted)",
+          border: canRoute ? "none" : "1px solid var(--input-border)",
+          boxShadow: canRoute ? "0 10px 25px rgba(108,99,245,0.20)" : "none",
+          opacity: canRoute ? 1 : 0.85,
+        }}
+        onMouseEnter={(e) => {
+          if (canRoute) {
+            e.currentTarget.style.filter = "brightness(1.04)";
+            e.currentTarget.style.transform = "translateY(-1px)";
+          }
+        }}
+        onMouseLeave={(e) => {
+          if (canRoute) {
+            e.currentTarget.style.filter = "brightness(1)";
+            e.currentTarget.style.transform = "translateY(0)";
+          }
+        }}
+        onMouseDown={(e) => {
+          if (canRoute) e.currentTarget.style.transform = "scale(0.98)";
+        }}
+        onMouseUp={(e) => {
+          if (canRoute) e.currentTarget.style.transform = "scale(1)";
+        }}
       >
+        <Navigation className="h-5 w-5" />
         {canRoute
           ? routeError
             ? "مسیری پیدا نشد"
             : "یافتن مسیر"
           : "انتخاب مبدا و مقصد"}
-      </SparkleButton>
+      </button>
     </div>
   );
 }
@@ -289,7 +638,20 @@ function FavoritesSection() {
         />
         <button
           onClick={() => openSearch("general")}
-          className="mt-3 flex w-full items-center gap-3 rounded-xl border border-dashed border-border/50 bg-surface/50 p-4 text-sm text-foreground/30 transition-colors hover:bg-surface"
+          className="mt-3 flex w-full items-center gap-3 rounded-[14px] p-4 text-sm transition-all duration-200"
+          style={{
+            background: "var(--card-elevated)",
+            border: "1px dashed var(--color-border)",
+            color: "var(--text-muted)",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "var(--input-bg-hover)";
+            e.currentTarget.style.borderColor = "rgba(124, 92, 252, 0.30)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "var(--card-elevated)";
+            e.currentTarget.style.borderColor = "var(--color-border)";
+          }}
         >
           <Star className="h-4 w-4" />
           <span>ایستگاه مورد علاقه اضافه کنید</span>
@@ -340,19 +702,26 @@ function RecentRoutesSection() {
           return (
             <button
               key={idx}
-              className="flex w-full items-center gap-3 rounded-xl border border-border/40 bg-surface/60 p-3 text-right transition-colors hover:bg-surface"
+              className="flex w-full items-center gap-3 rounded-[16px] p-3.5 text-right transition-all duration-200"
+              style={{
+                background: "var(--card-elevated)",
+                border: "1px solid var(--color-border)",
+              }}
               onClick={() => {
                 setOriginAndDestination(origin, dest);
                 const route = MetroRouteService.calculate(origin.id, dest.id);
                 if (route) setCurrentRoute(route);
               }}
             >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/5">
-                <Clock className="h-4 w-4 text-foreground/30" />
+              <div
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                style={{ background: "var(--component-active-bg)" }}
+              >
+                <Clock className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-foreground truncate">
-                  {origin.nameFa} <span className="text-foreground/40">←</span> {dest.nameFa}
+                <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
+                  {origin.nameFa} <span style={{ color: "var(--text-muted)" }}>←</span> {dest.nameFa}
                 </p>
               </div>
             </button>
@@ -424,15 +793,18 @@ function SectionHeader({
   action?: { label: string; onClick: () => void; icon?: React.ReactNode };
 }) {
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-2">
-        <span className="text-foreground/40">{icon}</span>
-        <h2 className="text-sm font-semibold text-foreground/80">{title}</h2>
+        <span style={{ color: "var(--color-primary)" }}>{icon}</span>
+        <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>{title}</h2>
       </div>
       {action && (
         <button
           onClick={action.onClick}
-          className="flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+          className="flex items-center gap-1.5 text-xs font-medium transition-colors"
+          style={{ color: '#8B5CF6' }}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#A855F7'}
+          onMouseLeave={(e) => e.currentTarget.style.color = '#8B5CF6'}
         >
           {action.icon}
           {action.label}
@@ -443,16 +815,25 @@ function SectionHeader({
 }
 
 function StationChip({ station, onClick }: { station: Station; onClick: () => void }) {
+  const statusColor = station.type === "interchange" ? "#10CFA3" :
+                     station.type === "terminal" ? "#F59E0B" : "#EF476F";
+
   return (
     <button
       onClick={onClick}
-      className="flex shrink-0 items-center gap-2 rounded-2xl border border-border/50 bg-surface/60 px-3 py-2 transition-all hover:bg-surface hover:border-border"
+      className="flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 transition-all duration-200"
+      style={{
+        background: "var(--card-elevated)",
+        border: "1px solid var(--color-border)",
+      }}
     >
       <div
         className="h-2 w-2 rounded-full shrink-0"
-        style={{ backgroundColor: station.colors[0] ?? "#888" }}
+        style={{ backgroundColor: statusColor }}
       />
-      <span className="text-sm text-foreground/70 whitespace-nowrap">{station.nameFa}</span>
+      <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>
+        {station.nameFa}
+      </span>
       {station.type === "interchange" && (
         <div className="flex gap-0.5">
           {station.lines.map((l) => (
@@ -473,20 +854,32 @@ function FavoriteCard({
   label?: string;
   onClick: () => void;
 }) {
+  const lineColor = station.colors[0] ?? "#888";
+
   return (
     <button
       onClick={onClick}
-      className="flex flex-col items-start gap-2 rounded-xl border border-border/40 bg-surface/60 p-3 text-right transition-all hover:bg-surface"
+      className="flex flex-col items-start gap-2.5 rounded-[20px] p-3.5 text-right transition-all duration-200"
+      style={{
+        background: "var(--card-elevated)",
+        border: "1px solid var(--color-border)",
+        boxShadow: "var(--shadow-card-soft, none)",
+      }}
     >
       <div className="flex items-center gap-2 w-full">
         <div
-          className="h-2.5 w-2.5 rounded-full shrink-0"
-          style={{ backgroundColor: station.colors[0] ?? "#888" }}
-        />
-        <span className="text-sm font-medium text-foreground truncate flex-1">
+          className="h-6 w-6 rounded-full shrink-0 flex items-center justify-center"
+          style={{
+            background: `${lineColor}30`,
+            border: `1px solid ${lineColor}60`,
+          }}
+        >
+          <div className="h-2 w-2 rounded-full" style={{ background: lineColor }} />
+        </div>
+        <span className="text-sm font-semibold truncate flex-1" style={{ color: "var(--text-primary)" }}>
           {label ?? station.nameFa}
         </span>
-        <Star className="h-3 w-3 text-amber-400/70 shrink-0" />
+        <Star className="h-3.5 w-3.5 shrink-0" style={{ color: "#F4B740", fill: "#F4B740" }} />
       </div>
       <div className="flex gap-1">
         {station.lines.map((l) => (
@@ -507,25 +900,29 @@ function StatCard({
   color: "emerald" | "cyan" | "amber" | "purple";
 }) {
   const colorMap = {
-    emerald: "from-emerald-500/10 border-emerald-500/20 text-emerald-400",
-    cyan: "from-cyan-500/10 border-cyan-500/20 text-cyan-400",
-    amber: "from-amber-500/10 border-amber-500/20 text-amber-400",
-    purple: "from-purple-500/10 border-purple-500/20 text-purple-400",
+    emerald: { accent: "#10CFA3" },
+    cyan: { accent: "#3B82F6" },
+    amber: { accent: "#F59E0B" },
+    purple: { accent: "#8B5CF6" },
   };
+
+  const { accent } = colorMap[color];
   const { count, ref } = useCountUp(value);
 
   return (
     <div
       ref={ref}
-      className={cn(
-        "rounded-xl border bg-gradient-to-br to-transparent p-4",
-        colorMap[color]
-      )}
+      className="rounded-[20px] p-4 transition-all duration-200"
+      style={{
+        background: "var(--card-elevated)",
+        border: "1px solid var(--color-border)",
+        boxShadow: "var(--shadow-card-soft, none)",
+      }}
     >
-      <p className={cn("text-2xl font-bold tabular-nums", colorMap[color].split(" ").pop())}>
+      <p className="text-3xl font-bold tabular-nums" style={{ color: accent }}>
         {count}
       </p>
-      <p className="mt-1 text-xs text-foreground/50">{label}</p>
+      <p className="mt-1.5 text-xs font-medium" style={{ color: "var(--text-muted)" }}>{label}</p>
     </div>
   );
 }

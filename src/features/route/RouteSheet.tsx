@@ -14,29 +14,51 @@ import type { Route, Station } from "@/types/metro";
 import { cn, formatDuration, formatDistance } from "@/lib/utils";
 
 // ─── Data-driven transfer direction ──────────────────────────────────────────
-// Looks up the line's ordered stationIds, finds where nextStation sits,
-// and picks the terminal at whichever end it's heading toward.
+// Determines direction by looking at ALL stations after the transfer on the new line.
+// Returns the terminal station name (first or last in line array).
 
 function getTransferLabel(
-  nextStation: Station | undefined,
-  toLineId: number
+  currentStationId: string,
+  toLineId: number,
+  stationSequence: Station[]
 ): string {
   const base = `تبادل به خط ${toLineId}`;
-  if (!nextStation) return base;
-
+  
   const line = MetroDataService.getLine(toLineId);
   if (!line || line.stationIds.length < 2) return base;
 
-  const idx = line.stationIds.indexOf(nextStation.id);
-  if (idx === -1) return base;          // next station not on this line (shouldn't happen)
+  // Find current transfer station in route
+  const currentIdx = stationSequence.findIndex(s => s.id === currentStationId);
+  if (currentIdx === -1 || currentIdx >= stationSequence.length - 1) return base;
 
-  const midpoint = (line.stationIds.length - 1) / 2;
+  // Collect all stations AFTER this transfer that belong to the new line
+  const stationsOnNewLine: string[] = [];
+  for (let i = currentIdx + 1; i < stationSequence.length; i++) {
+    const station = stationSequence[i];
+    if (station.lines.includes(toLineId)) {
+      stationsOnNewLine.push(station.id);
+    } else {
+      break; // stopped using this line
+    }
+  }
 
-  // Terminal toward which the train is heading
-  const terminalId =
-    idx <= midpoint
-      ? line.stationIds[0]                          // heading toward first terminal
-      : line.stationIds[line.stationIds.length - 1]; // heading toward last terminal
+  if (stationsOnNewLine.length === 0) return base;
+
+  // Determine direction: are we moving toward higher or lower indices?
+  const firstStationOnNewLine = stationsOnNewLine[0];
+  const lastStationOnNewLine = stationsOnNewLine[stationsOnNewLine.length - 1];
+  
+  const firstIdx = line.stationIds.indexOf(firstStationOnNewLine);
+  const lastIdx = line.stationIds.indexOf(lastStationOnNewLine);
+  
+  if (firstIdx === -1 || lastIdx === -1) return base;
+
+  const movingTowardEnd = lastIdx > firstIdx;
+
+  // Simply return first or last station in the line array (assumes they are terminals)
+  const terminalId = movingTowardEnd
+    ? line.stationIds[line.stationIds.length - 1]  // last station
+    : line.stationIds[0];                           // first station
 
   const terminal = MetroDataService.getStation(terminalId);
   if (!terminal) return base;
@@ -194,7 +216,7 @@ function RouteTimeline({ route }: { route: Route }) {
             lineColor={lineColor}
             showConnector={!isLast}
             transfer={transfer}
-            nextStation={nextStation}
+            stationSequence={stations}
           />
         );
       })}
@@ -214,7 +236,7 @@ function getCurrentLine(station: Station, next: Station | undefined): number | n
 
 function TimelineItem({
   station, isFirst, isLast, isTransfer,
-  lineColor, showConnector, transfer, nextStation,
+  lineColor, showConnector, transfer, stationSequence,
 }: {
   station: Station;
   isFirst: boolean;
@@ -223,7 +245,7 @@ function TimelineItem({
   lineColor: string;
   showConnector: boolean;
   transfer?: { fromLineId: number; toLineId: number };
-  nextStation?: Station;
+  stationSequence: Station[];
 }) {
   const dotSize = isFirst || isLast ? "h-4 w-4 mt-3" : isTransfer ? "h-3.5 w-3.5 mt-3.5" : "h-2.5 w-2.5 mt-4";
 
@@ -266,7 +288,7 @@ function TimelineItem({
           <div className="mb-2 flex items-center gap-2 rounded-lg bg-amber-500/10 border border-amber-500/20 px-2.5 py-1.5">
             <ArrowLeftRight className="h-3 w-3 text-amber-400 shrink-0" />
             <span className="text-xs text-amber-400 flex-1">
-              {getTransferLabel(nextStation, transfer.toLineId)}
+              {getTransferLabel(station.id, transfer.toLineId, stationSequence)}
             </span>
             <span className="text-xs text-foreground/30 whitespace-nowrap">~۳ دقیقه</span>
           </div>

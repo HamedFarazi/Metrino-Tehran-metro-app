@@ -14,6 +14,8 @@ interface SettingsPopupProps {
   onClose: () => void;
   currentTheme: ThemeMode;
   onThemeChange: (theme: ThemeMode) => void;
+  /** above = bottom nav; aside = desktop sidebar (open to the right) */
+  placement?: "above" | "aside";
 }
 
 const THEMES: { id: ThemeMode; labelFa: string; icon: React.ElementType; accent: string }[] = [
@@ -23,11 +25,16 @@ const THEMES: { id: ThemeMode; labelFa: string; icon: React.ElementType; accent:
   { id: "darya",  labelFa: "دریا",   icon: Waves,   accent: "text-indigo-400" },
 ];
 
-export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: SettingsPopupProps) {
+export function SettingsPopup({
+  open,
+  onClose,
+  currentTheme,
+  onThemeChange,
+  placement = "above",
+}: SettingsPopupProps) {
   const ref = useRef<HTMLDivElement>(null);
   const { state: installState, install, installing, canShow } = usePWAInstall();
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -37,7 +44,6 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
     return () => document.removeEventListener("mousedown", handler);
   }, [open, onClose]);
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -45,111 +51,132 @@ export function SettingsPopup({ open, onClose, currentTheme, onThemeChange }: Se
     return () => document.removeEventListener("keydown", handler);
   }, [open, onClose]);
 
+  const positionClass =
+    placement === "aside"
+      ? "absolute right-full top-0 mr-3 z-[200]"
+      : "absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-[200]";
+
   return (
     <AnimatePresence>
       {open && (
         <motion.div
           ref={ref}
-          initial={{ opacity: 0, scale: 0.92, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.92, y: 10 }}
+          initial={{
+            opacity: 0,
+            scale: 0.92,
+            y: placement === "aside" ? 0 : 10,
+            x: placement === "aside" ? 8 : 0,
+          }}
+          animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
+          exit={{
+            opacity: 0,
+            scale: 0.92,
+            y: placement === "aside" ? 0 : 10,
+            x: placement === "aside" ? 8 : 0,
+          }}
           transition={{ type: "spring", damping: 24, stiffness: 320 }}
-          className="absolute bottom-full mb-3 left-1/2 -translate-x-1/2 z-50 w-60 rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)]/90 backdrop-blur-2xl shadow-[0_8px_40px_rgba(0,0,0,0.4)] p-3"
+          className={cn("w-60 rounded-[20px] p-4 shadow-xl", positionClass)}
           dir="rtl"
+          style={{
+            background: "var(--glass-bg, rgba(11, 21, 42, 0.92))",
+            border: "1px solid var(--glass-border, rgba(130, 150, 200, 0.22))",
+            backdropFilter: "blur(24px)",
+            boxShadow: "var(--shadow-nav, 0 -10px 40px rgba(0, 0, 0, 0.35))",
+            color: "var(--text-primary)",
+          }}
         >
-          {/* Header */}
-          <div className="flex items-center justify-between mb-3 px-1">
-            <span className="text-xs font-medium text-[var(--color-foreground)]/60">تنظیمات</span>
+          <div className="flex items-center justify-between mb-3">
+            <span className="text-xs font-semibold" style={{ color: "var(--text-secondary)" }}>تنظیمات</span>
             <button
               onClick={onClose}
-              className="flex h-5 w-5 items-center justify-center rounded-full text-[var(--color-foreground)]/30 hover:text-[var(--color-foreground)] transition-colors"
+              className="flex h-6 w-6 items-center justify-center rounded-full transition-colors"
+              style={{ color: "var(--text-muted)" }}
             >
-              <X className="h-3 w-3" />
+              <X className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          {/* PWA Install section */}
           {canShow && (
             <>
-              <p className="text-[10px] text-[var(--color-foreground)]/30 uppercase tracking-wider px-1 mb-2">
+              <p className="text-[10px] uppercase tracking-wider mb-2.5" style={{ color: "var(--text-muted)" }}>
                 نصب برنامه
               </p>
               <div className="mb-3">
                 {installState === "installed" ? null : installState === "available" ? (
-                  /* Chrome/Android — native prompt */
                   <button
                     onClick={install}
                     disabled={installing}
-                    className={cn(
-                      "flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm transition-all",
-                      "bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/25",
-                      "hover:bg-[var(--color-primary)]/20 active:scale-95",
-                      installing && "opacity-60 pointer-events-none"
-                    )}
+                    className="flex w-full items-center gap-2.5 rounded-xl px-3.5 py-3 text-sm transition-all active:scale-95"
+                    style={{
+                      background: "var(--component-active-bg)",
+                      border: "1px solid rgba(124, 92, 252, 0.30)",
+                    }}
                   >
-                    <Download className={cn(
-                      "h-4 w-4 shrink-0",
-                      installing ? "animate-bounce text-[var(--color-primary)]" : "text-[var(--color-primary)]"
-                    )} />
-                    <span className="flex-1 text-right text-[var(--color-foreground)] font-medium">
+                    <Download className={cn("h-4 w-4 shrink-0", installing && "animate-bounce")} style={{ color: "var(--color-primary)" }} />
+                    <span className="flex-1 text-right font-medium" style={{ color: "var(--text-primary)" }}>
                       {installing ? "در حال نصب…" : "نصب برنامه"}
                     </span>
                   </button>
                 ) : installState === "ios" ? (
-                  /* iOS Safari — manual steps */
-                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-sky-500/10 border border-sky-500/20">
+                  <div className="flex flex-col gap-2 rounded-xl px-3.5 py-3" style={{
+                    background: "rgba(22, 199, 232, 0.10)",
+                    border: "1px solid rgba(22, 199, 232, 0.25)",
+                  }}>
                     <div className="flex items-center gap-2">
-                      <Smartphone className="h-4 w-4 text-sky-400 shrink-0" />
-                      <span className="text-xs text-sky-400 font-medium">نصب در iOS</span>
+                      <Smartphone className="h-4 w-4 shrink-0" style={{ color: "#16C7E8" }} />
+                      <span className="text-xs font-medium" style={{ color: "#16C7E8" }}>نصب در iOS</span>
                     </div>
-                    <p className="text-[11px] text-[var(--color-foreground)]/50 leading-relaxed">
+                    <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                       Safari ← دکمه Share ← «Add to Home Screen»
                     </p>
                   </div>
                 ) : (
-                  /* manual — browser supports SW but no auto-prompt yet */
-                  <div className="flex flex-col gap-1.5 rounded-xl px-3 py-2.5 bg-[var(--color-primary)]/8 border border-[var(--color-primary)]/15">
+                  <div className="flex flex-col gap-2 rounded-xl px-3.5 py-3" style={{
+                    background: "var(--component-active-bg)",
+                    border: "1px solid rgba(124, 92, 252, 0.20)",
+                  }}>
                     <div className="flex items-center gap-2">
-                      <Download className="h-4 w-4 text-[var(--color-primary)] shrink-0" />
-                      <span className="text-xs text-[var(--color-foreground)]/80 font-medium">نصب برنامه</span>
+                      <Download className="h-4 w-4 shrink-0" style={{ color: "var(--color-primary)" }} />
+                      <span className="text-xs font-medium" style={{ color: "var(--text-primary)" }}>نصب برنامه</span>
                     </div>
-                    <p className="text-[11px] text-[var(--color-foreground)]/45 leading-relaxed">
+                    <p className="text-[11px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
                       منوی مرورگر ← «Install app» یا «Add to Home Screen»
                     </p>
                   </div>
                 )}
               </div>
-              <div className="h-px bg-[var(--color-border)]/50 mx-1 mb-3" />
+              <div className="h-px mb-3" style={{ background: "var(--color-border)" }} />
             </>
           )}
 
-          {/* Theme section */}
-          <p className="text-[10px] text-[var(--color-foreground)]/30 uppercase tracking-wider px-1 mb-2">
+          <p className="text-[10px] uppercase tracking-wider mb-2.5" style={{ color: "var(--text-muted)" }}>
             تم
           </p>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             {THEMES.map(({ id, labelFa, icon: Icon, accent }) => {
               const isActive = currentTheme === id;
               return (
                 <button
                   key={id}
                   onClick={() => { onThemeChange(id); onClose(); }}
-                  className={cn(
-                    "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all",
-                    isActive
-                      ? "bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20"
-                      : "text-[var(--color-foreground)]/60 hover:bg-[var(--color-foreground)]/6 hover:text-[var(--color-foreground)] border border-transparent"
-                  )}
+                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors"
+                  style={{
+                    background: isActive ? "var(--component-active-bg)" : "transparent",
+                    border: isActive ? "1px solid rgba(124, 92, 252, 0.30)" : "1px solid transparent",
+                  }}
                 >
-                  <Icon className={cn("h-4 w-4 shrink-0", isActive ? accent : "")} />
-                  <span className={cn(
-                    "flex-1 text-right text-[var(--color-foreground)]",
-                    isActive ? "font-medium" : "opacity-70"
-                  )}>
+                  <Icon className={cn("h-4 w-4 shrink-0", isActive ? accent : "")}
+                    style={{ color: isActive ? undefined : "var(--text-muted)" }} />
+                  <span className="flex-1 text-right"
+                    style={{
+                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
+                      fontWeight: isActive ? 600 : 400,
+                    }}>
                     {labelFa}
                   </span>
                   {isActive && (
-                    <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", accent.replace("text-", "bg-"))} />
+                    <span className="h-1.5 w-1.5 rounded-full shrink-0"
+                      style={{ background: "var(--color-primary)" }} />
                   )}
                 </button>
               );

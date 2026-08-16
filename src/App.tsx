@@ -6,13 +6,14 @@ import { lazy, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMetroStore } from "@/store/metro.store";
 import { BottomNav } from "@/components/layout/BottomNav";
+import { DesktopSidebar } from "@/components/layout/DesktopSidebar";
+import { DesktopRightRail } from "@/components/layout/DesktopRightRail";
 import { SearchPanel } from "@/features/search/SearchPanel";
 import { StationSheet } from "@/features/station/StationSheet";
 import { RouteSheet } from "@/features/route/RouteSheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-// Lazy load pages for performance
 const HomePage = lazy(() =>
   import("@/pages/HomePage").then((m) => ({ default: m.HomePage }))
 );
@@ -22,8 +23,6 @@ const MapPage = lazy(() =>
 const FavoritesPage = lazy(() =>
   import("@/pages/FavoritesPage").then((m) => ({ default: m.FavoritesPage }))
 );
-
-// ─── Page Skeleton ────────────────────────────────────────────────────────────
 
 function PageSkeleton() {
   return (
@@ -38,8 +37,6 @@ function PageSkeleton() {
     </div>
   );
 }
-
-// ─── Tab Content ──────────────────────────────────────────────────────────────
 
 function TabContent() {
   const { activeTab } = useMetroStore();
@@ -64,33 +61,61 @@ function TabContent() {
   );
 }
 
-// ─── App ──────────────────────────────────────────────────────────────────────
-
-function App() {
-  const { activeTab } = useMetroStore();
-  const isMapPage = activeTab === "map";
-
+function GlobalOverlays() {
   return (
-    <div className={cn(
-      "relative flex h-svh w-full flex-col overflow-hidden",
-      isMapPage ? "bg-transparent" : "bg-background"
-    )}>
-      {/* Status Bar Spacer */}
-      <div className="h-safe-top" />
-
-      {/* Main Content */}
-      <main className="flex-1 overflow-y-auto scrollbar-thin">
-        <TabContent />
-      </main>
-
-      {/* Bottom Navigation — fixed, floats over everything including MapPage */}
-      <BottomNav />
-
-      {/* Global Overlays */}
+    <>
       <SearchPanel />
       <StationSheet />
       <RouteSheet />
-    </div>
+    </>
+  );
+}
+
+function App() {
+  const { activeTab } = useMetroStore();
+  const isMap = activeTab === "map";
+
+  return (
+    <>
+      {/* Mobile / Tablet */}
+      <div className="lg:hidden relative flex h-svh w-full flex-col overflow-hidden">
+        <div className="h-safe-top" />
+        <main className="flex-1 overflow-y-auto scrollbar-thin">
+          <TabContent />
+        </main>
+        <BottomNav />
+        <GlobalOverlays />
+      </div>
+
+      {/* Desktop — Map: fullscreen + mobile-style bottom dock (no sidebars) */}
+      {isMap ? (
+        <div className="hidden lg:block relative h-svh w-full overflow-hidden">
+          <TabContent />
+          <BottomNav />
+          <GlobalOverlays />
+        </div>
+      ) : (
+        /* Desktop — Home / Favorites: sidebar + main + right rail */
+        <div className="hidden lg:block min-h-screen">
+          <div
+            className="max-w-[1800px] mx-auto p-[14px]"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "120px minmax(0, 1fr) 360px",
+              gap: "14px",
+              minHeight: "calc(100vh - 28px)",
+            }}
+          >
+            <DesktopSidebar />
+            <main className={cn("overflow-y-auto scrollbar-thin")}>
+              <TabContent />
+            </main>
+            <DesktopRightRail />
+          </div>
+          <GlobalOverlays />
+        </div>
+      )}
+    </>
   );
 }
 
