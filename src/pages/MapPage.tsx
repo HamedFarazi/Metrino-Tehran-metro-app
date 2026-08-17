@@ -675,14 +675,24 @@ function OfflineMap() {
                   className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
                 >
                   <div className="flex flex-col items-center gap-3 rounded-2xl bg-black/50 backdrop-blur-xl border border-white/10 px-8 py-6">
-                    <motion.span
+                    <motion.div
                       animate={{ x: [0, 10, -10, 8, -6, 0], y: [0, -5, 5, -3, 3, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                      className="text-4xl select-none"
+                      className="relative"
                     >
-                      👆
-                    </motion.span>
-                    <p className="text-xs text-white/60" dir="rtl">برای جابجایی بکشید</p>
+                      <div className="flex items-center justify-center h-12 w-12 rounded-full"
+                        style={{ background: "rgba(139, 92, 246, 0.2)", border: "2px solid rgba(139, 92, 246, 0.4)" }}>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" 
+                          stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" 
+                          className="h-6 w-6" style={{ color: "#A855F7" }}>
+                          <path d="M5 9l-3 3 3 3M9 5l3-3 3 3M15 19l-3 3-3-3M19 9l3 3-3 3M2 12h20M12 2v20"/>
+                        </svg>
+                      </div>
+                    </motion.div>
+                    <div className="flex flex-col items-center gap-1" dir="rtl">
+                      <p className="text-sm font-medium text-white/80">برای جابجایی بکشید</p>
+                      <p className="text-xs text-white/40">برای بزرگ‌نمایی دوبار لمس کنید</p>
+                    </div>
                   </div>
                 </motion.div>
               )}

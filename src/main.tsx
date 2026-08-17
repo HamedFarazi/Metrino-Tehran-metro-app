@@ -3,10 +3,12 @@ import { createRoot } from "react-dom/client";
 import "@/index.css";
 import App from "@/App";
 import { initDeveloperConsole, suppressProductionDebugLogs } from "@/lib/dev-console";
+import { initMetroCommands } from "@/features/dev-easter-egg/devConsole";
 
 // ── Initialize developer console (production only) ────────────────────────────
 initDeveloperConsole();
 suppressProductionDebugLogs();
+initMetroCommands();
 
 // ── Apply saved theme before first render to avoid flash ──────────────────────
 (function initTheme() {

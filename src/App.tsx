@@ -11,6 +11,8 @@ import { DesktopRightRail } from "@/components/layout/DesktopRightRail";
 import { SearchPanel } from "@/features/search/SearchPanel";
 import { StationSheet } from "@/features/station/StationSheet";
 import { RouteSheet } from "@/features/route/RouteSheet";
+import { DevEasterEgg } from "@/features/dev-easter-egg/DevEasterEgg";
+import { useDevEasterEgg } from "@/features/dev-easter-egg/useDevEasterEgg";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -62,11 +64,14 @@ function TabContent() {
 }
 
 function GlobalOverlays() {
+  const { showEasterEgg, closeEasterEgg } = useDevEasterEgg();
+
   return (
     <>
       <SearchPanel />
       <StationSheet />
       <RouteSheet />
+      {showEasterEgg && <DevEasterEgg onClose={closeEasterEgg} />}
     </>
   );
 }
