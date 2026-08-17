@@ -68,7 +68,7 @@ export function BottomNav() {
   const menuItems = [
     { label: "home",      labelFa: "خانه",        icon: Home,     onClick: () => setActiveTab("home") },
     { label: "map",       labelFa: "نقشه",         icon: Map,      onClick: () => setActiveTab("map") },
-    { label: "favorites", labelFa: "علاقه‌مندی",   icon: Star,     onClick: () => setActiveTab("favorites") },
+    { label: "favorites", labelFa: "علاقه",        icon: Star,     onClick: () => setActiveTab("favorites") },
     { label: "settings",  labelFa: "تنظیمات",      icon: Settings, onClick: handleSettingsClick },
   ];
 
@@ -95,9 +95,21 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-5 inset-x-0 z-40 flex justify-center pointer-events-none"
+      className="fixed bottom-4 inset-x-0 z-40 flex justify-center px-3 pointer-events-none"
       aria-label="Navigation"
     >
+      {/* Soft ambient glow behind floating nav (dark) */}
+      {theme !== "light" && theme !== "darya" && (
+        <div
+          className="pointer-events-none absolute bottom-0 left-1/2 h-28 w-[min(420px,92vw)] -translate-x-1/2 md:hidden"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(99,102,241,0.22) 0%, rgba(34,211,238,0.08) 42%, transparent 70%)",
+            filter: "blur(8px)",
+          }}
+          aria-hidden
+        />
+      )}
       <div className="pointer-events-auto relative" ref={settingsAnchorRef}>
         {/* Settings Popup — anchored above the nav */}
         <SettingsPopup

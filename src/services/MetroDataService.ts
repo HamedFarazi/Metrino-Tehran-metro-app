@@ -34,12 +34,16 @@ export class MetroDataService {
    * Initialize service with raw data
    */
   async initialize(rawData: RawStationData): Promise<InitializationResult> {
-    console.log('Initializing MetroDataService...');
+    if (import.meta.env.DEV) {
+      console.log('Initializing MetroDataService...');
+    }
     
     try {
       // Step 1: Validate raw data
       const rawValidation = this.validator.validateRawData(rawData);
-      console.log('Raw data validation completed');
+      if (import.meta.env.DEV) {
+        console.log('Raw data validation completed');
+      }
       
       if (!rawValidation.isValid && rawValidation.errors.length > 0) {
         return {
@@ -61,7 +65,9 @@ export class MetroDataService {
         this.lines,
         this.connections
       );
-      console.log('Domain model validation completed');
+      if (import.meta.env.DEV) {
+        console.log('Domain model validation completed');
+      }
       
       if (!domainValidation.isValid && domainValidation.errors.length > 0) {
         return {
@@ -77,7 +83,9 @@ export class MetroDataService {
       // Step 5: Mark as initialized
       this.isInitialized = true;
       
-      console.log(`Service initialized with ${this.stations.length} stations, ${this.lines.length} lines, ${this.connections.length} connections`);
+      if (import.meta.env.DEV) {
+        console.log(`Service initialized with ${this.stations.length} stations, ${this.lines.length} lines, ${this.connections.length} connections`);
+      }
       
       return {
         success: true,

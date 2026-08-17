@@ -61,7 +61,9 @@ export class ValidationService {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
     
-    console.log('Validating raw data...');
+    if (import.meta.env.DEV) {
+      console.log('Validating raw data...');
+    }
     
     // Basic structure validation
     if (!rawData || typeof rawData !== 'object') {
@@ -107,7 +109,9 @@ export class ValidationService {
     const errors: ValidationError[] = [];
     const warnings: ValidationWarning[] = [];
     
-    console.log('Validating domain models...');
+    if (import.meta.env.DEV) {
+      console.log('Validating domain models...');
+    }
     
     // Validate stations
     stations.forEach(station => {

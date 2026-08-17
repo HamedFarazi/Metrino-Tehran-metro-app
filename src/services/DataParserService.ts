@@ -22,7 +22,9 @@ export class DataParserService {
     lines: MetroLine[];
     connections: MetroConnection[];
   } {
-    console.log('Starting data parsing...');
+    if (import.meta.env.DEV) {
+      console.log('Starting data parsing...');
+    }
     
     // Step 1: Generate stable IDs for all stations
     this.generateStationIds(rawData);
@@ -36,7 +38,9 @@ export class DataParserService {
     // Step 4: Parse connections between stations
     const connections = this.parseConnections(rawData, stations);
     
-    console.log(`Parsing complete: ${stations.length} stations, ${lines.length} lines, ${connections.length} connections`);
+    if (import.meta.env.DEV) {
+      console.log(`Parsing complete: ${stations.length} stations, ${lines.length} lines, ${connections.length} connections`);
+    }
     
     return {
       stations,

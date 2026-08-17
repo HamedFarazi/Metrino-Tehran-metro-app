@@ -2,6 +2,11 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/index.css";
 import App from "@/App";
+import { initDeveloperConsole, suppressProductionDebugLogs } from "@/lib/dev-console";
+
+// ── Initialize developer console (production only) ────────────────────────────
+initDeveloperConsole();
+suppressProductionDebugLogs();
 
 // ── Apply saved theme before first render to avoid flash ──────────────────────
 (function initTheme() {

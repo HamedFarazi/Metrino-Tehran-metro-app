@@ -10,7 +10,9 @@ export class DataLoader {
    */
   static async loadRawStationData(): Promise<RawStationData> {
     try {
-      console.log('Loading raw station data...');
+      if (import.meta.env.DEV) {
+        console.log('Loading raw station data...');
+      }
       
       // In a real application, this would fetch from a URL or file system
       // For now, we'll return a placeholder that will be replaced with actual data

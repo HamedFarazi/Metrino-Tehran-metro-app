@@ -159,10 +159,16 @@ function IconContainer({
     >
       <motion.div
         ref={ref}
-        style={{ width, height }}
+        style={{
+          width,
+          height,
+          background: "var(--input-bg)",
+          border: "1px solid var(--glass-border)",
+          boxShadow: "inset 0 1px 0 rgba(255,255,255,0.05)",
+        }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
-        className="relative flex aspect-square items-center justify-center rounded-full bg-surface border border-border"
+        className="relative flex aspect-square items-center justify-center rounded-full"
       >
         <AnimatePresence>
           {hovered && (

@@ -4,12 +4,16 @@
  */
 import { useState, useRef, useEffect } from "react";
 import { motion, type Variants } from "framer-motion";
-import { Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap, LocateFixed } from "lucide-react";
+import {
+  Search, Navigation, Star, Clock, ArrowLeftRight, MapPin, Zap, LocateFixed, Send,
+  Flag, TrainFront, Activity, GitBranch,
+} from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
 import { MetroRouteService } from "@/services/metro-route.service";
 import { LineBadge } from "@/components/shared/LineBadge";
 import { MetroLinesAnimation } from "@/components/ui/metro-lines-animation";
+import { ParticlesNetworkBackdrop } from "@/components/ui/particles-network-backdrop";
 import { useGeolocation } from "@/hooks/useGeolocation";
 import { useThemeMode } from "@/hooks/useThemeMode";
 import type { Station } from "@/types/metro";
@@ -37,6 +41,7 @@ export function HomePage() {
   const { originStation, destinationStation, openSearch, swapOriginDestination } =
     useMetroStore();
   const stats = MetroDataService.getStats();
+  const { isLight } = useThemeMode();
 
   return (
     <>
@@ -62,18 +67,30 @@ export function HomePage() {
           />
         </motion.div>
 
-        {/* Content Sections */}
+        {/* Upper content */}
         <motion.div
-          className="mt-6 px-4 space-y-6"
+          className="mt-6 px-4 space-y-6 relative z-10"
           initial="hidden"
           animate="visible"
           variants={stagger}
         >
           <NearbyStationsSection />
           <FavoritesSection />
-          <RecentRoutesSection />
-          <QuickStatsSection stats={stats} />
         </motion.div>
+
+        {/* Bottom zone — particles.js network (dark only) */}
+        <div className="relative mt-4 flex-1 min-h-[180px] sm:min-h-[320px]">
+          {!isLight && <ParticlesNetworkBackdrop />}
+          <motion.div
+            className="relative z-10 px-4 space-y-6 pb-6 pt-2"
+            initial="hidden"
+            animate="visible"
+            variants={stagger}
+          >
+            <RecentRoutesSection />
+            <QuickStatsSection stats={stats} />
+          </motion.div>
+        </div>
       </div>
 
       {/* Desktop Layout */}
@@ -168,10 +185,11 @@ function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataServi
                     backdropFilter: "blur(12px)",
                   }
                 : {
-                    background: "rgba(20, 230, 181, 0.08)",
-                    border: "1px solid rgba(20, 230, 181, 0.30)",
-                    color: "#14E6B5",
-                    boxShadow: "0 0 25px rgba(20, 230, 181, 0.08)",
+                    background: "rgba(168, 85, 247, 0.12)",
+                    border: "1px solid rgba(196, 181, 253, 0.35)",
+                    color: "#C4B5FD",
+                    boxShadow: "0 0 28px rgba(168, 85, 247, 0.18)",
+                    backdropFilter: "blur(12px)",
                   }
             }
           >
@@ -186,7 +204,7 @@ function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataServi
             style={{
               backgroundImage: isLight
                 ? "linear-gradient(90deg, #11152B, #7C5CFC)"
-                : "linear-gradient(90deg, #F8FAFF, #C4B5FD, #8B5CF6)",
+                : "linear-gradient(180deg, #FFFFFF 0%, #E9D5FF 45%, #A78BFA 100%)",
               backgroundColor: "transparent",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
@@ -199,7 +217,7 @@ function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataServi
           </h1>
           <p
             className="text-base font-normal"
-            style={{ color: isLight ? "#667089" : "#8E9AB5", opacity: 0.9 }}
+            style={{ color: isLight ? "#667089" : "#A5B0C8", opacity: 0.95 }}
           >
             سریع‌ترین مسیر رو پیدا کن
           </p>
@@ -207,8 +225,8 @@ function DesktopHeroSection({ stats }: { stats: ReturnType<typeof MetroDataServi
 
         <motion.div variants={fadeUp} custom={2} className="flex items-center gap-4 mt-4">
           <StatPill value={stats.totalStations} label="ایستگاه" icon={<MapPin className="h-3.5 w-3.5" />} color="#22D3EE" isLight={isLight} />
-          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#8B5CF6" isLight={isLight} />
-          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#14E6B5" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#A78BFA" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#2DD4BF" isLight={isLight} />
         </motion.div>
       </motion.div>
     </div>
@@ -243,25 +261,28 @@ function DesktopStatCard({
   value: number;
   color: "emerald" | "cyan" | "amber" | "purple";
 }) {
+  const { isLight } = useThemeMode();
   const colorMap = {
-    emerald: { accent: '#14E6B5', glow: 'rgba(20, 230, 181, 0.12)' },
-    cyan: { accent: '#38BDF8', glow: 'rgba(56, 189, 248, 0.12)' },
-    amber: { accent: '#F59E0B', glow: 'rgba(245, 158, 11, 0.12)' },
-    purple: { accent: '#A855F7', glow: 'rgba(168, 85, 247, 0.12)' },
+    emerald: { accent: "#2DD4BF", glow: "rgba(45, 212, 191, 0.22)", border: "rgba(45, 212, 191, 0.28)" },
+    cyan: { accent: "#38BDF8", glow: "rgba(56, 189, 248, 0.22)", border: "rgba(56, 189, 248, 0.28)" },
+    amber: { accent: "#FBBF24", glow: "rgba(251, 191, 36, 0.20)", border: "rgba(251, 191, 36, 0.28)" },
+    purple: { accent: "#A78BFA", glow: "rgba(167, 139, 250, 0.25)", border: "rgba(167, 139, 250, 0.30)" },
   };
-  
-  const { accent } = colorMap[color];
+
+  const { accent, glow, border } = colorMap[color];
   const { count, ref } = useCountUp(value);
 
   return (
     <div
       ref={ref}
-      className="rounded-[20px] p-5 transition-all duration-200 flex flex-col items-center justify-center text-center"
+      className="rounded-[22px] p-5 transition-all duration-200 flex flex-col items-center justify-center text-center"
       style={{
-        background: "var(--color-card)",
-        border: "1px solid var(--color-border)",
+        background: isLight ? "var(--color-card)" : "var(--card-elevated)",
+        border: isLight ? "1px solid var(--color-border)" : `1px solid ${border}`,
         height: "160px",
-        boxShadow: "var(--shadow-card-soft, 0 8px 30px rgba(38,48,80,0.06))",
+        boxShadow: isLight
+          ? "var(--shadow-card-soft)"
+          : `0 12px 36px rgba(0,0,0,0.28), 0 0 28px ${glow}`,
       }}
     >
       <p className="text-4xl font-bold tabular-nums mb-2" style={{ color: accent }}>
@@ -295,7 +316,7 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
         style={{
           background: isLight
             ? "linear-gradient(to bottom, rgba(255,255,255,0.28) 0%, rgba(255,255,255,0.08) 40%, rgba(246,247,252,0.55) 100%)"
-            : "linear-gradient(to bottom, rgba(3, 8, 23, 0.85) 0%, rgba(3, 8, 23, 0.65) 50%, rgba(3, 8, 23, 0.95) 100%)",
+            : "linear-gradient(to bottom, rgba(5, 8, 20, 0.55) 0%, rgba(5, 8, 20, 0.28) 42%, rgba(5, 8, 20, 0.88) 100%)",
         }}
       />
 
@@ -322,10 +343,11 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
                     backdropFilter: "blur(12px)",
                   }
                 : {
-                    background: "rgba(20, 230, 181, 0.08)",
-                    border: "1px solid rgba(20, 230, 181, 0.30)",
-                    color: "#14E6B5",
-                    boxShadow: "0 0 25px rgba(20, 230, 181, 0.08)",
+                    background: "rgba(168, 85, 247, 0.12)",
+                    border: "1px solid rgba(196, 181, 253, 0.35)",
+                    color: "#C4B5FD",
+                    boxShadow: "0 0 28px rgba(168, 85, 247, 0.18)",
+                    backdropFilter: "blur(12px)",
                   }
             }
           >
@@ -340,7 +362,7 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
             style={{
               backgroundImage: isLight
                 ? "linear-gradient(90deg, #11152B, #7C5CFC)"
-                : "linear-gradient(90deg, #F8FAFF, #C4B5FD, #8B5CF6)",
+                : "linear-gradient(180deg, #FFFFFF 0%, #E9D5FF 45%, #A78BFA 100%)",
               backgroundColor: "transparent",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
@@ -353,7 +375,7 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
           </h1>
           <p
             className="text-sm sm:text-base font-normal"
-            style={{ color: isLight ? "#667089" : "#8E9AB5", opacity: 0.9 }}
+            style={{ color: isLight ? "#667089" : "#A5B0C8", opacity: 0.95 }}
           >
             سریع‌ترین مسیر رو پیدا کن
           </p>
@@ -361,8 +383,8 @@ function HeroSection({ stats }: { stats: ReturnType<typeof MetroDataService.getS
 
         <motion.div variants={fadeUp} custom={2} className="flex justify-center gap-2 sm:gap-3 mt-5 sm:mt-6 flex-wrap px-2">
           <StatPill value={stats.totalStations} label="ایستگاه" icon={<MapPin className="h-3.5 w-3.5" />} color="#22D3EE" isLight={isLight} />
-          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#8B5CF6" isLight={isLight} />
-          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#14E6B5" isLight={isLight} />
+          <StatPill value={stats.totalLines} label="خط" icon={<Navigation className="h-3.5 w-3.5" />} color="#A78BFA" isLight={isLight} />
+          <StatPill value={stats.interchangeCount} label="تبادل" icon={<ArrowLeftRight className="h-3.5 w-3.5" />} color="#2DD4BF" isLight={isLight} />
         </motion.div>
       </motion.div>
     </div>
@@ -394,9 +416,10 @@ function StatPill({
               backdropFilter: "blur(14px)",
             }
           : {
-              background: "rgba(15, 25, 48, 0.75)",
-              border: "1px solid rgba(140, 150, 200, 0.18)",
-              backdropFilter: "blur(14px)",
+              background: "rgba(10, 16, 36, 0.65)",
+              border: `1px solid ${color}44`,
+              boxShadow: `0 0 20px ${color}22, inset 0 1px 0 rgba(255,255,255,0.06)`,
+              backdropFilter: "blur(16px)",
             }
       }
     >
@@ -448,35 +471,36 @@ function RoutePlannerCard({
 
   return (
     <div
-      className="rounded-[26px] p-5"
+      className="rounded-[28px] p-5 sm:p-6"
       style={{
         background: "var(--glass-bg)",
-        border: "1px solid var(--color-border)",
-        boxShadow: "var(--shadow-card, 0 15px 45px rgba(38,48,80,0.08))",
-        backdropFilter: "blur(20px)",
+        border: "1px solid var(--glass-border-strong)",
+        boxShadow: "var(--shadow-card)",
+        backdropFilter: "blur(24px) saturate(160%)",
       }}
     >
       {/* Origin */}
       <button
         onClick={onOpenOrigin}
-        className="flex w-full items-center gap-3 rounded-xl p-3.5 text-right transition-all duration-200"
+        className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-right transition-all duration-200"
         style={{
-          background: origin ? "rgba(20, 230, 181, 0.13)" : "var(--input-bg)",
-          border: origin ? "1px solid rgba(20, 230, 181, 0.35)" : "1px solid var(--input-border)",
+          background: origin ? "rgba(45, 212, 191, 0.14)" : "var(--input-bg)",
+          border: origin ? "1px solid rgba(45, 212, 191, 0.40)" : "1px solid var(--input-border)",
+          boxShadow: origin ? "0 0 24px rgba(45, 212, 191, 0.12)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         <div
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
           style={{
-            background: "rgba(20, 230, 181, 0.13)",
-            boxShadow: origin ? "0 0 20px rgba(20, 230, 181, 0.18)" : "none",
+            background: "rgba(45, 212, 191, 0.14)",
+            boxShadow: "0 0 16px rgba(45, 212, 191, 0.25)",
           }}
         >
-          <div className="h-3 w-3 rounded-full" style={{ background: "#14E6B5" }} />
+          <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#2DD4BF", boxShadow: "0 0 10px #2DD4BF" }} />
         </div>
         {origin ? (
           <div className="flex-1 min-w-0">
-            <p className="text-xs mb-0.5" style={{ color: "#14E6B5" }}>مبدا</p>
+            <p className="text-xs mb-0.5" style={{ color: "#2DD4BF" }}>مبدا</p>
             <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{origin.nameFa}</p>
           </div>
         ) : (
@@ -485,40 +509,54 @@ function RoutePlannerCard({
         <Search className="h-4 w-4 shrink-0" style={{ color: "var(--text-muted)" }} />
       </button>
 
-      {/* Swap & connector */}
-      <div className="relative flex items-center justify-center my-3">
-        <div className="absolute inset-x-8 h-px" style={{ background: "var(--color-border)" }} />
+      {/* Swap + vertical dashed connector */}
+      <div className="relative flex items-center justify-center my-2.5 h-10">
+        <div
+          className="absolute left-1/2 top-0 bottom-0 w-px -translate-x-1/2"
+          style={{
+            backgroundImage: "linear-gradient(to bottom, #2DD4BF 0%, transparent 40%, transparent 60%, #A78BFA 100%)",
+            opacity: 0.55,
+          }}
+        />
+        <div
+          className="absolute left-1/2 top-1 bottom-1 w-px -translate-x-1/2 border-l border-dashed"
+          style={{ borderColor: "rgba(167, 139, 250, 0.35)" }}
+        />
         <button
           onClick={onSwap}
-          className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
+          className="relative z-10 flex h-9 w-9 items-center justify-center rounded-full transition-all duration-200 hover:scale-110"
           style={{
             background: "var(--swap-bg)",
-            border: "1px solid rgba(139, 92, 246, 0.35)",
-            boxShadow: "0 5px 16px rgba(40,50,80,0.08)",
+            border: "1px solid rgba(167, 139, 250, 0.45)",
+            boxShadow: "0 0 20px rgba(139, 92, 246, 0.25)",
           }}
         >
-          <ArrowLeftRight className="h-4 w-4 rotate-90" style={{ color: "#6652D8" }} />
+          <ArrowLeftRight className="h-4 w-4 rotate-90" style={{ color: "#C4B5FD" }} />
         </button>
       </div>
 
       {/* Destination */}
       <button
         onClick={onOpenDestination}
-        className="flex w-full items-center gap-3 rounded-xl p-3.5 text-right transition-all duration-200"
+        className="flex w-full items-center gap-3 rounded-2xl p-3.5 text-right transition-all duration-200"
         style={{
-          background: destination ? "rgba(34, 211, 238, 0.13)" : "var(--input-bg)",
-          border: destination ? "1px solid rgba(34, 211, 238, 0.35)" : "1px solid var(--input-border)",
+          background: destination ? "rgba(168, 85, 247, 0.14)" : "var(--input-bg)",
+          border: destination ? "1px solid rgba(168, 85, 247, 0.40)" : "1px solid var(--input-border)",
+          boxShadow: destination ? "0 0 24px rgba(168, 85, 247, 0.14)" : "inset 0 1px 0 rgba(255,255,255,0.04)",
         }}
       >
         <div
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-          style={{ background: "rgba(34, 211, 238, 0.13)" }}
+          style={{
+            background: "rgba(168, 85, 247, 0.14)",
+            boxShadow: "0 0 16px rgba(168, 85, 247, 0.25)",
+          }}
         >
-          <MapPin className="h-5 w-5" style={{ color: "#22D3EE" }} />
+          <div className="h-2.5 w-2.5 rounded-full" style={{ background: "#A78BFA", boxShadow: "0 0 10px #A78BFA" }} />
         </div>
         {destination ? (
           <div className="flex-1 min-w-0">
-            <p className="text-xs mb-0.5" style={{ color: "#22D3EE" }}>مقصد</p>
+            <p className="text-xs mb-0.5" style={{ color: "#C4B5FD" }}>مقصد</p>
             <p className="text-sm font-semibold truncate" style={{ color: "var(--text-primary)" }}>{destination.nameFa}</p>
           </div>
         ) : (
@@ -531,17 +569,19 @@ function RoutePlannerCard({
       <button
         onClick={handleRoute}
         disabled={!canRoute}
-        className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3.5 text-base font-bold transition-all duration-200 disabled:cursor-not-allowed"
+        className="mt-5 w-full flex items-center justify-center gap-2.5 rounded-2xl py-3.5 text-base font-bold transition-all duration-200 disabled:cursor-not-allowed"
         style={{
           background: canRoute ? "var(--gradient-cta)" : "var(--input-bg)",
           color: canRoute ? "#FFFFFF" : "var(--text-muted)",
           border: canRoute ? "none" : "1px solid var(--input-border)",
-          boxShadow: canRoute ? "0 10px 25px rgba(108,99,245,0.20)" : "none",
+          boxShadow: canRoute
+            ? "0 12px 32px rgba(139, 92, 246, 0.35), 0 0 40px rgba(34, 211, 238, 0.12)"
+            : "none",
           opacity: canRoute ? 1 : 0.85,
         }}
         onMouseEnter={(e) => {
           if (canRoute) {
-            e.currentTarget.style.filter = "brightness(1.04)";
+            e.currentTarget.style.filter = "brightness(1.06)";
             e.currentTarget.style.transform = "translateY(-1px)";
           }
         }}
@@ -558,11 +598,11 @@ function RoutePlannerCard({
           if (canRoute) e.currentTarget.style.transform = "scale(1)";
         }}
       >
-        <Navigation className="h-5 w-5" />
+        <Send className="h-4 w-4" />
         {canRoute
           ? routeError
             ? "مسیری پیدا نشد"
-            : "یافتن مسیر"
+            : "سریع‌ترین مسیر رو پیدا کن"
           : "انتخاب مبدا و مقصد"}
       </button>
     </div>
@@ -679,7 +719,7 @@ function RecentRoutesSection() {
   return (
     <motion.section variants={fadeUp}>
       <SectionHeader icon={<Clock className="h-4 w-4" />} title="مسیرهای اخیر" />
-      <div className="mt-3 space-y-2">
+      <div className="mt-3 flex flex-col gap-2">
         {recentRoutes.slice(0, 3).map((r, idx) => {
           const origin = MetroDataService.getStation(r.originId);
           const dest = MetroDataService.getStation(r.destinationId);
@@ -687,10 +727,13 @@ function RecentRoutesSection() {
           return (
             <button
               key={idx}
-              className="flex w-full items-center gap-3 rounded-[16px] p-3.5 text-right transition-all duration-200"
+              type="button"
+              className="flex w-full items-center gap-2.5 rounded-xl p-2.5 text-right transition-all duration-200 active:scale-[0.99]"
               style={{
-                background: "var(--card-elevated)",
+                background: "var(--color-card)",
                 border: "1px solid var(--color-border)",
+                height: "54px",
+                boxShadow: "var(--shadow-card-soft, none)",
               }}
               onClick={() => {
                 setOriginAndDestination(origin, dest);
@@ -702,13 +745,13 @@ function RecentRoutesSection() {
               }}
             >
               <div
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
                 style={{ background: "var(--component-active-bg)" }}
               >
-                <Clock className="h-4 w-4" style={{ color: "var(--text-muted)" }} />
+                <Clock className="h-3.5 w-3.5" style={{ color: "var(--text-muted)" }} />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-medium" style={{ color: "var(--text-primary)" }}>
                   {origin.nameFa} <span style={{ color: "var(--text-muted)" }}>←</span> {dest.nameFa}
                 </p>
               </div>
@@ -758,12 +801,41 @@ function useCountUp(target: number, duration = 1200) {
 function QuickStatsSection({ stats }: { stats: ReturnType<typeof MetroDataService.getStats> }) {
   return (
     <motion.section variants={fadeUp} className="pb-2">
-      <SectionHeader icon={<Zap className="h-4 w-4" />} title="آمار سریع" />
-      <div className="mt-3 grid grid-cols-2 gap-3">
-        <StatCard label="ایستگاه فعال"   value={stats.activeStations}   color="emerald" />
-        <StatCard label="ایستگاه تبادلی" value={stats.interchangeCount} color="amber" />
-        <StatCard label="ایستگاه پایانه" value={stats.terminalCount}    color="cyan" />
-        <StatCard label="اتصالات"         value={stats.totalConnections} color="purple" />
+      <div className="mb-3 flex items-center gap-2">
+        <Activity className="h-4 w-4" style={{ color: "var(--color-primary)" }} />
+        <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+          آمار لحظه‌ای
+        </h2>
+        <span
+          className="h-1.5 w-1.5 rounded-full"
+          style={{
+            background: "var(--color-primary)",
+            boxShadow: "0 0 8px color-mix(in srgb, var(--color-primary) 40%, transparent)",
+            animation: "pulse 1.8s ease-in-out infinite",
+          }}
+        />
+      </div>
+      <div className="grid grid-cols-4 gap-1">
+        <StatCard
+          label="ایستگاه تبادلی"
+          value={stats.interchangeCount}
+          icon={<ArrowLeftRight className="h-3.5 w-3.5" />}
+        />
+        <StatCard
+          label="ایستگاه فعال"
+          value={stats.activeStations}
+          icon={<TrainFront className="h-3.5 w-3.5" />}
+        />
+        <StatCard
+          label="اتصالات"
+          value={stats.totalConnections}
+          icon={<GitBranch className="h-3.5 w-3.5" />}
+        />
+        <StatCard
+          label="ایستگاه پایانه"
+          value={stats.terminalCount}
+          icon={<Flag className="h-3.5 w-3.5" />}
+        />
       </div>
     </motion.section>
   );
@@ -803,8 +875,9 @@ function SectionHeader({
 }
 
 function StationChip({ station, onClick }: { station: Station; onClick: () => void }) {
-  const statusColor = station.type === "interchange" ? "#10CFA3" :
-                     station.type === "terminal" ? "#F59E0B" : "#EF476F";
+  const { isLight } = useThemeMode();
+  const statusColor = station.type === "interchange" ? "#2DD4BF" :
+                     station.type === "terminal" ? "#FBBF24" : "#F43F5E";
 
   return (
     <button
@@ -812,12 +885,18 @@ function StationChip({ station, onClick }: { station: Station; onClick: () => vo
       className="flex shrink-0 items-center gap-2.5 rounded-full px-4 py-2.5 transition-all duration-200"
       style={{
         background: "var(--card-elevated)",
-        border: "1px solid var(--color-border)",
+        border: isLight
+          ? "1px solid var(--color-border)"
+          : `1px solid ${statusColor}33`,
+        boxShadow: isLight ? "none" : `0 0 18px ${statusColor}18`,
       }}
     >
       <div
         className="h-2 w-2 rounded-full shrink-0"
-        style={{ backgroundColor: statusColor }}
+        style={{
+          backgroundColor: statusColor,
+          boxShadow: isLight ? "none" : `0 0 8px ${statusColor}`,
+        }}
       />
       <span className="text-sm whitespace-nowrap" style={{ color: "var(--text-secondary)" }}>
         {station.nameFa}
@@ -842,6 +921,7 @@ function FavoriteCard({
   label?: string;
   onClick: () => void;
 }) {
+  const { isLight } = useThemeMode();
   const lineColor = station.colors[0] ?? "#888";
 
   return (
@@ -850,8 +930,10 @@ function FavoriteCard({
       className="flex flex-col items-start gap-2.5 rounded-[20px] p-3.5 text-right transition-all duration-200"
       style={{
         background: "var(--card-elevated)",
-        border: "1px solid var(--color-border)",
-        boxShadow: "var(--shadow-card-soft, none)",
+        border: isLight ? "1px solid var(--color-border)" : `1px solid ${lineColor}40`,
+        boxShadow: isLight
+          ? "var(--shadow-card-soft)"
+          : `0 10px 28px rgba(0,0,0,0.28), 0 0 20px ${lineColor}22`,
       }}
     >
       <div className="flex items-center gap-2 w-full">
@@ -860,14 +942,21 @@ function FavoriteCard({
           style={{
             background: `${lineColor}30`,
             border: `1px solid ${lineColor}60`,
+            boxShadow: isLight ? "none" : `0 0 12px ${lineColor}40`,
           }}
         >
-          <div className="h-2 w-2 rounded-full" style={{ background: lineColor }} />
+          <div
+            className="h-2 w-2 rounded-full"
+            style={{
+              background: lineColor,
+              boxShadow: isLight ? "none" : `0 0 8px ${lineColor}`,
+            }}
+          />
         </div>
         <span className="text-sm font-semibold truncate flex-1" style={{ color: "var(--text-primary)" }}>
           {label ?? station.nameFa}
         </span>
-        <Star className="h-3.5 w-3.5 shrink-0" style={{ color: "#F4B740", fill: "#F4B740" }} />
+        <Star className="h-3.5 w-3.5 shrink-0" style={{ color: "#FBBF24", fill: "#FBBF24" }} />
       </div>
       <div className="flex gap-1">
         {station.lines.map((l) => (
@@ -881,36 +970,34 @@ function FavoriteCard({
 function StatCard({
   label,
   value,
-  color,
+  icon,
 }: {
   label: string;
   value: number;
-  color: "emerald" | "cyan" | "amber" | "purple";
+  icon: React.ReactNode;
 }) {
-  const colorMap = {
-    emerald: { accent: "#10CFA3" },
-    cyan: { accent: "#3B82F6" },
-    amber: { accent: "#F59E0B" },
-    purple: { accent: "#8B5CF6" },
-  };
-
-  const { accent } = colorMap[color];
   const { count, ref } = useCountUp(value);
 
   return (
     <div
       ref={ref}
-      className="rounded-[20px] p-4 transition-all duration-200"
-      style={{
-        background: "var(--card-elevated)",
-        border: "1px solid var(--color-border)",
-        boxShadow: "var(--shadow-card-soft, none)",
-      }}
+      className="flex flex-col items-center px-1 py-2 text-center"
     >
-      <p className="text-3xl font-bold tabular-nums" style={{ color: accent }}>
+      <span className="mb-1.5" style={{ color: "var(--color-primary)", opacity: 0.85 }}>
+        {icon}
+      </span>
+      <p
+        className="text-lg font-bold tabular-nums leading-none sm:text-xl"
+        style={{ color: "var(--text-primary)" }}
+      >
         {count}
       </p>
-      <p className="mt-1.5 text-xs font-medium" style={{ color: "var(--text-muted)" }}>{label}</p>
+      <p
+        className="mt-1.5 text-[9px] font-medium leading-tight sm:text-[10px]"
+        style={{ color: "var(--text-muted)" }}
+      >
+        {label}
+      </p>
     </div>
   );
 }

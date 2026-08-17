@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search, ZoomIn, ZoomOut, Maximize2,
-  Map, Satellite, Layers,
+  Map, Satellite, Layers, Eye,
   ArrowLeftRight, MapPin, Navigation, Route, X, LocateFixed,
   CloudSun, CloudRain, Cloud, Sun, CloudSnow, Wind,
 } from "lucide-react";
@@ -417,11 +417,38 @@ function ScaleTracker({ onScale }: { onScale: (s: number) => void }) {
 const IMAGE_W = 900;
 const IMAGE_H = 900; // approximate, used for initial scale calc
 
+type AccessibilityMapType = "default" | "blind" | "ramp" | "wheelchair";
+
+const ACCESSIBILITY_MAPS = {
+  default: {
+    url: "/metromap.jpg",
+    label: "نقشه کلی",
+    labelEn: "General Map",
+  },
+  blind: {
+    url: "https://metro.tehran.ir/Portals/0/1405/%D9%86%D8%A7%D8%A8%DB%8C%D9%86%D8%A7%DB%8C%D8%A7%D9%86405.jpg?ver=YECRgttb4hQmuwfBzoOi8Q%3d%3d",
+    label: "مسیر ویژه نابینایان",
+    labelEn: "Blind Path",
+  },
+  ramp: {
+    url: "https://metro.tehran.ir/Portals/0/1405/%D9%88%DB%8C%DA%98%D9%87%20%D8%B1%D9%85%D9%BE405.jpg?ver=dsC1T7ituMsPCiFu1fNlGw%3d%3d",
+    label: "ورودی همسطح یا رمپ",
+    labelEn: "Level Entry / Ramp",
+  },
+  wheelchair: {
+    url: "https://metro.tehran.ir/Portals/0/1405/%D9%88%DB%8C%D9%84%DA%86%D8%B1405.jpg?ver=fxZWUZmLLwdapR5_iH6vIA%3d%3d",
+    label: "آسانسور ویلچر",
+    labelEn: "Wheelchair Elevator",
+  },
+} as const;
+
 function OfflineMap() {
   const [scale, setScale] = useState(1);
   const [showHint, setShowHint] = useState(true);
   const { userLocation } = useMetroStore();
   const [nearestLabel, setNearestLabel] = useState<string | null>(null);
+  const [accessibilityMap, setAccessibilityMap] = useState<AccessibilityMapType>("default");
+  const [showAccessibilityPopup, setShowAccessibilityPopup] = useState(false);
 
   // Calculate initial scale so the image fits the viewport with padding
   const initialScale = Math.min(
@@ -470,8 +497,8 @@ function OfflineMap() {
               }}
             >
               <img
-                src="/metromap.jpg"
-                alt="نقشه مترو تهران"
+                src={ACCESSIBILITY_MAPS[accessibilityMap].url}
+                alt={ACCESSIBILITY_MAPS[accessibilityMap].label}
                 draggable={false}
                 style={{ 
                   width: IMAGE_W, 
@@ -483,10 +510,136 @@ function OfflineMap() {
 
             {/* Zoom controls */}
             <div className="absolute bottom-2 right-4 flex flex-col gap-1.5 z-10">
+              <ZoomBtn 
+                icon={<Eye className="h-4 w-4" />} 
+                onClick={() => setShowAccessibilityPopup(!showAccessibilityPopup)} 
+                active={showAccessibilityPopup}
+              />
               <ZoomBtn icon={<ZoomIn className="h-4 w-4" />} onClick={() => zoomIn()} />
               <ZoomBtn icon={<ZoomOut className="h-4 w-4" />} onClick={() => zoomOut()} />
               <ZoomBtn icon={<Maximize2 className="h-4 w-4" />} onClick={() => resetTransform()} />
             </div>
+
+            {/* Accessibility Map Popup */}
+            <AnimatePresence>
+              {showAccessibilityPopup && (
+                <>
+                  {/* Backdrop for mobile */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="md:hidden fixed inset-0 bg-black/40 z-[15]"
+                    onClick={() => setShowAccessibilityPopup(false)}
+                  />
+                  
+                  {/* Desktop Popup (slide from right) */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    className="hidden md:block absolute bottom-2 right-20 z-20 max-w-[280px]"
+                    dir="rtl"
+                  >
+                    <div 
+                      className="rounded-2xl p-3 min-w-[220px] w-full"
+                      style={{
+                        background: "rgba(0, 0, 0, 0.85)",
+                        backdropFilter: "blur(20px)",
+                        border: "1px solid rgba(255, 255, 255, 0.1)",
+                        boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+                      }}
+                    >
+                      <h3 className="text-sm font-semibold mb-2 px-1" style={{ color: "#F8FAFF" }}>
+                        تغییر نما
+                      </h3>
+                      <div className="space-y-1">
+                        {(Object.keys(ACCESSIBILITY_MAPS) as AccessibilityMapType[]).map((type) => (
+                          <button
+                            key={type}
+                            onClick={() => {
+                              setAccessibilityMap(type);
+                              setShowAccessibilityPopup(false);
+                            }}
+                            className="w-full text-right px-3 py-2 rounded-xl transition-all text-sm whitespace-normal"
+                            style={{
+                              background: accessibilityMap === type 
+                                ? "rgba(139, 92, 246, 0.2)" 
+                                : "rgba(255, 255, 255, 0.05)",
+                              border: `1px solid ${accessibilityMap === type 
+                                ? "rgba(139, 92, 246, 0.4)" 
+                                : "transparent"}`,
+                              color: accessibilityMap === type ? "#A855F7" : "rgba(248, 250, 255, 0.8)",
+                            }}
+                          >
+                            {ACCESSIBILITY_MAPS[type].label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+
+                  {/* Mobile Bottom Sheet */}
+                  <motion.div
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "100%" }}
+                    transition={{ type: "spring", damping: 30, stiffness: 380 }}
+                    className="md:hidden fixed bottom-0 inset-x-0 z-20 rounded-t-3xl p-5"
+                    style={{
+                      background: "rgba(0, 0, 0, 0.9)",
+                      backdropFilter: "blur(20px)",
+                      border: "1px solid rgba(255, 255, 255, 0.1)",
+                      boxShadow: "0 -8px 32px rgba(0, 0, 0, 0.6)",
+                      paddingBottom: "calc(env(safe-area-inset-bottom) + 80px)", // Space for bottom nav
+                    }}
+                    dir="rtl"
+                  >
+                    {/* Handle */}
+                    <div className="flex justify-center mb-4">
+                      <div className="h-1 w-12 rounded-full" style={{ background: "rgba(255, 255, 255, 0.2)" }} />
+                    </div>
+
+                    <h3 className="text-base font-semibold mb-3" style={{ color: "#F8FAFF" }}>
+                      انتخاب نوع نقشه
+                    </h3>
+                    
+                    <div className="space-y-2">
+                      {(Object.keys(ACCESSIBILITY_MAPS) as AccessibilityMapType[]).map((type) => (
+                        <button
+                          key={type}
+                          onClick={() => {
+                            setAccessibilityMap(type);
+                            setShowAccessibilityPopup(false);
+                          }}
+                          className="w-full text-right px-4 py-3 rounded-xl transition-all"
+                          style={{
+                            background: accessibilityMap === type 
+                              ? "rgba(139, 92, 246, 0.25)" 
+                              : "rgba(255, 255, 255, 0.08)",
+                            border: `1px solid ${accessibilityMap === type 
+                              ? "rgba(139, 92, 246, 0.5)" 
+                              : "rgba(255, 255, 255, 0.1)"}`,
+                            color: accessibilityMap === type ? "#A855F7" : "rgba(248, 250, 255, 0.9)",
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">{ACCESSIBILITY_MAPS[type].label}</span>
+                            {accessibilityMap === type && (
+                              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
 
             {/* Scale indicator */}
             <div className="absolute bottom-2 left-4 z-10 rounded-lg bg-black/40 backdrop-blur-xl border border-white/8 px-2 py-1 text-xs text-white/40">
@@ -543,12 +696,13 @@ function OfflineMap() {
 
 // ─── Zoom btn ─────────────────────────────────────────────────────────────────
 
-function ZoomBtn({ icon, onClick }: { icon: React.ReactNode; onClick: () => void }) {
+function ZoomBtn({ icon, onClick, active = false }: { icon: React.ReactNode; onClick: () => void; active?: boolean }) {
   return (
     <button onClick={onClick} className={cn(
       "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
-      "bg-black/40 backdrop-blur-2xl border-white/8",
-      "text-white/55 hover:text-white hover:border-white/15",
+      active 
+        ? "bg-violet-500/30 backdrop-blur-2xl border-violet-500/50 text-violet-300"
+        : "bg-black/40 backdrop-blur-2xl border-white/8 text-white/55 hover:text-white hover:border-white/15",
     )}>
       {icon}
     </button>

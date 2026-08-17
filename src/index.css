@@ -62,20 +62,25 @@
     padding: 0;
     background: 
       radial-gradient(
-        circle at 50% 0%,
-        rgba(124, 58, 237, 0.12),
+        circle at 50% -5%,
+        rgba(139, 92, 246, 0.18),
+        transparent 38%
+      ),
+      radial-gradient(
+        circle at 100% 25%,
+        rgba(34, 211, 238, 0.10),
         transparent 32%
       ),
       radial-gradient(
-        circle at 100% 30%,
-        rgba(34, 211, 238, 0.06),
+        circle at 0% 80%,
+        rgba(45, 212, 191, 0.06),
         transparent 28%
       ),
       linear-gradient(
         180deg,
-        #030817 0%,
-        #050B1C 45%,
-        #020611 100%
+        #050814 0%,
+        #070B1A 45%,
+        #030611 100%
       );
     background-attachment: fixed;
     color: var(--color-foreground);
@@ -113,9 +118,9 @@
     position: fixed;
     inset: 0;
     background-image: 
-      radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(34, 211, 238, 0.04) 0%, transparent 50%),
-      radial-gradient(circle at 40% 90%, rgba(20, 230, 181, 0.03) 0%, transparent 40%);
+      radial-gradient(circle at 18% 35%, rgba(168, 85, 247, 0.08) 0%, transparent 42%),
+      radial-gradient(circle at 82% 70%, rgba(34, 211, 238, 0.07) 0%, transparent 40%),
+      radial-gradient(circle at 50% 95%, rgba(45, 212, 191, 0.05) 0%, transparent 35%);
     pointer-events: none;
     z-index: 0;
   }
@@ -220,92 +225,93 @@
 
 /* ─── Themes ──────────────────────────────────────────────────────────────── */
 
-/* ── Default (dark) — Futuristic Metro Navigation ── */
+/* ── Default (dark) — Futuristic Neon Glass Metro ── */
 :root,
 :root.theme-dark {
   /* Base Colors - Deep Navy */
-  --color-background: #030817;
-  --color-surface:    #071225;
-  --color-card:       #0B1730;
-  --color-border:     rgba(120, 145, 190, 0.18);
+  --color-background: #050814;
+  --color-surface:    #0A1228;
+  --color-card:       #0E1A34;
+  --color-border:     rgba(140, 160, 220, 0.16);
   --color-foreground: #F8FAFF;
 
   /* Text Hierarchy */
   --text-primary:     #F8FAFF;
-  --text-secondary:   #B1BAD0;
-  --text-muted:       #7F8BA6;
-  --text-disabled:    #8A94AA;
+  --text-secondary:   #B8C0D6;
+  --text-muted:       #8B95AD;
+  --text-disabled:    #6B7388;
 
   /* Accent Colors */
-  --color-primary:            #8B5CF6;  /* Purple */
+  --color-primary:            #A78BFA;
   --color-primary-foreground: #FFFFFF;
-  --color-accent:             #A855F7;  /* Electric Violet */
+  --color-accent:             #C084FC;
   --color-accent-foreground:  #FFFFFF;
-  
+
   /* Functional Colors */
-  --color-success:            #14E6B5;  /* Teal/Mint */
-  --color-warning:            #F59E0B;  /* Amber */
-  --color-error:              #F43F5E;  /* Red */
-  --color-info:               #38BDF8;  /* Blue */
-  --color-cyan:               #22D3EE;  /* Cyan */
-  
+  --color-success:            #2DD4BF;
+  --color-warning:            #FBBF24;
+  --color-error:              #F43F5E;
+  --color-info:               #38BDF8;
+  --color-cyan:               #22D3EE;
+
   --color-destructive:        #F43F5E;
   --color-destructive-foreground: #FFFFFF;
 
   /* Component System */
-  --component-inactive-color:         #8A94AA;
-  --component-bg:                     rgba(11, 21, 42, 0.88);
-  --component-shadow:                 rgba(0, 0, 0, 0.35);
-  --component-active-bg:              rgba(139, 92, 246, 0.16);
+  --component-inactive-color:         #8B95AD;
+  --component-bg:                     rgba(10, 18, 40, 0.82);
+  --component-shadow:                 rgba(0, 0, 0, 0.45);
+  --component-active-bg:              rgba(139, 92, 246, 0.22);
   --component-line-inactive-color:    rgba(120, 140, 190, 0.14);
-  --component-active-color-default:   #8B5CF6;
+  --component-active-color-default:   #C4B5FD;
 
   /* Glass Effects */
-  --glass-bg:                rgba(16, 29, 55, 0.68);
-  --glass-border:            rgba(120, 145, 190, 0.18);
-  --glass-border-strong:     rgba(130, 150, 210, 0.30);
+  --glass-bg:                rgba(12, 22, 48, 0.72);
+  --glass-border:            rgba(160, 175, 230, 0.16);
+  --glass-border-strong:     rgba(170, 185, 240, 0.28);
 
-  --popup-bg:                rgba(11, 18, 38, 0.97);
-  --popup-border:            rgba(140, 160, 210, 0.28);
-  --popup-shadow:            0 18px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  --popup-bg:                rgba(10, 16, 36, 0.97);
+  --popup-border:            rgba(150, 165, 220, 0.28);
+  --popup-shadow:            0 22px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
 
-  --sidebar-bg:              rgba(7, 16, 35, 0.75);
-  --sidebar-border:          rgba(130, 150, 200, 0.15);
-  --nav-active:              #A78BFA;
-  --nav-active-text:         #C4B5FD;
-  --shadow-card-soft:        0 20px 60px rgba(0, 0, 0, 0.35);
+  --sidebar-bg:              rgba(8, 14, 32, 0.78);
+  --sidebar-border:          rgba(140, 155, 210, 0.18);
+  --nav-active:              #C4B5FD;
+  --nav-active-text:         #E9D5FF;
+  --shadow-card-soft:        0 18px 50px rgba(0, 0, 0, 0.4);
 
   --hero-image: url(/herosecBack1.png);
-  --hero-overlay: linear-gradient(90deg, rgba(3, 8, 23, 0.15), rgba(3, 8, 23, 0.35), rgba(3, 8, 23, 0.10));
-  --hero-overlay-mobile: linear-gradient(to bottom, rgba(3, 8, 23, 0.85) 0%, rgba(3, 8, 23, 0.65) 50%, rgba(3, 8, 23, 0.95) 100%);
+  --hero-overlay: linear-gradient(180deg, rgba(5,8,20,0.15) 0%, rgba(5,8,20,0.45) 55%, rgba(5,8,20,0.75) 100%);
+  --hero-overlay-mobile: linear-gradient(to bottom, rgba(5, 8, 20, 0.55) 0%, rgba(5, 8, 20, 0.35) 40%, rgba(5, 8, 20, 0.88) 100%);
   --hero-title: transparent;
-  --hero-subtitle: #8E9AB5;
+  --hero-subtitle: #A5B0C8;
 
-  --input-bg: rgba(30, 43, 73, 0.55);
-  --input-bg-hover: rgba(30, 43, 73, 0.7);
-  --input-border: rgba(130, 150, 200, 0.12);
-  --swap-bg: #0B1730;
-  --card-elevated: rgba(15, 27, 50, 0.72);
+  --input-bg: rgba(8, 14, 32, 0.72);
+  --input-bg-hover: rgba(16, 26, 52, 0.85);
+  --input-border: rgba(140, 160, 220, 0.14);
+  --swap-bg: rgba(18, 28, 58, 0.95);
+  --card-elevated: rgba(14, 24, 48, 0.78);
 
   /* Gradients */
   --gradient-hero: linear-gradient(
     145deg,
-    rgba(17, 30, 58, 0.92),
-    rgba(7, 18, 38, 0.82)
+    rgba(18, 30, 62, 0.88),
+    rgba(8, 14, 34, 0.82)
   );
   --gradient-cta: linear-gradient(
     90deg,
     #7C3AED 0%,
-    #6366F1 45%,
+    #8B5CF6 35%,
+    #6366F1 65%,
     #22D3EE 100%
   );
 
   /* Shadows */
-  --shadow-card: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(99, 102, 241, 0.05);
-  --shadow-nav: 0 -10px 40px rgba(0, 0, 0, 0.35), 0 10px 40px rgba(0, 0, 0, 0.20);
-  --shadow-glow-purple: 0 0 25px rgba(139, 92, 246, 0.15);
-  --shadow-glow-cyan: 0 0 20px rgba(34, 211, 238, 0.18);
-  --shadow-glow-teal: 0 0 20px rgba(20, 230, 181, 0.18);
+  --shadow-card: 0 22px 60px rgba(0, 0, 0, 0.45), 0 0 40px rgba(139, 92, 246, 0.08);
+  --shadow-nav: 0 -12px 40px rgba(0, 0, 0, 0.45), 0 10px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255,255,255,0.06);
+  --shadow-glow-purple: 0 0 28px rgba(168, 85, 247, 0.35);
+  --shadow-glow-cyan: 0 0 24px rgba(34, 211, 238, 0.28);
+  --shadow-glow-teal: 0 0 24px rgba(45, 212, 191, 0.28);
 }
 
 /* ── Light — premium ice / lavender futuristic ── */
@@ -503,13 +509,15 @@
   justify-content: space-around;
   background: var(--component-bg, var(--glass-bg));
   border: 1px solid var(--glass-border-strong, var(--color-border));
-  border-radius: 28px;
-  padding: 0.6rem 0.75rem;
-  gap: 0.25rem;
+  border-radius: 999px;
+  padding: 0.35rem 0.4rem;
+  gap: 0.1rem;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   box-shadow: var(--shadow-nav, 0 10px 35px rgba(40, 50, 80, 0.08));
-  min-width: 280px;
+  width: max-content;
+  max-width: calc(100vw - 1.5rem);
+  min-width: 0;
 }
 
 .menu__item {
@@ -517,15 +525,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
-  padding: 0.6rem 0.85rem;
+  gap: 0.12rem;
+  padding: 0.4rem 0.55rem;
   border: 1px solid transparent;
   background: transparent;
   cursor: pointer;
-  border-radius: 16px;
+  border-radius: 14px;
   transition: all 0.2s ease;
   position: relative;
-  min-width: 60px;
+  min-width: 48px;
+  flex: 0 0 auto;
 }
 
 .menu__item::after {
@@ -551,8 +560,8 @@
 
 .menu__item.active {
   background: var(--component-active-bg);
-  border: 1px solid rgba(124, 92, 252, 0.22);
-  box-shadow: var(--shadow-glow-purple, none);
+  border: 1px solid rgba(167, 139, 250, 0.42);
+  box-shadow: var(--shadow-glow-purple, none), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .menu__icon {
@@ -560,17 +569,29 @@
   align-items: center;
   justify-content: center;
   color: var(--component-inactive-color);
-  transition: color 0.2s ease;
+  transition: color 0.2s ease, filter 0.2s ease;
 }
 
 .menu__item.active .menu__icon {
   color: var(--component-active-color, var(--component-active-color-default));
   animation: iconBounce 0.5s ease;
+  filter: drop-shadow(0 0 10px rgba(196, 181, 253, 0.7));
+}
+
+.theme-light .menu__item.active,
+.theme-darya .menu__item.active {
+  border-color: rgba(124, 92, 252, 0.22);
+  box-shadow: 0 6px 18px rgba(90, 80, 180, 0.08);
+}
+
+.theme-light .menu__item.active .menu__icon,
+.theme-darya .menu__item.active .menu__icon {
+  filter: none;
 }
 
 .menu__icon .icon {
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 1.15rem;
+  height: 1.15rem;
   stroke-width: 2;
 }
 
@@ -614,13 +635,14 @@
 }
 
 .menu__text {
-  font-size: 0.65rem;
+  font-size: 0.58rem;
   font-weight: 600;
   color: var(--component-inactive-color);
   transition: color 0.2s ease;
   white-space: nowrap;
   font-family: var(--font-family-sans);
   letter-spacing: 0;
+  line-height: 1.1;
 }
 
 .menu__text.active {
