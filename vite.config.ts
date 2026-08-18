@@ -6,6 +6,12 @@ import { VitePWA } from "vite-plugin-pwa";
 import { fileURLToPath } from "node:url";
 
 export default defineConfig({
+  // Windows often resolves localhost → ::1; browsers then hit 127.0.0.1 and time out.
+  server: {
+    host: "127.0.0.1",
+    port: 5173,
+    strictPort: true,
+  },
   plugins: [
     react(),
     babel({
