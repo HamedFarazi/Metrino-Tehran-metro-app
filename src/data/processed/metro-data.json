@@ -5679,7 +5679,7 @@
       },
       "connectedStationIds": [
         "station_112",
-        "station_114"
+        "station_115"
       ]
     },
     {
@@ -5697,10 +5697,9 @@
       },
       "address": "خیابان ۱۷ شهریور، تقاطع خیابان امیرکبیر",
       "colors": [
-        "#EF639F",
         "#7F0B74"
       ],
-      "isDisabled": true,
+      "isDisabled": false,
       "amenities": {
         "restroom": false,
         "coffeeShop": false,
@@ -5729,10 +5728,8 @@
         "processedAt": "2026-08-04T22:50:38.890Z"
       },
       "connectedStationIds": [
-        "station_113",
-        "station_115",
-        "station_138",
-        "station_139"
+        "station_124",
+        "station_84"
       ]
     },
     {
@@ -5781,7 +5778,7 @@
         "processedAt": "2026-08-04T22:50:38.890Z"
       },
       "connectedStationIds": [
-        "station_114",
+        "station_113",
         "station_116"
       ]
     },
@@ -9999,30 +9996,13 @@
     {
       "id": "conn_126",
       "fromStationId": "station_113",
-      "toStationId": "station_114",
-      "lineIds": [
-        6
-      ],
-      "travelMetrics": {
-        "distance": 0.47253248735812803,
-        "travelTime": 1.445064974716256,
-        "isUnderground": true,
-        "tracks": 2
-      },
-      "metadata": {
-        "processedAt": "2026-08-04T22:50:38.982Z"
-      }
-    },
-    {
-      "id": "conn_127",
-      "fromStationId": "station_114",
       "toStationId": "station_115",
       "lineIds": [
         6
       ],
       "travelMetrics": {
-        "distance": 1.5742551405623497,
-        "travelTime": 3.6485102811246994,
+        "distance": 2.0,
+        "travelTime": 5.0,
         "isUnderground": true,
         "tracks": 2
       },
