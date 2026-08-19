@@ -171,7 +171,6 @@ export interface RouteOption {
   route: Route;
   label: string;
   labelFa: string;
-  icon: string;
   description: string;
   descriptionFa: string;
 }

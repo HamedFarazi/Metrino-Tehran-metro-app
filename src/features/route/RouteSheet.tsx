@@ -6,13 +6,32 @@
  */
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Clock, MapPin, ArrowLeftRight, Train } from "lucide-react";
+import { X, Clock, MapPin, ArrowLeftRight, Train, Zap, Target, Rocket, Sparkles, RefreshCw } from "lucide-react";
 import { useMetroStore } from "@/store/metro.store";
 import { LineBadge } from "@/components/shared/LineBadge";
 import { LINE_COLORS } from "@/types/metro";
 import { MetroDataService } from "@/services/metro-data.service";
 import type { Route, RouteOption, Station } from "@/types/metro";
 import { cn, formatDuration, formatDistance } from "@/lib/utils";
+
+// ─── Route Type Icon Mapping ─────────────────────────────────────────────────
+function getRouteIcon(routeType?: string) {
+  const iconClass = "h-4 w-4";
+  
+  switch (routeType) {
+    case "fastest":
+      return <Zap className={iconClass} style={{ color: "#FBBF24" }} />;
+    case "fewest-transfers":
+      return <Target className={iconClass} style={{ color: "#22D3EE" }} />;
+    case "shortest":
+      return <Rocket className={iconClass} style={{ color: "#F472B6" }} />;
+    case "balanced":
+      return <Sparkles className={iconClass} style={{ color: "#A78BFA" }} />;
+    default:
+      return <RefreshCw className={iconClass} style={{ color: "#94A3B8" }} />;
+  }
+}
+
 
 // ─── Data-driven transfer direction ──────────────────────────────────────────
 // Determines direction by looking at ALL stations after the transfer on the new line.
@@ -575,7 +594,7 @@ function AlternativeRoutesList({
               {/* Header: Icon + Label */}
               <div className="flex items-center justify-between mb-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{option.icon}</span>
+                  {getRouteIcon(route.routeType)}
                   <span 
                     className={cn("font-semibold", compact ? "text-sm" : "text-base")}
                     style={{ color: isSelected ? "#A855F7" : "#F8FAFF" }}

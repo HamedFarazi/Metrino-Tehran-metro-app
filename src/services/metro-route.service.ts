@@ -106,19 +106,18 @@ class MetroRouteServiceClass {
 
     // Add best routes with labels
     const candidates = [
-      { scored: fastest, type: "fastest" as const, label: "Fastest", labelFa: "سریع‌ترین", icon: "⚡", desc: "Shortest travel time", descFa: "کمترین زمان سفر" },
-      { scored: fewestTransfers, type: "fewest-transfers" as const, label: "Fewest Transfers", labelFa: "کمترین تبادل", icon: "🎯", desc: "Minimum transfers", descFa: "کمترین تعداد تبادل" },
-      { scored: shortest, type: "shortest" as const, label: "Shortest", labelFa: "کوتاه‌ترین", icon: "🚀", desc: "Fewest stations", descFa: "کمترین ایستگاه" },
-      { scored: balanced, type: "balanced" as const, label: "Balanced", labelFa: "متعادل", icon: "⚖️", desc: "Best overall", descFa: "بهترین حالت کلی" },
+      { scored: fastest, type: "fastest" as const, label: "Fastest", labelFa: "سریع‌ترین", desc: "Least travel time", descFa: "کمترین زمان سفر" },
+      { scored: fewestTransfers, type: "fewest-transfers" as const, label: "Fewest Transfers", labelFa: "کمترین تبادل", desc: "Minimum line changes", descFa: "کمترین تعویض خط" },
+      { scored: shortest, type: "shortest" as const, label: "Shortest", labelFa: "کوتاه‌ترین", desc: "Fewest stops", descFa: "کمترین ایستگاه" },
+      { scored: balanced, type: "balanced" as const, label: "Balanced", labelFa: "متعادل", desc: "Optimal mix", descFa: "ترکیب بهینه" },
     ];
 
-    for (const { scored: s, type, label, labelFa, icon, desc, descFa } of candidates) {
+    for (const { scored: s, type, label, labelFa, desc, descFa } of candidates) {
       if (!addedRouteIds.has(s.route.id)) {
         options.push({
           route: { ...s.route, routeType: type, rank: options.length + 1 },
           label,
           labelFa,
-          icon,
           description: desc,
           descriptionFa: descFa,
         });
@@ -126,22 +125,75 @@ class MetroRouteServiceClass {
       }
     }
 
-    // Add remaining routes as alternatives
+    // Add remaining routes as alternatives with smart descriptions
     for (const s of scored) {
       if (!addedRouteIds.has(s.route.id) && options.length < 5) {
+        // Generate smart description based on route characteristics
+        const { desc, descFa } = this._generateAlternativeDescription(s, options);
+        
         options.push({
           route: { ...s.route, routeType: "balanced", rank: options.length + 1 },
           label: "Alternative",
           labelFa: "جایگزین",
-          icon: "🔄",
-          description: "Alternative route",
-          descriptionFa: "مسیر جایگزین",
+          description: desc,
+          descriptionFa: descFa,
         });
         addedRouteIds.add(s.route.id);
       }
     }
 
     return options;
+  }
+
+  /**
+   * Generate smart description for alternative routes based on their characteristics
+   */
+  private _generateAlternativeDescription(
+    scored: { route: Route; timeScore: number; transferScore: number; stationScore: number },
+    existingOptions: RouteOption[]
+  ): { desc: string; descFa: string } {
+    const route = scored.route;
+    
+    // Check if this route has no transfers
+    if (route.transferCount === 0) {
+      return { 
+        desc: "Direct route, no transfers", 
+        descFa: "مسیر مستقیم بدون تبادل" 
+      };
+    }
+    
+    // Check if this route uses fewer lines
+    const uniqueLines = new Set<number>();
+    route.segments.forEach(seg => uniqueLines.add(seg.lineId));
+    if (uniqueLines.size <= 2) {
+      return { 
+        desc: "Uses fewer metro lines", 
+        descFa: "استفاده از خطوط کمتر" 
+      };
+    }
+    
+    // Check if time difference is small (within 5 minutes of fastest)
+    const fastestTime = Math.min(...existingOptions.map(opt => opt.route.totalTimeMin));
+    if (route.totalTimeMin - fastestTime <= 5) {
+      return { 
+        desc: "Similar travel time", 
+        descFa: "زمان سفر مشابه" 
+      };
+    }
+    
+    // Check if this has moderate transfers
+    if (route.transferCount <= 2) {
+      return { 
+        desc: "Few transfers needed", 
+        descFa: "تبادل‌های اندک" 
+      };
+    }
+    
+    // Default fallback
+    return { 
+      desc: "Alternative path", 
+      descFa: "مسیر دیگر" 
+    };
   }
 
   // ── Private ───────────────────────────────────────────────────────────────
