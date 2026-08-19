@@ -22,6 +22,7 @@
       "station_9",
       "station_10",
       "station_11",
+      "station_119",
       "station_12",
       "station_13",
       "station_14",
@@ -42,7 +43,6 @@
       "station_29",
       "station_30",
       "station_31",
-      "station_119",
       "station_32"
     ],
     "specifications": {
@@ -121,8 +121,10 @@
       "station_62",
       "station_63",
       "station_64",
+      "station_10",
       "station_65",
       "station_66",
+      "station_121",
       "station_67",
       "station_68",
       "station_69",
@@ -132,8 +134,6 @@
       "station_73",
       "station_74",
       "station_75",
-      "station_10",
-      "station_121",
       "station_76"
     ],
     "specifications": {
@@ -162,9 +162,10 @@
       "station_79",
       "station_80",
       "station_81",
-      "station_82",
-      "station_13",
+      "station_116",
       "station_43",
+      "station_13",
+      "station_82",
       "station_67",
       "station_83",
       "station_84",
@@ -173,12 +174,8 @@
       "station_86",
       "station_87",
       "station_88",
-      "station_89",
-      "station_90",
       "station_91",
       "station_94",
-      "station_116",
-      "station_93",
       "station_92"
     ],
     "specifications": {

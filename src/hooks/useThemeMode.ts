@@ -27,6 +27,6 @@ export function useThemeMode() {
     };
   }, []);
 
-  const isLight = theme === "light" || theme === "darya";
+  const isLight = theme === "light";
   return { theme, isLight };
 }

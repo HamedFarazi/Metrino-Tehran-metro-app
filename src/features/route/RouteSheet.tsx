@@ -16,7 +16,7 @@ import { cn, formatDuration, formatDistance } from "@/lib/utils";
 
 // ─── Data-driven transfer direction ──────────────────────────────────────────
 // Determines direction by looking at ALL stations after the transfer on the new line.
-// Returns the terminal station name (first or last in line array).
+// Finds actual terminal stations (stations with only 1 connection on that line).
 
 function getTransferLabel(
   currentStationId: string,
@@ -45,21 +45,67 @@ function getTransferLabel(
 
   if (stationsOnNewLine.length === 0) return base;
 
-  // Determine direction: are we moving toward higher or lower indices?
+  // Get the transfer station's index in the line
+  const transferStationIdx = line.stationIds.indexOf(currentStationId);
+  if (transferStationIdx === -1) return base;
+
+  // Get the first station we're moving to after transfer
   const firstStationOnNewLine = stationsOnNewLine[0];
-  const lastStationOnNewLine = stationsOnNewLine[stationsOnNewLine.length - 1];
-  
   const firstIdx = line.stationIds.indexOf(firstStationOnNewLine);
-  const lastIdx = line.stationIds.indexOf(lastStationOnNewLine);
   
-  if (firstIdx === -1 || lastIdx === -1) return base;
+  if (firstIdx === -1) return base;
 
-  const movingTowardEnd = lastIdx > firstIdx;
+  // Determine direction based on whether we're moving to higher or lower index
+  const movingTowardEnd = firstIdx > transferStationIdx;
 
-  // Simply return first or last station in the line array (assumes they are terminals)
+  // Find terminal stations: stations that have only 1 connected station on this line
+  const terminals: string[] = [];
+  for (const stationId of line.stationIds) {
+    const station = MetroDataService.getStation(stationId);
+    if (!station) continue;
+    
+    // Count how many connected stations are on the same line
+    const connectionsOnLine = station.connectedStationIds.filter(connId => {
+      return line.stationIds.includes(connId);
+    }).length;
+    
+    // Terminal stations have only 1 connection on their line
+    if (connectionsOnLine === 1) {
+      terminals.push(stationId);
+    }
+  }
+
+  // If we found terminals, use the appropriate one based on direction
+  if (terminals.length >= 2) {
+    // We have at least 2 terminals - pick the correct one based on direction
+    let terminalId: string;
+    
+    if (movingTowardEnd) {
+      // Find terminal that is furthest in the direction we're moving
+      terminalId = terminals.reduce((furthest, current) => {
+        const furthestIdx = line.stationIds.indexOf(furthest);
+        const currentIdx = line.stationIds.indexOf(current);
+        return currentIdx > furthestIdx ? current : furthest;
+      });
+    } else {
+      // Find terminal that is closest to start
+      terminalId = terminals.reduce((closest, current) => {
+        const closestIdx = line.stationIds.indexOf(closest);
+        const currentIdx = line.stationIds.indexOf(current);
+        return currentIdx < closestIdx ? current : closest;
+      });
+    }
+    
+    const terminal = MetroDataService.getStation(terminalId);
+    if (terminal) {
+      return `تبادل خط ${toLineId} — به سمت ${terminal.nameFa}`;
+    }
+  }
+
+  // Fallback: use first or last station in array if no terminals found
   const terminalId = movingTowardEnd
-    ? line.stationIds[line.stationIds.length - 1]  // last station
-    : line.stationIds[0];                           // first station
+    ? line.stationIds[line.stationIds.length - 1]
+    : line.stationIds[0];
 
   const terminal = MetroDataService.getStation(terminalId);
   if (!terminal) return base;

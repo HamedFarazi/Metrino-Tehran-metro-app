@@ -120,7 +120,7 @@
 
 - Favorite stations persisted in local storage
 - Favorites page for quick access
-- Themes: light, dark, system, and **دریا (Darya)**
+- Themes: light, dark and system
 - Geolocation → nearest stations (“موقعیت من”)
 
 ### 📱 Responsive UI

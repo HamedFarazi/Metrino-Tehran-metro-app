@@ -3,11 +3,11 @@
  */
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sun, Moon, Monitor, Waves, Download, Smartphone } from "lucide-react";
+import { X, Sun, Moon, Monitor, Download, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { usePWAInstall } from "@/hooks/usePWAInstall";
 
-export type ThemeMode = "dark" | "light" | "system" | "darya";
+export type ThemeMode = "dark" | "light" | "system";
 
 interface SettingsPopupProps {
   open: boolean;
@@ -22,7 +22,6 @@ const THEMES: { id: ThemeMode; labelFa: string; icon: React.ElementType; accent:
   { id: "dark",   labelFa: "تاریک",  icon: Moon,    accent: "text-slate-300"  },
   { id: "light",  labelFa: "روشن",   icon: Sun,     accent: "text-amber-400"  },
   { id: "system", labelFa: "سیستم",  icon: Monitor, accent: "text-sky-400"    },
-  { id: "darya",  labelFa: "دریا",   icon: Waves,   accent: "text-indigo-400" },
 ];
 
 export function SettingsPopup({

@@ -1,4 +1,6 @@
 {
+  "version": "2.0.0",
+  "lastUpdated": "2026-08-19T12:15:00.000Z",
   "stations": [
     {
       "id": "station_1",
@@ -7567,6 +7569,7 @@
         "station_9",
         "station_10",
         "station_11",
+        "station_119",
         "station_12",
         "station_13",
         "station_14",
@@ -7587,7 +7590,6 @@
         "station_29",
         "station_30",
         "station_31",
-        "station_119",
         "station_32"
       ],
       "specifications": {
@@ -7631,8 +7633,8 @@
         "station_36",
         "station_35",
         "station_34",
-        "station_33",
-        "station_15"
+        "station_15",
+        "station_33"
       ],
       "specifications": {
         "stationCount": 22,
@@ -7655,7 +7657,6 @@
         "fa": "خط مترو تهران 3"
       },
       "stationIds": [
-        "station_10",
         "station_54",
         "station_55",
         "station_56",
@@ -7667,8 +7668,10 @@
         "station_62",
         "station_63",
         "station_64",
+        "station_10",
         "station_65",
         "station_66",
+        "station_121",
         "station_67",
         "station_68",
         "station_69",
@@ -7678,8 +7681,7 @@
         "station_73",
         "station_74",
         "station_75",
-        "station_76",
-        "station_121"
+        "station_76"
       ],
       "specifications": {
         "stationCount": 25,
@@ -7702,29 +7704,26 @@
         "fa": "خط مترو تهران 4"
       },
       "stationIds": [
-        "station_13",
-        "station_43",
-        "station_50",
-        "station_67",
         "station_77",
         "station_78",
         "station_79",
         "station_80",
         "station_81",
+        "station_116",
+        "station_43",
+        "station_13",
         "station_82",
+        "station_67",
         "station_83",
         "station_84",
+        "station_50",
         "station_85",
         "station_86",
         "station_87",
         "station_88",
-        "station_89",
-        "station_90",
         "station_91",
-        "station_92",
-        "station_93",
         "station_94",
-        "station_116"
+        "station_92"
       ],
       "specifications": {
         "stationCount": 23,

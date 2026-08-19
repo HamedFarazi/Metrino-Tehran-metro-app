@@ -12,7 +12,6 @@ const ALL_THEME_CLASSES = [
   "theme-dark",
   "theme-light",
   "theme-system",
-  "theme-darya",
 ] as const;
 
 function applyTheme(theme: ThemeMode) {
@@ -20,7 +19,7 @@ function applyTheme(theme: ThemeMode) {
   root.classList.remove(...ALL_THEME_CLASSES);
   root.classList.add(`theme-${theme}`);
   root.style.colorScheme =
-    theme === "darya" || theme === "light" ? "light"
+    theme === "light" ? "light"
     : theme === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
     : "dark";
   localStorage.setItem("metro-theme", theme);

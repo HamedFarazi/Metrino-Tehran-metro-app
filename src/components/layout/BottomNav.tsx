@@ -17,7 +17,6 @@ const ALL_THEME_CLASSES = [
   "theme-dark",
   "theme-light",
   "theme-system",
-  "theme-darya",
 ] as const;
 
 function applyTheme(theme: ThemeMode) {
@@ -31,7 +30,7 @@ function applyTheme(theme: ThemeMode) {
 
   // color-scheme hint for browser chrome (scrollbars, inputs, etc.)
   root.style.colorScheme =
-    theme === "darya" || theme === "light" ? "light"
+    theme === "light" ? "light"
     : theme === "system" ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
     : "dark";
 
@@ -85,7 +84,7 @@ export function BottomNav() {
             color: isActive
               ? "var(--component-active-color-default)"
               : "var(--component-inactive-color)",
-            strokeWidth: theme === "darya" ? 2.5 : 2,
+            strokeWidth: 2,
           }}
         />
       ),
@@ -99,7 +98,7 @@ export function BottomNav() {
       aria-label="Navigation"
     >
       {/* Soft ambient glow behind floating nav (dark) */}
-      {theme !== "light" && theme !== "darya" && (
+      {theme !== "light" && (
         <div
           className="pointer-events-none absolute bottom-0 left-1/2 h-28 w-[min(420px,92vw)] -translate-x-1/2 md:hidden"
           style={{

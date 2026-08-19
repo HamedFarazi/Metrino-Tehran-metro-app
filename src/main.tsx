@@ -19,7 +19,7 @@ initMetroCommands();
   root.classList.add(`theme-${saved}`);
 
   // color-scheme hint
-  if (saved === "darya" || saved === "light") {
+  if (saved === "light") {
     root.style.colorScheme = "light";
   } else if (saved === "system") {
     root.style.colorScheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
