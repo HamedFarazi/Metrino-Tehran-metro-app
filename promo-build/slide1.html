@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{
+    font-family:'Vazirmatn',system-ui,sans-serif;
+    background:#0b1220;
+    color:#e6edf7;
+    position:relative;
+  }
+  .bg{position:absolute;inset:0;
+    background:
+      radial-gradient(900px 500px at 88% -10%, rgba(13,148,136,.35), transparent 60%),
+      radial-gradient(700px 500px at 5% 110%, rgba(37,99,235,.28), transparent 60%),
+      linear-gradient(160deg,#0b1220 0%,#0e1729 55%,#0b1220 100%);
+  }
+  .grid{position:absolute;inset:0;opacity:.16;
+    background-image:linear-gradient(rgba(255,255,255,.10) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.10) 1px,transparent 1px);
+    background-size:48px 48px;
+    -webkit-mask-image:radial-gradient(80% 70% at 50% 40%,#000 30%,transparent 100%);
+  }
+  .wrap{position:relative;height:100%;display:grid;grid-template-columns:1fr 470px;}
+
+  .left{padding:56px 56px 46px 30px;display:flex;flex-direction:column;justify-content:center;gap:22px}
+
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;
+    background:linear-gradient(145deg,#0f9d8f,#0b7d72);box-shadow:0 10px 30px rgba(13,148,136,.45)}
+  .logo svg{width:32px;height:32px}
+  .brandtxt b{display:block;font-size:21px;font-weight:800;letter-spacing:-.3px}
+  .brandtxt span{display:block;font-size:13px;color:#8fa3bd;letter-spacing:.6px;direction:ltr;text-align:right}
+
+  h1{font-size:60px;line-height:1.14;font-weight:900;letter-spacing:-1.4px}
+  h1 em{font-style:normal;background:linear-gradient(90deg,#2dd4bf,#38bdf8);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{font-size:20px;line-height:1.85;color:#a9bcd4;max-width:560px}
+
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:2px}
+  .chip{font-size:14px;font-weight:600;padding:8px 15px;border-radius:999px;
+    background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);color:#cfe0f2;direction:ltr}
+
+  .stats{display:flex;gap:38px;margin-top:10px;padding-top:22px;border-top:1px solid rgba(255,255,255,.10)}
+  .stat b{display:block;font-size:34px;font-weight:900;color:#fff;line-height:1;direction:ltr}
+  .stat span{display:block;font-size:13px;color:#8fa3bd;margin-top:7px}
+  .stat b i{font-style:normal;color:#2dd4bf}
+
+  .right{position:relative;overflow:hidden}
+  .glow{position:absolute;width:520px;height:520px;border-radius:50%;top:60px;left:-40px;
+    background:radial-gradient(circle,rgba(45,212,191,.30),transparent 62%);filter:blur(8px)}
+  .phone{position:absolute;width:280px;border-radius:34px;overflow:hidden;
+    border:8px solid #10192b;box-shadow:0 40px 90px rgba(0,0,0,.62), 0 0 0 1px rgba(255,255,255,.09)}
+  .phone img{width:100%;display:block}
+  .p1{top:66px;left:64px;transform:rotate(-6deg)}
+  .p2{top:158px;left:236px;transform:rotate(5deg);width:262px}
+  .fade{position:absolute;inset:0;background:linear-gradient(90deg,#0b1220 0%,rgba(11,18,32,0) 16%)}
+</style>
+</head>
+<body>
+<div class="bg"></div><div class="grid"></div>
+<div class="wrap">
+  <div class="left">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 11h16"/>
+          <circle cx="8.5" cy="14" r="1.1" fill="#fff" stroke="none"/><circle cx="15.5" cy="14" r="1.1" fill="#fff" stroke="none"/>
+          <path d="M8 17l-2.5 4M16 17l2.5 4"/>
+        </svg>
+      </div>
+      <div class="brandtxt"><b>مترو تهران</b><span>TEHRAN METRO · ROUTE PLANNER</span></div>
+    </div>
+
+    <h1>مسیریابی هوشمند<br/><em>مترو تهران</em></h1>
+
+    <p class="sub">
+      وب‌اپلیکیشن فارسی و راست‌چین برای پیدا کردن سریع‌ترین مسیر بین ایستگاه‌ها،
+      همراه با نقشه تعاملی، جست‌وجوی ایستگاه و نمایش نقاط تبادل خط.
+    </p>
+
+    <div class="chips">
+      <span class="chip">React 19</span>
+      <span class="chip">TypeScript</span>
+      <span class="chip">Vite 8</span>
+      <span class="chip">Tailwind 4</span>
+      <span class="chip">MapLibre GL</span>
+      <span class="chip">Zustand</span>
+      <span class="chip">PWA</span>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b>150</b><span>ایستگاه</span></div>
+      <div class="stat"><b>7</b><span>خط فعال</span></div>
+      <div class="stat"><b>18</b><span>ایستگاه تبادلی</span></div>
+      <div class="stat"><b>160</b><span>اتصال</span></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="glow"></div>
+    <div class="phone p1"><img src="mobile.png" /></div>
+    <div class="phone p2"><img src="dark.png" /></div>
+    <div class="fade"></div>
+  </div>
+</div>
+</body>
+</html>

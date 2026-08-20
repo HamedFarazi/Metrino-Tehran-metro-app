@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css" />
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:1200px;height:630px;overflow:hidden}
+  body{font-family:'Vazirmatn',system-ui,sans-serif;background:#f5f7fb;color:#0d1526;position:relative}
+  .bg{position:absolute;inset:0;
+    background:radial-gradient(700px 420px at 92% 0%,rgba(13,148,136,.14),transparent 60%),
+               radial-gradient(600px 400px at 0% 100%,rgba(37,99,235,.11),transparent 60%),
+               #f5f7fb}
+  .wrap{position:relative;height:100%;padding:44px 54px 40px;display:flex;flex-direction:column}
+
+  .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+  .htxt h2{font-size:38px;font-weight:900;letter-spacing:-1px}
+  .htxt h2 em{font-style:normal;color:#0d9488}
+  .htxt p{font-size:16px;color:#5b6b83;margin-top:8px}
+  .badge{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #e2e8f2;
+    padding:11px 17px;border-radius:14px;box-shadow:0 6px 18px rgba(13,25,50,.06)}
+  .badge div{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,#0f9d8f,#0b7d72);display:grid;place-items:center}
+  .badge svg{width:20px;height:20px}
+  .badge b{font-size:16px;font-weight:800}
+  .badge span{display:block;font-size:10.5px;color:#7b8aa1;letter-spacing:.7px;direction:ltr}
+
+  .body{flex:1;display:grid;grid-template-columns:1.15fr .85fr;gap:26px;min-height:0}
+
+  .shot{border-radius:18px;overflow:hidden;border:1px solid #dfe6f1;background:#0b1220;
+    box-shadow:0 22px 50px rgba(13,25,50,.16);position:relative}
+  .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block}
+  .tag{position:absolute;bottom:14px;right:14px;background:rgba(6,12,24,.82);color:#eaf2ff;
+    font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;backdrop-filter:blur(6px);
+    border:1px solid rgba(255,255,255,.14)}
+
+  .cards{display:flex;flex-direction:column;gap:12px}
+  .card{background:#fff;border:1px solid #e4eaf4;border-radius:14px;padding:14px 16px;
+    display:flex;gap:13px;align-items:flex-start;box-shadow:0 4px 14px rgba(13,25,50,.045)}
+  .ico{width:38px;height:38px;flex:0 0 38px;border-radius:11px;display:grid;place-items:center;
+    background:#e9f7f5;color:#0d9488}
+  .ico svg{width:20px;height:20px}
+  .card b{display:block;font-size:16px;font-weight:800;margin-bottom:4px}
+  .card p{font-size:13.2px;line-height:1.75;color:#61708a}
+
+  .foot{margin-top:22px;display:flex;align-items:center;justify-content:space-between;
+    border-top:1px solid #e2e8f2;padding-top:16px}
+  .algo{display:flex;align-items:center;gap:9px;flex-wrap:wrap;direction:rtl}
+  .step{font-size:12.5px;font-weight:700;color:#33475f;background:#fff;border:1px solid #e2e8f2;
+    padding:7px 13px;border-radius:999px}
+  .step.on{background:#0d9488;border-color:#0d9488;color:#fff}
+  .arw{color:#a6b3c6;font-size:13px}
+  .cta{font-size:14px;color:#5b6b83;direction:ltr;font-weight:600}
+  .cta b{color:#0d1526}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+
+  <div class="head">
+    <div class="htxt">
+      <h2>مسیر بهینه، <em>تبادل خط</em> و زمان تقریبی سفر</h2>
+      <p>محاسبه مسیر با الگوریتم BFS روی گراف ایستگاه‌ها — کاملاً سمت کلاینت و بدون نیاز به سرور</p>
+    </div>
+    <div class="badge">
+      <div><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="4" y="3" width="16" height="14" rx="3"/><path d="M4 11h16"/>
+        <circle cx="8.5" cy="14" r="1.1" fill="#fff" stroke="none"/><circle cx="15.5" cy="14" r="1.1" fill="#fff" stroke="none"/>
+        <path d="M8 17l-2.5 4M16 17l2.5 4"/></svg></div>
+      <div style="width:auto;height:auto;background:none;display:block">
+        <b>مترو تهران</b><span>TEHRAN METRO</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="shot">
+      <img src="route.png" />
+      <div class="tag">نمایش مسیر روی نقشه تعاملی MapLibre</div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="3"/><circle cx="18" cy="5" r="3"/><path d="M9 19h6a3 3 0 0 0 3-3V8"/></svg></div>
+        <div><b>مسیریابی و تبادل خط</b><p>کوتاه‌ترین مسیر بر پایه تعداد ایستگاه، با مشخص شدن نقاط تعویض خط و راهنمای تبادل.</p></div>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div><b>تخمین زمان و مسافت</b><p>محاسبه بر اساس فاصله هاورساین، توقف در ایستگاه‌ها و زمان هر تبادل خط.</p></div>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4 3 6.5v13L9 17l6 2.5 6-2.5v-13L15 6.5z"/><path d="M9 4v13M15 6.5v13"/></svg></div>
+        <div><b>چند لایه نقشه</b><p>نقشه شماتیک آفلاین، OpenFreeMap در حالت روشن و تیره، و لایه ماهواره‌ای.</p></div>
+      </div>
+      <div class="card">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18.5h2"/></svg></div>
+        <div><b>PWA و رابط راست‌چین</b><p>قابل نصب روی موبایل و دسکتاپ، با طراحی واکنش‌گرا و تم روشن و تاریک.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="algo">
+      <span class="step on">مبدأ</span><span class="arw">◀</span>
+      <span class="step">گراف ایستگاه‌ها</span><span class="arw">◀</span>
+      <span class="step">BFS</span><span class="arw">◀</span>
+      <span class="step">تشخیص تبادل خط</span><span class="arw">◀</span>
+      <span class="step on">مقصد</span>
+    </div>
+    <div class="cta"><b>github.com/HamedFarazi/metroapp</b></div>
+  </div>
+
+</div>
+</body>
+</html>

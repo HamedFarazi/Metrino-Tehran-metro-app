@@ -224,6 +224,7 @@ function MapTopBar() {
 
 export function MapPage() {
   const [mode, setMode] = useState<ViewMode>("offline");
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Add/remove body class based on offline map visibility
   useEffect(() => {
@@ -237,6 +238,13 @@ export function MapPage() {
     };
   }, [mode]);
 
+  // Mark as initialized after first render to prevent flash
+  useEffect(() => {
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(() => setIsInitialized(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div 
       style={{ position: "fixed", inset: 0, zIndex: 0 }} 
@@ -248,14 +256,20 @@ export function MapPage() {
       <div className="absolute inset-0">
         <div className="absolute inset-0 transition-opacity duration-300"
           style={{ opacity: mode === "offline" ? 1 : 0, zIndex: mode === "offline" ? 2 : 1, pointerEvents: mode === "offline" ? "auto" : "none" }}>
-          <OfflineMap />
+          {isInitialized && <OfflineMap />}
         </div>
-        {mode !== "offline" && (
+        {mode !== "offline" && isInitialized && (
           <div className="absolute inset-0" style={{ zIndex: 2 }}>
             <OnlineMap key={mode} styleKey={mode} />
           </div>
         )}
       </div>
+      {!isInitialized && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#1a1c2e]">
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-emerald-500/30 border-t-emerald-500" />
+          <p className="mt-4 text-sm text-white/50">در حال بارگذاری نقشه…</p>
+        </div>
+      )}
       <LayerSwitcher mode={mode} onChange={setMode} />
     </div>
   );
@@ -449,6 +463,7 @@ function OfflineMap() {
   const [nearestLabel, setNearestLabel] = useState<string | null>(null);
   const [accessibilityMap, setAccessibilityMap] = useState<AccessibilityMapType>("default");
   const [showAccessibilityPopup, setShowAccessibilityPopup] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Calculate initial scale so the image fits the viewport with padding
   const initialScale = Math.min(
@@ -473,8 +488,21 @@ function OfflineMap() {
     }
   }, [userLocation]);
 
+  // Preload default image
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.src = ACCESSIBILITY_MAPS.default.url;
+  }, []);
+
   return (
     <div className="relative h-full w-full bg-[#0d1117]">
+      {!imageLoaded && (
+        <div className="absolute inset-0 z-50 flex flex-col items-center justify-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-3 border-emerald-500/30 border-t-emerald-500" />
+          <p className="mt-4 text-sm text-white/50">بارگذاری نقشه…</p>
+        </div>
+      )}
       <TransformWrapper
         initialScale={initialScale}
         minScale={0.2}
@@ -482,6 +510,7 @@ function OfflineMap() {
         centerOnInit
         limitToBounds={false}
         centerZoomedOut={true}
+        disabled={!imageLoaded}
       >
         {({ zoomIn, zoomOut, resetTransform }) => (
           <>
@@ -493,13 +522,16 @@ function OfflineMap() {
                 alignItems: "center", 
                 justifyContent: "center",
                 width: "100%",
-                height: "100%"
+                height: "100%",
+                opacity: imageLoaded ? 1 : 0,
+                transition: "opacity 0.3s ease-in-out"
               }}
             >
               <img
                 src={ACCESSIBILITY_MAPS[accessibilityMap].url}
                 alt={ACCESSIBILITY_MAPS[accessibilityMap].label}
                 draggable={false}
+                onLoad={() => setImageLoaded(true)}
                 style={{ 
                   width: IMAGE_W, 
                   maxWidth: "none", 

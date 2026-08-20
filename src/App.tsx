@@ -2,7 +2,7 @@
  * App — Root component.
  * Handles layout, routing between tabs, and global overlays.
  */
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMetroStore } from "@/store/metro.store";
 import { BottomNav } from "@/components/layout/BottomNav";
@@ -25,6 +25,14 @@ const MapPage = lazy(() =>
 const FavoritesPage = lazy(() =>
   import("@/pages/FavoritesPage").then((m) => ({ default: m.FavoritesPage }))
 );
+
+// Preload map components after initial render for instant tab switching
+const preloadMapResources = () => {
+  // Preload MapPage component
+  import("@/pages/MapPage");
+  // Preload MapLibre GL library
+  import("maplibre-gl");
+};
 
 function PageSkeleton() {
   return (
@@ -79,6 +87,12 @@ function GlobalOverlays() {
 function App() {
   const { activeTab } = useMetroStore();
   const isMap = activeTab === "map";
+
+  // Preload map resources after app mounts for instant tab switching
+  useEffect(() => {
+    const timer = setTimeout(preloadMapResources, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "promo",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "serve", "promo-build", "-l", "4321"],
+      "port": 4321
+    }
+  ]
+}
