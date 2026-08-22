@@ -5726,10 +5726,7 @@
       "sourceName": "Shohada-ye Hefdah-e Shahrivar",
       "processedAt": "2026-08-04T22:50:38.890Z"
     },
-    "connectedStationIds": [
-      "station_124",
-      "station_84"
-    ]
+    "connectedStationIds": []
   },
   {
     "id": "station_115",
@@ -5986,7 +5983,8 @@
       "station_118",
       "station_120",
       "station_11",
-      "station_12"
+      "station_12",
+      "station_121"
     ]
   },
   {
@@ -6090,7 +6088,8 @@
       "station_120",
       "station_66",
       "station_67",
-      "station_122"
+      "station_122",
+      "station_119"
     ]
   },
   {

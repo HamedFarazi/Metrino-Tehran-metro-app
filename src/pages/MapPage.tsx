@@ -8,6 +8,7 @@ import {
   Map, Satellite, Layers, Eye,
   ArrowLeftRight, MapPin, Navigation, Route, X, LocateFixed,
   CloudSun, CloudRain, Cloud, Sun, CloudSnow, Wind,
+  Building2,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -31,6 +32,7 @@ const MAP_STYLES = {
   street:    { url: "https://tiles.openfreemap.org/styles/fiord",   glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${MT_KEY}` },
   liberty:   { url: "https://tiles.openfreemap.org/styles/liberty", glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${MT_KEY}` },
   satellite: { url: `https://api.maptiler.com/maps/satellite/style.json?key=${MT_KEY}`, glyphs: null },
+  "futuristic-3d": { url: "https://tiles.openfreemap.org/styles/fiord", glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${MT_KEY}` },
 } as const;
 
 type OnlineMode = keyof typeof MAP_STYLES;
@@ -364,6 +366,7 @@ const LAYERS: Array<{ id: ViewMode; labelFa: string; desc: string; icon: React.R
   { id: "street",    labelFa: "تیره (Fiord)",   desc: "OpenFreeMap — تم تیره", icon: <Layers className="h-5 w-5" /> },
   { id: "liberty",   labelFa: "روشن (Liberty)", desc: "OpenFreeMap — تم روشن", icon: <Layers className="h-5 w-5 opacity-70" /> },
   { id: "satellite", labelFa: "ماهواره‌ای",     desc: "MapTiler Satellite",    icon: <Satellite className="h-5 w-5" /> },
+  { id: "futuristic-3d", labelFa: "شهر هوشمند 3D", desc: "نمای فوتوریستیک تهران", icon: <Building2 className="h-5 w-5" /> },
 ];
 
 function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewMode) => void }) {
@@ -889,7 +892,26 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
     const initMap = async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let styleObj: string | any = styleDef.url;
-      if (styleKey !== "satellite") {
+      if (styleKey !== "satellite" && styleKey !== "futuristic-3d") {
+        try {
+          const res = await fetch(styleDef.url);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const json: any = await res.json();
+          if (styleDef.glyphs) json.glyphs = styleDef.glyphs;
+          if (Array.isArray(json.layers)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            json.layers = json.layers.map((l: any) => {
+              if (l.type !== "symbol" || !l.layout?.["text-field"]) return l;
+              return { ...l, layout: { ...l.layout,
+                "text-field": ["case", ["has", "name:nonlatin"], ["concat", ["get", "name:latin"], "\n", ["get", "name:nonlatin"]], ["coalesce", ["get", "name:latin"], ["get", "name"]]],
+                "text-font": ["Noto Sans Arabic Regular", "Noto Sans Regular"],
+              }};
+            });
+          }
+          styleObj = json;
+        } catch { /* fallback to url */ }
+      } else if (styleKey === "futuristic-3d") {
+        // Load Fiord style for futuristic mode
         try {
           const res = await fetch(styleDef.url);
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -911,7 +933,104 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
       if (cancelled || !divRef.current) return;
       const map = new lib.Map({ container: divRef.current, style: styleObj, center: TEHRAN, zoom: ZOOM, attributionControl: false });
       map.addControl(new lib.AttributionControl({ compact: true }), "bottom-left");
-      map.on("load", () => { if (cancelled) return; addStationLayers(map); setReady(true); });
+      
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const setupLayers = (map: any) => {
+        const geojson = {
+          type: "FeatureCollection" as const,
+          features: stations.map((s) => ({
+            type: "Feature" as const,
+            geometry: { type: "Point" as const, coordinates: [s.coordinates.lng, s.coordinates.lat] },
+            properties: { id: s.id, name: s.name, color: s.colors[0] ?? "#888", isInterchange: s.lines.length > 1 },
+          })),
+        };
+        map.addSource("stations", { type: "geojson", data: geojson });
+
+        // ═══════════════════════════════════════════════════════════════════════════
+        // METRO INTELLIGENCE LAYER - Integrated with 3D Digital Twin
+        // ═══════════════════════════════════════════════════════════════════════════
+        if (styleKey === "futuristic-3d") {
+          // Wait for style to fully load before adding metro intelligence
+          map.once("idle", () => {
+            if (cancelled) return;
+            const trainData = addMetroIntelligenceLayer(map, stations);
+            
+            // Add Digital Twin Intelligence System on top
+            setTimeout(() => {
+              if (!cancelled) {
+                addDigitalTwinIntelligence(map, stations);
+                
+                // Add Urban Entity Behavior Engine
+                setTimeout(() => {
+                  if (!cancelled && trainData) {
+                    addUrbanEntityBehavior(map, stations, trainData);
+                  }
+                }, 300);
+              }
+            }, 500); // Brief delay to ensure metro layer is ready
+          });
+        }
+
+        map.addLayer({ id: "stations-glow", type: "circle", source: "stations", filter: ["==", ["get", "isInterchange"], true],
+          paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, 10, 14, 20], "circle-color": ["get", "color"], "circle-opacity": 0.2, "circle-blur": 1 } });
+        map.addLayer({ id: "stations-circle", type: "circle", source: "stations",
+          paint: {
+            "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, ["case", ["get", "isInterchange"], 5, 3], 14, ["case", ["get", "isInterchange"], 10, 6]],
+            "circle-color": ["get", "color"],
+            "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 9, 1.5, 14, 3],
+            "circle-stroke-color": "rgba(255,255,255,0.95)",
+          } });
+        map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 13,
+          layout: { "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": ["interpolate", ["linear"], ["zoom"], 13, 10, 16, 13], "text-offset": [0, 1.2], "text-anchor": "top", "text-allow-overlap": false },
+          paint: { "text-color": "#fff", "text-halo-color": "rgba(0,0,0,0.85)", "text-halo-width": 1.5 } });
+
+        map.on("click", "stations-circle", (e: any) => {
+          const id = e.features?.[0]?.properties?.id;
+          if (id) { 
+            const s = MetroDataService.getStation(id); 
+            if (s) {
+              openStationSheet(s);
+              
+              // Zoom to the station with smooth animation
+              const coordinates = e.lngLat;
+              const currentZoom = map.getZoom();
+              const targetZoom = Math.max(15, currentZoom + 2);
+              
+              map.flyTo({
+                center: [coordinates.lng, coordinates.lat],
+                zoom: targetZoom,
+                duration: 800,
+                essential: true,
+                curve: 1.2
+              });
+            }
+          }
+        });
+        map.on("mouseenter", "stations-circle", () => { map.getCanvas().style.cursor = "pointer"; });
+        map.on("mouseleave", "stations-circle", () => { map.getCanvas().style.cursor = ""; });
+      };
+      
+      map.on("load", () => { 
+        if (cancelled) return; 
+        setupLayers(map); 
+        setReady(true); 
+      });
+
+      // Wait for style to fully load before applying futuristic styling
+      console.log("🔍 MapPage: styleKey =", styleKey);
+      if (styleKey === "futuristic-3d") {
+        console.log("✅ Registering idle listener for futuristic-3d");
+        map.once("idle", () => {
+          if (cancelled) return;
+          console.log("🎨 idle event fired - map is ready");
+          if (!(map as any).__futuristicApplied) {
+            console.log("🚀 Applying futuristic layers NOW");
+            (map as any).__futuristicApplied = true;
+            addFuturistic3DLayers(map);
+          }
+        });
+      }
+
       mapRef.current = map;
     };
 
@@ -921,52 +1040,2267 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
   }, [styleKey]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  function addStationLayers(map: any) {
-    const geojson = {
-      type: "FeatureCollection" as const,
-      features: stations.map((s) => ({
-        type: "Feature" as const,
-        geometry: { type: "Point" as const, coordinates: [s.coordinates.lng, s.coordinates.lat] },
-        properties: { id: s.id, name: s.name, color: s.colors[0] ?? "#888", isInterchange: s.lines.length > 1 },
-      })),
+  function addFuturistic3DLayers(map: any) {
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FUTURISTIC DIGITAL TWIN VISUALIZATION
+    // Priority: Buildings >>> Roads > Labels
+    // Style: Dark premium smart city with subtle cyan accents
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // Wait for style to fully load before applying styling
+    const applyFuturisticStyling = () => {
+      console.log("🎨 Applying futuristic styling...");
+      
+      // ─── Camera: Cinematic 3D City Viewing ─────────────────────────────────────
+      console.log("📹 Setting cinematic camera for 3D city...");
+      map.setPitch(65);
+      map.setBearing(-20);
+      
+      // Smooth zoom to showcase 3D depth
+      const currentZoom = map.getZoom();
+      if (currentZoom < 14) {
+        map.easeTo({ 
+          zoom: 14, 
+          duration: 1500,
+          pitch: 65,
+          bearing: -20
+        });
+      }
+
+      try {
+        // ─── Background: Deep Navy Atmosphere with Subtle Contrast ───────────────
+        if (map.getLayer("background")) {
+          // Slightly lighter background for better building separation
+          map.setPaintProperty("background", "background-color", "#040b16");
+        }
+
+        // ─── Debug: Log all layer IDs ─────────────────────────────────────────────
+        const allLayers = map.getStyle()?.layers || [];
+        console.log("All layer IDs:", allLayers.map((l: any) => l.id));
+        console.log("Road layers:", allLayers.filter((l: any) => 
+          l.type === "line" && (
+            l.id.includes("road") || 
+            l.id.includes("street") || 
+            l.id.includes("highway") ||
+            l.id.includes("motorway") ||
+            l.id.includes("path") ||
+            l.id.includes("transportation")
+          )
+        ).map((l: any) => l.id));
+
+      // ─── Roads: Hierarchical & Subtle ─────────────────────────────────────────
+      const roadLayers = map.getStyle()?.layers?.filter((l: any) => 
+        l.type === "line" && (
+          l.id.includes("road") || 
+          l.id.includes("street") || 
+          l.id.includes("highway") ||
+          l.id.includes("motorway") ||
+          l.id.includes("path") ||
+          l.id.includes("transportation")
+        )
+      ) || [];
+
+      console.log(`Found ${roadLayers.length} road layers to style`);
+
+      roadLayers.forEach((layer: any) => {
+        try {
+          const isHighway = layer.id.includes("motorway") || layer.id.includes("trunk");
+          const isMain = layer.id.includes("primary") || layer.id.includes("secondary");
+          const isMinor = layer.id.includes("tertiary") || layer.id.includes("minor");
+          
+          console.log(`Styling road layer: ${layer.id}`);
+          
+          if (isHighway) {
+            map.setPaintProperty(layer.id, "line-color", "#2d4a62");
+            map.setPaintProperty(layer.id, "line-opacity", 0.65);
+            map.setPaintProperty(layer.id, "line-width", [
+              "interpolate", ["linear"], ["zoom"],
+              10, 1.5,
+              14, 2.5,
+              18, 4
+            ]);
+          } else if (isMain) {
+            map.setPaintProperty(layer.id, "line-color", "#243a52");
+            map.setPaintProperty(layer.id, "line-opacity", 0.5);
+            map.setPaintProperty(layer.id, "line-width", [
+              "interpolate", ["linear"], ["zoom"],
+              10, 0.8,
+              14, 1.5,
+              18, 2.5
+            ]);
+          } else if (isMinor) {
+            map.setPaintProperty(layer.id, "line-color", "#1a2d42");
+            map.setPaintProperty(layer.id, "line-opacity", 0.35);
+            map.setPaintProperty(layer.id, "line-width", [
+              "interpolate", ["linear"], ["zoom"],
+              10, 0.3,
+              14, 0.8,
+              18, 1.2
+            ]);
+          } else {
+            map.setPaintProperty(layer.id, "line-color", "#12233a");
+            map.setPaintProperty(layer.id, "line-opacity", 0.25);
+          }
+        } catch (e) {
+          console.warn(`Failed to style layer ${layer.id}:`, e);
+        }
+      });
+
+      // ─── Labels: Minimal & Professional ───────────────────────────────────────
+      const labelLayers = map.getStyle()?.layers?.filter((l: any) => 
+        l.type === "symbol" && !l.id.includes("stations")
+      ) || [];
+
+      labelLayers.forEach((layer: any) => {
+        try {
+          const isMajor = layer.id.includes("place") || layer.id.includes("district");
+          
+          if (isMajor) {
+            map.setPaintProperty(layer.id, "text-opacity", 0.25);
+            map.setPaintProperty(layer.id, "text-color", "#3b5572");
+            map.setPaintProperty(layer.id, "text-halo-color", "#050a12");
+            map.setPaintProperty(layer.id, "text-halo-width", 1.5);
+          } else {
+            map.setPaintProperty(layer.id, "text-opacity", 0);
+            map.setPaintProperty(layer.id, "icon-opacity", 0);
+          }
+        } catch (e) {
+          // Silent fail
+        }
+      });
+
+      // ─── Water: Dark Reflective Surface ───────────────────────────────────────
+      const waterLayers = map.getStyle()?.layers?.filter((l: any) => 
+        l.id.includes("water") || l.id.includes("ocean") || l.id.includes("river")
+      ) || [];
+
+      waterLayers.forEach((layer: any) => {
+        try {
+          map.setPaintProperty(layer.id, "fill-color", "#0a1420");
+          map.setPaintProperty(layer.id, "fill-opacity", 0.9);
+        } catch (e) {
+          // Silent fail
+        }
+      });
+
+      // ─── Landuse: Simplified & Dark ───────────────────────────────────────────
+      const landuseayers = map.getStyle()?.layers?.filter((l: any) => 
+        l.id.includes("landuse") || l.id.includes("landcover")
+      ) || [];
+
+      landuseayers.forEach((layer: any) => {
+        try {
+          map.setPaintProperty(layer.id, "fill-color", "#0d1520");
+          map.setPaintProperty(layer.id, "fill-opacity", 0.6);
+        } catch (e) {
+          // Silent fail
+        }
+      });
+
+    } catch (error) {
+      console.warn("Futuristic layer styling warning:", error);
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 3D BUILDINGS: THE MAIN VISUAL ELEMENT
+    // Premium Futuristic Digital Twin Visualization
+    // ═══════════════════════════════════════════════════════════════════════════
+    try {
+      const style = map.getStyle();
+      const sources = style?.sources || {};
+      
+      console.log("🏗️ Building Analysis:");
+      console.log("Available sources:", Object.keys(sources));
+      
+      // Find vector tile source (usually openmaptiles or similar)
+      const vectorSourceName = Object.keys(sources).find(s => 
+        sources[s].type === "vector" && !s.includes("stations")
+      );
+      
+      if (!vectorSourceName) {
+        console.warn("❌ No vector tile source found for buildings");
+        return;
+      }
+      
+      console.log("✅ Using vector source:", vectorSourceName);
+      
+      // Find existing building layers to understand the source-layer structure
+      const existingBuildingLayers = style?.layers?.filter((l: any) => 
+        l.source === vectorSourceName && 
+        l["source-layer"] &&
+        (l["source-layer"].includes("building") || l.id.includes("building"))
+      ) || [];
+      
+      console.log("📋 Existing building layers:", existingBuildingLayers.map((l: any) => ({
+        id: l.id,
+        sourceLayer: l["source-layer"],
+        type: l.type
+      })));
+      
+      // Determine source-layer name
+      let buildingSourceLayer = "building";
+      if (existingBuildingLayers.length > 0) {
+        buildingSourceLayer = existingBuildingLayers[0]["source-layer"];
+      }
+      
+      console.log("🎯 Using source-layer:", buildingSourceLayer);
+
+      // ─── ROBUST HEIGHT EXPRESSION ────────────────────────────────────────────
+      // Priority: 
+      // 1. render_height (meters)
+      // 2. height (meters)  
+      // 3. building:levels * 3.5 meters per floor
+      // 4. levels * 3.5 meters per floor
+      // 5. Default: 15 meters (strong minimum for visibility)
+      
+      const heightExpression: any = [
+        "case",
+        ["has", "render_height"], ["get", "render_height"],
+        ["has", "height"], ["get", "height"],
+        ["has", "building:levels"], ["*", ["get", "building:levels"], 3.5],
+        ["has", "levels"], ["*", ["get", "levels"], 3.5],
+        15  // Strong default - every building MUST be visible
+      ];
+
+      console.log("📏 Height expression configured with fallbacks");
+
+      // ─── Main 3D Building Layer: Premium Architectural Visualization ─────────
+      map.addLayer({
+        id: "futuristic-3d-buildings",
+        type: "fill-extrusion",
+        source: vectorSourceName,
+        "source-layer": buildingSourceLayer,
+        minzoom: 12,
+        paint: {
+          // PREMIUM ARCHITECTURAL MATERIAL
+          // Richer dark graphite with improved depth perception
+          // Vertical gradient creates natural roof illumination
+          "fill-extrusion-color": [
+            "interpolate",
+            ["linear"],
+            heightExpression,
+            0, "#06090f",      // Very low: deep black foundation
+            8, "#08111c",      // Low: rich graphite base
+            15, "#0a1620",     // Low-medium: dark architectural gray
+            25, "#0d1d2e",     // Medium: deep navy graphite
+            40, "#11263c",     // Medium-tall: structured navy
+            60, "#152f4a",     // Tall: defined navy depth
+            90, "#1a3858",     // Very tall: prominent navy
+            120, "#1f4266"     // Landmarks: distinguished presence
+          ],
+          
+          // HEIGHT with natural scaling for realistic depth
+          "fill-extrusion-height": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            12, 0,
+            13, ["*", heightExpression, 0.3],
+            14, ["*", heightExpression, 0.8],
+            15, heightExpression,
+            18, ["*", heightExpression, 1.3]
+          ],
+          
+          // Base elevation
+          "fill-extrusion-base": 0,
+          
+          // Maximum opacity for solid architectural presence
+          "fill-extrusion-opacity": 1.0,
+          
+          // CRITICAL: Vertical gradient for realistic roof illumination
+          // Creates premium architectural depth: dark walls + illuminated roofs
+          "fill-extrusion-vertical-gradient": true
+        }
+      }, "stations-glow");
+
+      console.log("✅ Premium architectural buildings rendered");
+
+      // ─── Building Edge Enhancement: Refined Silhouette Definition ────────────
+      map.addLayer({
+        id: "futuristic-building-edges",
+        type: "line",
+        source: vectorSourceName,
+        "source-layer": buildingSourceLayer,
+        minzoom: 15, // Only at closer zoom for subtlety
+        paint: {
+          // ULTRA-SUBTLE EDGES - Premium scan aesthetic
+          "line-color": [
+            "interpolate",
+            ["linear"],
+            heightExpression,
+            0, "#0f1a28",      // Low: barely visible
+            20, "#12202f",     // Low-medium: subtle presence
+            40, "#152536",     // Medium: refined edge  
+            70, "#182a3d",     // Tall: clear definition
+            120, "#1b2f44"     // Landmarks: distinguished outline
+          ],
+          // MINIMAL OPACITY - Production quality subtlety
+          "line-opacity": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            15, 0.08,
+            16, 0.12,
+            18, 0.16
+          ],
+          // PRECISE WIDTH - Architectural precision
+          "line-width": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            15, 0.25,
+            16, 0.35,
+            18, 0.45
+          ]
+        }
+      }, "stations-glow");
+
+      console.log("✅ Refined building silhouettes added");
+      console.log("🎬 Premium architectural visualization complete");
+
+
+    } catch (error) {
+      console.error("❌ Failed to add 3D buildings:", error);
+    }
+
+    // ─── Reduce Station Dominance ──────────────────────────────────────────────
+    try {
+      if (map.getLayer("stations-glow")) {
+        map.setPaintProperty("stations-glow", "circle-radius", [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 8,
+          14, 12,
+          18, 18
+        ]);
+        map.setPaintProperty("stations-glow", "circle-opacity", 0.2);
+        map.setPaintProperty("stations-glow", "circle-color", "#0ea5e9");
+        map.setPaintProperty("stations-glow", "circle-blur", 0.8);
+      }
+      
+      if (map.getLayer("stations-circle")) {
+        map.setPaintProperty("stations-circle", "circle-radius", [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 3,
+          14, 4,
+          18, 6
+        ]);
+        map.setPaintProperty("stations-circle", "circle-stroke-color", "#0ea5e9");
+        map.setPaintProperty("stations-circle", "circle-stroke-width", [
+          "interpolate",
+          ["linear"],
+          ["zoom"],
+          10, 1.5,
+          14, 2,
+          18, 2.5
+        ]);
+      }
+
+      if (map.getLayer("stations-label")) {
+        map.setPaintProperty("stations-label", "text-color", "#e0f2fe");
+        map.setPaintProperty("stations-label", "text-halo-color", "#0a1428");
+        map.setPaintProperty("stations-label", "text-halo-width", 2);
+      }
+    } catch (error) {
+      console.warn("Could not enhance station styling:", error);
+    }
     };
-    map.addSource("stations", { type: "geojson", data: geojson });
-    map.addLayer({ id: "stations-glow", type: "circle", source: "stations", filter: ["==", ["get", "isInterchange"], true],
-      paint: { "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, 10, 14, 20], "circle-color": ["get", "color"], "circle-opacity": 0.2, "circle-blur": 1 } });
-    map.addLayer({ id: "stations-circle", type: "circle", source: "stations",
-      paint: {
-        "circle-radius": ["interpolate", ["linear"], ["zoom"], 9, ["case", ["get", "isInterchange"], 5, 3], 14, ["case", ["get", "isInterchange"], 10, 6]],
-        "circle-color": ["get", "color"],
-        "circle-stroke-width": ["interpolate", ["linear"], ["zoom"], 9, 1.5, 14, 3],
-        "circle-stroke-color": "rgba(255,255,255,0.95)",
-      } });
-    map.addLayer({ id: "stations-label", type: "symbol", source: "stations", minzoom: 13,
-      layout: { "text-field": ["get", "name"], "text-font": ["Noto Sans Regular"], "text-size": ["interpolate", ["linear"], ["zoom"], 13, 10, 16, 13], "text-offset": [0, 1.2], "text-anchor": "top", "text-allow-overlap": false },
-      paint: { "text-color": "#fff", "text-halo-color": "rgba(0,0,0,0.85)", "text-halo-width": 1.5 } });
-    map.on("click", "stations-circle", (e: any) => {
-      const id = e.features?.[0]?.properties?.id;
-      if (id) { 
-        const s = MetroDataService.getStation(id); 
-        if (s) {
-          openStationSheet(s);
+
+    // Check if style is already loaded
+    if (map.isStyleLoaded()) {
+      console.log("✅ Style already loaded, applying immediately");
+      applyFuturisticStyling();
+    } else {
+      console.log("⏳ Waiting for style to load...");
+      map.once("idle", () => {
+        console.log("✅ Style loaded via idle event");
+        applyFuturisticStyling();
+      });
+    }
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function addMetroIntelligenceLayer(map: any, stations: any[]) {
+    console.log("🚇 Adding Metro Intelligence Layer...");
+
+    try {
+      // ═══════════════════════════════════════════════════════════════════════════
+      // METRO INTELLIGENCE LAYER - Digital Twin Integration
+      // Animated metro lines + subtle station pulses + train-ready architecture
+      // Premium dark style integrated with 3D city
+      // ═══════════════════════════════════════════════════════════════════════════
+
+      // ─── Build Metro Line Connections ──────────────────────────────────────────
+      // Group stations by line and create connected segments
+      const lineSegments: Record<number, any[]> = {};
+      
+      console.log("🔍 Building metro line segments...");
+      let skippedStations = 0;
+      let validSegments = 0;
+      
+      stations.forEach(station => {
+        // Validate station coordinates
+        if (!station.coordinates || 
+            station.coordinates.lat === 0 || 
+            station.coordinates.lng === 0 ||
+            !isFinite(station.coordinates.lat) ||
+            !isFinite(station.coordinates.lng)) {
+          console.warn(`⚠️ Skipping station ${station.id} - Invalid coordinates:`, station.coordinates);
+          skippedStations++;
+          return; // Skip stations with invalid coordinates
+        }
+
+        station.lines.forEach((lineId: number) => {
+          if (!lineSegments[lineId]) lineSegments[lineId] = [];
           
-          // Zoom to the station with smooth animation
-          const coordinates = e.lngLat;
-          const currentZoom = map.getZoom();
-          const targetZoom = Math.max(15, currentZoom + 2);
+          // Find connected stations on the same line
+          station.connectedStationIds?.forEach((connectedId: string) => {
+            const connectedStation = stations.find(s => s.id === connectedId);
+            
+            // Validate connected station and its coordinates
+            if (connectedStation && 
+                connectedStation.lines.includes(lineId) &&
+                connectedStation.coordinates &&
+                connectedStation.coordinates.lat !== 0 &&
+                connectedStation.coordinates.lng !== 0 &&
+                isFinite(connectedStation.coordinates.lat) &&
+                isFinite(connectedStation.coordinates.lng)) {
+              
+              const coords = [
+                [station.coordinates.lng, station.coordinates.lat],
+                [connectedStation.coordinates.lng, connectedStation.coordinates.lat]
+              ];
+              
+              // Final validation: ensure all coordinate values are valid numbers
+              const allCoordsValid = coords.every(coord => 
+                coord.every(val => typeof val === 'number' && isFinite(val) && val !== 0)
+              );
+              
+              if (!allCoordsValid) {
+                console.error(`❌ Invalid coordinates in segment ${station.id} -> ${connectedId}:`, coords);
+                return;
+              }
+              
+              lineSegments[lineId].push({
+                type: "Feature" as const,
+                geometry: {
+                  type: "LineString" as const,
+                  coordinates: coords
+                },
+                properties: {
+                  lineId,
+                  color: station.colors[station.lines.indexOf(lineId)] || LINE_COLORS[lineId] || "#888",
+                  from: station.id,
+                  to: connectedId
+                }
+              });
+              validSegments++;
+            }
+          });
+        });
+      });
+      
+      console.log(`✅ Built ${validSegments} valid line segments, skipped ${skippedStations} invalid stations`);
+
+      // ─── Metro Lines: Premium Digital Twin Network ────────────────────────────
+      Object.keys(lineSegments).forEach(lineId => {
+        const segments = lineSegments[Number(lineId)];
+        if (segments.length === 0) {
+          console.warn(`⚠️ No segments for line ${lineId}`);
+          return;
+        }
+
+        console.log(`🎨 Adding line ${lineId} with ${segments.length} segments`);
+        
+        const lineColor = segments[0].properties.color;
+        const sourceId = `metro-line-${lineId}`;
+        const layerId = `metro-line-layer-${lineId}`;
+        const glowLayerId = `metro-line-glow-${lineId}`;
+        const animLayerId = `metro-line-anim-${lineId}`;
+
+        // Validate GeoJSON before adding
+        const geojson = {
+          type: "FeatureCollection" as const,
+          features: segments
+        };
+        
+        try {
+          // Add source
+          map.addSource(sourceId, {
+            type: "geojson",
+            data: geojson
+          });
+
+          // Wide soft glow (integrated atmospheric presence)
+          map.addLayer({
+            id: glowLayerId,
+            type: "line",
+            source: sourceId,
+            paint: {
+              "line-color": lineColor,
+              "line-width": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                10, 12,
+                14, 18,
+                18, 26
+              ],
+              "line-opacity": 0.03, // Reduced for hierarchy
+              "line-blur": 10 // Increased blur for atmospheric integration
+            }
+          }, "stations-glow");
+
+          // Core line (refined minimal precision)
+          map.addLayer({
+            id: layerId,
+            type: "line",
+            source: sourceId,
+            paint: {
+              "line-color": lineColor,
+              "line-width": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                10, 1.5,
+                14, 2,
+                18, 2.5
+              ],
+              "line-opacity": 0.28 // Reduced to let city dominate
+            }
+          }, "stations-glow");
+
+          // Subtle animated intelligence flow
+          map.addLayer({
+            id: animLayerId,
+            type: "line",
+            source: sourceId,
+            paint: {
+              "line-color": lineColor,
+              "line-width": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                10, 1,
+                14, 1.5,
+                18, 2
+              ],
+              "line-opacity": 0.18, // Further reduced for subtlety
+              "line-blur": 2.5 // Softer for atmospheric feel
+            }
+          }, "stations-glow");
+
+          console.log(`✅ Added metro line ${lineId} with animation`);
+        } catch (error) {
+          console.error(`❌ Failed to add line ${lineId}:`, error);
+        }
+      });
+
+      // ─── Animate Metro Lines ───────────────────────────────────────────────────
+      // Calm professional intelligence flow
+      let linePulsePhase = 0;
+      const animateMetroLines = () => {
+        linePulsePhase = (linePulsePhase + 0.008) % (Math.PI * 2); // Slower
+        
+        Object.keys(lineSegments).forEach(lineId => {
+          const animLayerId = `metro-line-anim-${lineId}`;
+          if (map.getLayer(animLayerId)) {
+            try {
+              // Minimal pulse: 0.15 to 0.21 opacity (very calm)
+              const opacity = 0.18 + Math.sin(linePulsePhase) * 0.03;
+              map.setPaintProperty(animLayerId, "line-opacity", opacity);
+            } catch (error) {
+              console.error(`❌ Animation error for line ${lineId}:`, error);
+            }
+          }
+        });
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateMetroLines);
+        }
+      };
+      animateMetroLines();
+
+      // ─── Station Markers: Hierarchical Digital Twin Nodes ─────────────────────
+      // Refined hierarchy: interchange stations vs regular stations
+      const stationPulseSource = {
+        type: "FeatureCollection" as const,
+        features: stations.map(s => ({
+          type: "Feature" as const,
+          geometry: { 
+            type: "Point" as const, 
+            coordinates: [s.coordinates.lng, s.coordinates.lat] 
+          },
+          properties: {
+            id: s.id,
+            color: s.colors[0] || "#0ea5e9",
+            isInterchange: s.lines.length > 1
+          }
+        }))
+      };
+
+      map.addSource("metro-station-pulses", {
+        type: "geojson",
+        data: stationPulseSource
+      });
+
+      // Wide atmospheric presence (ultra-subtle)
+      map.addLayer({
+        id: "metro-station-pulse-outer",
+        type: "circle",
+        source: "metro-station-pulses",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, ["case", ["get", "isInterchange"], 14, 10],
+            14, ["case", ["get", "isInterchange"], 20, 14],
+            18, ["case", ["get", "isInterchange"], 28, 20]
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.04, // Reduced for hierarchy
+          "circle-blur": 1.2
+        }
+      }, "stations-glow");
+
+      // Precise core marker (refined sizing)
+      map.addLayer({
+        id: "metro-station-pulse-inner",
+        type: "circle",
+        source: "metro-station-pulses",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, ["case", ["get", "isInterchange"], 3, 2],
+            14, ["case", ["get", "isInterchange"], 4.5, 3],
+            18, ["case", ["get", "isInterchange"], 6.5, 4.5]
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.35, // Refined for balance
+          "circle-blur": 0.4
+        }
+      }, "stations-glow");
+
+      // Calm breathing animation (production quality)
+      let pulsePhase = 0;
+      const animateStationPulses = () => {
+        pulsePhase = (pulsePhase + 0.012) % (Math.PI * 2);
+        const pulseScale = 0.92 + Math.sin(pulsePhase) * 0.08; // 0.84 to 1.0 (calmer)
+        const pulseOpacity = 0.04 + Math.sin(pulsePhase) * 0.015; // 0.025 to 0.055
+
+        if (map.getLayer("metro-station-pulse-outer")) {
+          const baseRadii = [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, ["case", ["get", "isInterchange"], 14 * pulseScale, 10 * pulseScale],
+            14, ["case", ["get", "isInterchange"], 20 * pulseScale, 14 * pulseScale],
+            18, ["case", ["get", "isInterchange"], 28 * pulseScale, 20 * pulseScale]
+          ];
+          map.setPaintProperty("metro-station-pulse-outer", "circle-radius", baseRadii);
+          map.setPaintProperty("metro-station-pulse-outer", "circle-opacity", pulseOpacity);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateStationPulses);
+        }
+      };
+      animateStationPulses();
+
+      console.log("🚇 Metro Intelligence Layer complete");
+      console.log("✅ Animated metro lines + station pulses integrated");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // ─── Metro Train Simulation v1 ─────────────────────────────────────────────
+      // ═══════════════════════════════════════════════════════════════════════════
+      console.log("🚆 Initializing Metro Train Simulation...");
+
+      // Build continuous path geometries for each metro line
+      const metroLinePaths: Record<number, { coordinates: [number, number][]; stationIds: string[] }> = {};
+      
+      Object.keys(lineSegments).forEach(lineId => {
+        const segments = lineSegments[Number(lineId)];
+        if (segments.length === 0) return;
+
+        // Extract unique stations along the line
+        const stationSet = new Set<string>();
+        const coordMap: Record<string, [number, number]> = {};
+        
+        segments.forEach(segment => {
+          const from = segment.properties.from;
+          const to = segment.properties.to;
+          stationSet.add(from);
+          stationSet.add(to);
           
-          map.flyTo({
-            center: [coordinates.lng, coordinates.lat],
-            zoom: targetZoom,
-            duration: 800,
-            essential: true,
-            curve: 1.2
+          const [fromCoord, toCoord] = segment.geometry.coordinates;
+          coordMap[from] = fromCoord as [number, number];
+          coordMap[to] = toCoord as [number, number];
+        });
+
+        // Build ordered path (simple approach: use first station and follow connections)
+        const stationIds = Array.from(stationSet);
+        const path: [number, number][] = [];
+        const visited = new Set<string>();
+        
+        // Start from first station
+        let current = stationIds[0];
+        while (current && visited.size < stationIds.length) {
+          visited.add(current);
+          const coord = coordMap[current];
+          if (coord) path.push(coord);
+          
+          // Find next connected station
+          const nextSegment = segments.find(s => 
+            (s.properties.from === current && !visited.has(s.properties.to)) ||
+            (s.properties.to === current && !visited.has(s.properties.from))
+          );
+          
+          if (nextSegment) {
+            current = nextSegment.properties.from === current ? 
+              nextSegment.properties.to : nextSegment.properties.from;
+          } else {
+            break;
+          }
+        }
+
+        metroLinePaths[Number(lineId)] = { 
+          coordinates: path,
+          stationIds: Array.from(visited)
+        };
+      });
+
+      // Initialize train positions for each line
+      interface TrainState {
+        lineId: number;
+        position: number; // 0 to 1 along path
+        speed: number; // units per frame
+        color: string;
+        direction: 1 | -1;
+      }
+
+      const trains: TrainState[] = [];
+      
+      Object.keys(metroLinePaths).forEach(lineId => {
+        const path = metroLinePaths[Number(lineId)];
+        if (path.coordinates.length < 2) return;
+
+        const segments = lineSegments[Number(lineId)];
+        const color = segments[0]?.properties.color || "#0ea5e9";
+
+        // Create 2-3 trains per line with staggered positions
+        const trainsPerLine = Math.min(3, Math.max(2, Math.floor(path.coordinates.length / 8)));
+        
+        for (let i = 0; i < trainsPerLine; i++) {
+          trains.push({
+            lineId: Number(lineId),
+            position: i / trainsPerLine,
+            speed: 0.0008 + Math.random() * 0.0004, // Varied speeds
+            color,
+            direction: i % 2 === 0 ? 1 : -1 // Alternate directions
           });
         }
+      });
+
+      console.log(`🚆 Created ${trains.length} trains across ${Object.keys(metroLinePaths).length} lines`);
+
+      // Create GeoJSON source for train positions
+      const trainSource = {
+        type: "FeatureCollection" as const,
+        features: trains.map((train, idx) => ({
+          type: "Feature" as const,
+          geometry: {
+            type: "Point" as const,
+            coordinates: [0, 0] // Will be updated in animation
+          },
+          properties: {
+            id: `train-${train.lineId}-${idx}`,
+            color: train.color,
+            lineId: train.lineId
+          }
+        }))
+      };
+
+      map.addSource("metro-trains", {
+        type: "geojson",
+        data: trainSource
+      });
+
+      // Wide soft glow (energy signature)
+      map.addLayer({
+        id: "metro-train-glow",
+        type: "circle",
+        source: "metro-trains",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 12,
+            14, 18,
+            18, 26
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.08,
+          "circle-blur": 1.2
+        }
+      });
+
+      // Core energy point
+      map.addLayer({
+        id: "metro-train-core",
+        type: "circle",
+        source: "metro-trains",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 3,
+            14, 4,
+            18, 5
+          ],
+          "circle-color": "#ffffff",
+          "circle-opacity": 0.7,
+          "circle-blur": 0.3
+        }
+      });
+
+      // Animate trains along paths
+      const animateTrains = () => {
+        // Update each train position
+        trains.forEach((train, idx) => {
+          const path = metroLinePaths[train.lineId];
+          if (!path || path.coordinates.length < 2) return;
+
+          // Update position
+          train.position += train.speed * train.direction;
+
+          // Loop at path ends
+          if (train.position > 1) {
+            train.position = 0;
+          } else if (train.position < 0) {
+            train.position = 1;
+          }
+
+          // Calculate coordinate along path
+          const totalSegments = path.coordinates.length - 1;
+          const floatIndex = train.position * totalSegments;
+          const segmentIndex = Math.floor(floatIndex);
+          const segmentProgress = floatIndex - segmentIndex;
+
+          const startCoord = path.coordinates[segmentIndex];
+          const endCoord = path.coordinates[Math.min(segmentIndex + 1, path.coordinates.length - 1)];
+
+          if (startCoord && endCoord) {
+            // Interpolate between points
+            const lng = startCoord[0] + (endCoord[0] - startCoord[0]) * segmentProgress;
+            const lat = startCoord[1] + (endCoord[1] - startCoord[1]) * segmentProgress;
+
+            trainSource.features[idx].geometry.coordinates = [lng, lat];
+            
+            // Store current train position for Urban Entity Behavior Engine
+            const props = trainSource.features[idx].properties as any;
+            props.currentLng = lng;
+            props.currentLat = lat;
+            props.segmentProgress = segmentProgress;
+            props.nearStation = false;
+
+            // Check if near station (for intelligent station behavior)
+            const distanceThreshold = 0.15; // 15% of segment for approach detection
+            if (segmentProgress < distanceThreshold || segmentProgress > (1 - distanceThreshold)) {
+              props.nearStation = true;
+              
+              // Identify which station is nearby
+              const nearStationCoord = segmentProgress < distanceThreshold ? startCoord : endCoord;
+              props.nearStationCoord = nearStationCoord;
+            }
+          }
+        });
+
+        // Update source
+        const source = map.getSource("metro-trains") as maplibregl.GeoJSONSource;
+        if (source) {
+          source.setData(trainSource);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateTrains);
+        }
+      };
+
+      animateTrains();
+
+      console.log("🚆 Metro Train Simulation active");
+      console.log("✅ Living digital twin - metro infrastructure is alive");
+      
+      // Return train data for Urban Entity Behavior Engine
+      return {
+        trains,
+        trainSource,
+        metroLinePaths
+      };
+
+    } catch (error) {
+      console.error("❌ Failed to add Metro Intelligence Layer:", error);
+      return null;
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ─── DIGITAL TWIN INTELLIGENCE SYSTEM ──────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Transforms the map from "3D night map" into "Living futuristic urban digital twin"
+  // Adds intelligent visual layers without modifying existing geometry or UI
+  
+  function addDigitalTwinIntelligence(map: maplibregl.Map, stations: any[]) {
+    try {
+      console.log("🧠 Initializing Digital Twin Intelligence System...");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 1. DIGITAL TWIN GROUND LAYER - Subtle Data Surface
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Create very subtle digital grid overlay
+      const gridSize = 0.01; // ~1km grid cells
+      const bounds = map.getBounds();
+      const gridFeatures: any[] = [];
+      
+      const minLng = Math.floor(bounds.getWest() / gridSize) * gridSize;
+      const maxLng = Math.ceil(bounds.getEast() / gridSize) * gridSize;
+      const minLat = Math.floor(bounds.getSouth() / gridSize) * gridSize;
+      const maxLat = Math.ceil(bounds.getNorth() / gridSize) * gridSize;
+      
+      // Horizontal lines
+      for (let lat = minLat; lat <= maxLat; lat += gridSize) {
+        gridFeatures.push({
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [[minLng, lat], [maxLng, lat]]
+          },
+          properties: { type: "grid" }
+        });
       }
-    });
-    map.on("mouseenter", "stations-circle", () => { map.getCanvas().style.cursor = "pointer"; });
-    map.on("mouseleave", "stations-circle", () => { map.getCanvas().style.cursor = ""; });
+      
+      // Vertical lines
+      for (let lng = minLng; lng <= maxLng; lng += gridSize) {
+        gridFeatures.push({
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [[lng, minLat], [lng, maxLat]]
+          },
+          properties: { type: "grid" }
+        });
+      }
+
+      map.addSource("digital-ground-grid", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: gridFeatures
+        }
+      });
+
+      map.addLayer({
+        id: "digital-ground-grid-layer",
+        type: "line",
+        source: "digital-ground-grid",
+        paint: {
+          "line-color": "#0d3f5c",
+          "line-width": 0.3,
+          "line-opacity": 0.04
+        }
+      }, "futuristic-3d-buildings");
+
+      console.log("✅ Added subtle digital ground grid");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 2. LANDMARK INTELLIGENCE SYSTEM - Milad Tower + Major Landmarks
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Define major landmarks (coordinates approximate - can be refined)
+      const landmarks = [
+        {
+          id: "milad-tower",
+          name: "Milad Tower",
+          nameFa: "برج میلاد",
+          coordinates: [51.375, 35.745],
+          importance: "critical",
+          type: "tower"
+        },
+        {
+          id: "azadi-tower",
+          name: "Azadi Tower",
+          nameFa: "برج آزادی",
+          coordinates: [51.338, 35.700],
+          importance: "high",
+          type: "monument"
+        }
+      ];
+
+      map.addSource("city-landmarks", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: landmarks.map(lm => ({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: lm.coordinates
+            },
+            properties: {
+              id: lm.id,
+              name: lm.name,
+              nameFa: lm.nameFa,
+              importance: lm.importance,
+              type: lm.type
+            }
+          }))
+        }
+      });
+
+      // Landmark awareness beacon (breathing effect)
+      map.addLayer({
+        id: "landmark-awareness-glow",
+        type: "circle",
+        source: "city-landmarks",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 40,
+            14, 80,
+            18, 140
+          ],
+          "circle-color": [
+            "match",
+            ["get", "importance"],
+            "critical", "#1a4d6b",
+            "high", "#153f58",
+            "#122e45"
+          ],
+          "circle-opacity": 0.05,
+          "circle-blur": 1.5
+        }
+      });
+
+      // Landmark core beacon
+      map.addLayer({
+        id: "landmark-beacon-core",
+        type: "circle",
+        source: "city-landmarks",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 4,
+            14, 6,
+            18, 9
+          ],
+          "circle-color": "#2d5f7e",
+          "circle-opacity": 0.3,
+          "circle-blur": 0.5
+        }
+      });
+
+      // Animate landmark breathing
+      let landmarkPhase = 0;
+      const animateLandmarks = () => {
+        landmarkPhase = (landmarkPhase + 0.006) % (Math.PI * 2); // Slower
+        const breathe = 0.04 + Math.sin(landmarkPhase) * 0.02; // 0.02 to 0.06 (calmer)
+
+        if (map.getLayer("landmark-awareness-glow")) {
+          map.setPaintProperty("landmark-awareness-glow", "circle-opacity", breathe);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateLandmarks);
+        }
+      };
+      animateLandmarks();
+
+      console.log("✅ Landmark intelligence system active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 3. SMART STATION INTERACTION LAYER - Intelligent Station States
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Enhance existing station markers with state system
+      const stationStates: Record<string, "idle" | "train_approaching" | "train_arrival"> = {};
+      
+      // Initialize all stations as idle
+      stations.forEach(s => stationStates[s.id] = "idle");
+
+      // Add station interaction layer
+      map.addSource("smart-stations", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: stations.map(s => ({
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [s.coordinates.lng, s.coordinates.lat]
+            },
+            properties: {
+              id: s.id,
+              state: "idle",
+              color: s.colors[0] || "#0ea5e9",
+              isInterchange: s.lines.length > 1
+            }
+          }))
+        }
+      });
+
+      // Smart station interaction ring (expands on activity)
+      map.addLayer({
+        id: "smart-station-interaction-ring",
+        type: "circle",
+        source: "smart-stations",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 15,
+            14, 22,
+            18, 32
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.03,
+          "circle-stroke-width": 0.5,
+          "circle-stroke-color": ["get", "color"],
+          "circle-stroke-opacity": 0.15
+        }
+      });
+
+      console.log("✅ Smart station interaction layer added");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 4. URBAN INTELLIGENCE LAYER - Building Activity States
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Identify important buildings (interchange stations = important hubs)
+      const importantBuildings = stations
+        .filter(s => s.lines.length > 1)
+        .map(s => ({
+          coordinates: [s.coordinates.lng, s.coordinates.lat],
+          id: s.id,
+          name: s.name
+        }));
+
+      if (importantBuildings.length > 0) {
+        map.addSource("urban-intelligence-zones", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: importantBuildings.map(building => ({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: building.coordinates
+              },
+              properties: {
+                id: building.id,
+                name: building.name,
+                activityLevel: 0.5
+              }
+            }))
+          }
+        });
+
+        // Urban activity awareness field
+        map.addLayer({
+          id: "urban-awareness-field",
+          type: "circle",
+          source: "urban-intelligence-zones",
+          paint: {
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              10, 60,
+              14, 100,
+              18, 160
+            ],
+            "circle-color": "#1a3d56",
+            "circle-opacity": 0.04,
+            "circle-blur": 2
+          }
+        });
+
+        console.log("✅ Urban intelligence zones active");
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 5. ATMOSPHERIC DEPTH ENHANCEMENT - Scanning Texture Layer
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Add scanning texture animation phase
+      let scanPhase = 0;
+      const animateScan = () => {
+        scanPhase = (scanPhase + 0.008) % (Math.PI * 2); // Slower
+        const scanIntensity = 0.025 + Math.sin(scanPhase) * 0.015; // 0.01 to 0.04 (reduced)
+
+        // Modulate digital grid opacity for scanning effect
+        if (map.getLayer("digital-ground-grid-layer")) {
+          map.setPaintProperty("digital-ground-grid-layer", "line-opacity", scanIntensity);
+        }
+
+        // Modulate urban awareness field
+        if (map.getLayer("urban-awareness-field")) {
+          const fieldIntensity = 0.03 + Math.sin(scanPhase * 0.7) * 0.01; // Reduced
+          map.setPaintProperty("urban-awareness-field", "circle-opacity", fieldIntensity);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateScan);
+        }
+      };
+      animateScan();
+
+      console.log("✅ Atmospheric scanning texture active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 6. METRO TRAIN INTELLIGENCE ENHANCEMENT - Energy Trails
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Add subtle trail effect to existing trains (refined)
+      if (map.getLayer("metro-train-glow")) {
+        // Balanced glow for nervous system effect
+        map.setPaintProperty("metro-train-glow", "circle-opacity", 0.08); // Reduced
+        map.setPaintProperty("metro-train-glow", "circle-blur", 1.8); // Softer
+      }
+
+      if (map.getLayer("metro-train-core")) {
+        // Refined core brightness
+        map.setPaintProperty("metro-train-core", "circle-opacity", 0.75); // Slightly reduced
+      }
+
+      console.log("✅ Metro train intelligence enhanced");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // DIGITAL TWIN SYSTEM STATUS
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      console.log("🧠 Digital Twin Intelligence System ACTIVE");
+      console.log("═══════════════════════════════════════════════════════════");
+      console.log("✅ Digital ground layer: Subtle data surface");
+      console.log("✅ Landmark intelligence: City awareness beacons");
+      console.log("✅ Smart stations: Intelligent node states");
+      console.log("✅ Urban intelligence: Building activity zones");
+      console.log("✅ Atmospheric depth: Scanning texture animation");
+      console.log("✅ Metro intelligence: Enhanced energy visualization");
+      console.log("═══════════════════════════════════════════════════════════");
+      console.log("🌃 TEHRAN DIGITAL TWIN: Living futuristic urban system");
+
+    } catch (error) {
+      console.error("❌ Failed to initialize Digital Twin Intelligence:", error);
+    }
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ─── URBAN ENTITY BEHAVIOR ENGINE ──────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Transforms passive objects into living intelligent entities
+  // Adds state-based behavior without modifying existing geometry
+  
+  function addUrbanEntityBehavior(map: maplibregl.Map, stations: any[], trainData: any) {
+    try {
+      console.log("🧬 Initializing Urban Entity Behavior Engine...");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // ENTITY STATE SYSTEM - Core Architecture
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      type StationState = "idle" | "train_approaching" | "train_arrival";
+      
+      interface UrbanEntity {
+        id: string;
+        type: "landmark" | "metro_station" | "transport_node" | "important_building";
+        importance: number;
+        activityLevel: number;
+        state: string;
+        position: [number, number];
+        lastStateChange: number;
+      }
+
+      // Entity registry
+      const entityRegistry: Record<string, UrbanEntity> = {};
+
+      // Initialize station entities
+      stations.forEach(station => {
+        entityRegistry[station.id] = {
+          id: station.id,
+          type: "metro_station",
+          importance: station.lines.length > 1 ? 0.8 : 0.5,
+          activityLevel: 0.3,
+          state: "idle",
+          position: [station.coordinates.lng, station.coordinates.lat],
+          lastStateChange: Date.now()
+        };
+      });
+
+      console.log(`📊 Registered ${Object.keys(entityRegistry).length} urban entities`);
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 1. INTELLIGENT STATION BEHAVIOR - Living Transport Nodes
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Create station state visualization source
+      const stationStateSource = {
+        type: "FeatureCollection" as const,
+        features: stations.map(s => ({
+          type: "Feature" as const,
+          geometry: {
+            type: "Point" as const,
+            coordinates: [s.coordinates.lng, s.coordinates.lat]
+          },
+          properties: {
+            id: s.id,
+            state: "idle",
+            color: s.colors[0] || "#0ea5e9",
+            activityLevel: 0.3,
+            isInterchange: s.lines.length > 1
+          }
+        }))
+      };
+
+      map.addSource("station-behavior-state", {
+        type: "geojson",
+        data: stationStateSource
+      });
+
+      // Station behavior: Approach ring (expands when train approaching)
+      map.addLayer({
+        id: "station-approach-ring",
+        type: "circle",
+        source: "station-behavior-state",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 12,
+            14, 18,
+            18, 26
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.0, // Will be animated based on state
+          "circle-stroke-width": 1,
+          "circle-stroke-color": ["get", "color"],
+          "circle-stroke-opacity": 0.0 // Will be animated
+        }
+      });
+
+      // Station behavior: Energy pulse (shows activity level)
+      map.addLayer({
+        id: "station-energy-pulse",
+        type: "circle",
+        source: "station-behavior-state",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 8,
+            14, 12,
+            18, 18
+          ],
+          "circle-color": ["get", "color"],
+          "circle-opacity": 0.15, // Base idle state
+          "circle-blur": 0.8
+        }
+      });
+
+      console.log("✅ Intelligent station behavior layers added");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 2. TRAIN TRAIL VISUALIZATION - City Nervous System
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      if (trainData && trainData.trains) {
+        // Create trail points for each train (5 points per trail)
+        const trailPoints: any[] = [];
+        const trailLength = 5;
+        
+        trainData.trains.forEach((train: any, trainIdx: number) => {
+          for (let i = 0; i < trailLength; i++) {
+            trailPoints.push({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [0, 0] // Will be updated in animation
+              },
+              properties: {
+                trainIdx,
+                trailIdx: i,
+                opacity: 1 - (i / trailLength), // Fade towards tail
+                color: train.color
+              }
+            });
+          }
+        });
+
+        map.addSource("train-trails", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: trailPoints
+          }
+        });
+
+        // Trail visualization
+        map.addLayer({
+          id: "train-trail-glow",
+          type: "circle",
+          source: "train-trails",
+          paint: {
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              10, 2,
+              14, 3,
+              18, 4
+            ],
+            "circle-color": ["get", "color"],
+            "circle-opacity": [
+              "*",
+              ["get", "opacity"],
+              0.3
+            ],
+            "circle-blur": 1.2
+          }
+        }, "metro-train-glow");
+
+        console.log("✅ Train trail visualization added");
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 3. CITY PULSE SYSTEM - Global Urban Heartbeat
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      let cityPulsePhase = 0;
+      
+      const animateCityPulse = () => {
+        cityPulsePhase = (cityPulsePhase + 0.004) % (Math.PI * 2); // Slower
+        
+        // Modulate landmark awareness (calmer)
+        if (map.getLayer("landmark-awareness-glow")) {
+          const landmarkPulse = 0.04 + Math.sin(cityPulsePhase * 0.8) * 0.015; // Reduced
+          map.setPaintProperty("landmark-awareness-glow", "circle-opacity", landmarkPulse);
+        }
+        
+        // Modulate urban activity fields (subtler)
+        if (map.getLayer("urban-awareness-field")) {
+          const urbanPulse = 0.03 + Math.sin(cityPulsePhase * 1.2) * 0.01; // Reduced
+          map.setPaintProperty("urban-awareness-field", "circle-opacity", urbanPulse);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateCityPulse);
+        }
+      };
+      animateCityPulse();
+
+      console.log("✅ City pulse system active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 4. BEHAVIORAL ANIMATION ENGINE - State-based Intelligence
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      let behaviorFrame = 0;
+      
+      const updateEntityBehavior = () => {
+        behaviorFrame++;
+        
+        // Update station states based on train proximity
+        if (trainData && trainData.trainSource) {
+          const trains = trainData.trainSource.features;
+          
+          stations.forEach((station, stationIdx) => {
+            const entity = entityRegistry[station.id];
+            if (!entity) return;
+            
+            let nearestDistance = Infinity;
+            let hasApproachingTrain = false;
+            
+            // Check distance to all trains on same line
+            trains.forEach((train: any) => {
+              if (!train.properties.nearStation) return;
+              
+              const trainPos = train.geometry.coordinates;
+              const stationPos = [station.coordinates.lng, station.coordinates.lat];
+              
+              // Simple distance calculation
+              const dx = trainPos[0] - stationPos[0];
+              const dy = trainPos[1] - stationPos[1];
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              
+              if (distance < nearestDistance) {
+                nearestDistance = distance;
+              }
+              
+              // Approaching threshold
+              if (distance < 0.005) { // ~500m
+                hasApproachingTrain = true;
+              }
+            });
+            
+            // Update station state
+            const currentState = entity.state;
+            let newState: StationState = "idle";
+            
+            if (hasApproachingTrain) {
+              if (nearestDistance < 0.002) { // ~200m - arrival
+                newState = "train_arrival";
+              } else {
+                newState = "train_approaching";
+              }
+            }
+            
+            // State transition
+            if (newState !== currentState) {
+              entity.state = newState;
+              entity.lastStateChange = Date.now();
+              stationStateSource.features[stationIdx].properties.state = newState;
+            }
+            
+            // Update activity level based on state
+            let targetActivity = 0.3; // idle
+            if (newState === "train_approaching") targetActivity = 0.6;
+            if (newState === "train_arrival") targetActivity = 0.9;
+            
+            // Smooth transition
+            const currentActivity = stationStateSource.features[stationIdx].properties.activityLevel;
+            const newActivity = currentActivity + (targetActivity - currentActivity) * 0.1;
+            stationStateSource.features[stationIdx].properties.activityLevel = newActivity;
+          });
+          
+          // Update station visualization
+          const stationSource = map.getSource("station-behavior-state") as maplibregl.GeoJSONSource;
+          if (stationSource) {
+            stationSource.setData(stationStateSource);
+          }
+        }
+        
+        // Animate station rings based on activity
+        const stationPulse = Math.sin(behaviorFrame * 0.03);
+        stations.forEach((_station, idx) => {
+          const activity = stationStateSource.features[idx].properties.activityLevel;
+          
+          // Approach ring opacity (shows when train approaching)
+          const ringOpacity = Math.max(0, (activity - 0.4) * 0.4); // 0 at idle, 0.2 at max
+          const strokeOpacity = Math.max(0, (activity - 0.4) * 0.6);
+          
+          // Update via paint properties (affects all stations)
+          if (map.getLayer("station-approach-ring") && idx === 0) {
+            // Only update once per frame
+            map.setPaintProperty("station-approach-ring", "circle-opacity", ringOpacity * (0.8 + stationPulse * 0.2));
+            map.setPaintProperty("station-approach-ring", "circle-stroke-opacity", strokeOpacity);
+          }
+          
+          // Energy pulse (breathing effect based on activity)
+          const pulseOpacity = 0.15 + activity * 0.15 + stationPulse * 0.05;
+          if (map.getLayer("station-energy-pulse") && idx === 0) {
+            map.setPaintProperty("station-energy-pulse", "circle-opacity", pulseOpacity);
+          }
+        });
+        
+        // Update train trails
+        if (trainData && trainData.trains && trainData.trainSource) {
+          const trailSource = map.getSource("train-trails") as maplibregl.GeoJSONSource;
+          if (trailSource) {
+            const trailFeatures: any[] = [];
+            const trailLength = 5;
+            const trailSpacing = 0.02; // spacing along path
+            
+            trainData.trains.forEach((train: any, trainIdx: number) => {
+              const path = trainData.metroLinePaths[train.lineId];
+              if (!path || !path.coordinates) return;
+              
+              // Generate trail points behind train
+              for (let i = 0; i < trailLength; i++) {
+                let trailPos = train.position - (i * trailSpacing);
+                
+                // Wrap around
+                if (trailPos < 0) trailPos += 1;
+                if (trailPos > 1) trailPos -= 1;
+                
+                // Calculate trail point coordinate
+                const totalSegments = path.coordinates.length - 1;
+                const floatIndex = trailPos * totalSegments;
+                const segmentIndex = Math.floor(floatIndex);
+                const segmentProgress = floatIndex - segmentIndex;
+                
+                const startCoord = path.coordinates[segmentIndex];
+                const endCoord = path.coordinates[Math.min(segmentIndex + 1, path.coordinates.length - 1)];
+                
+                if (startCoord && endCoord) {
+                  const lng = startCoord[0] + (endCoord[0] - startCoord[0]) * segmentProgress;
+                  const lat = startCoord[1] + (endCoord[1] - startCoord[1]) * segmentProgress;
+                  
+                  trailFeatures.push({
+                    type: "Feature",
+                    geometry: {
+                      type: "Point",
+                      coordinates: [lng, lat]
+                    },
+                    properties: {
+                      trainIdx,
+                      trailIdx: i,
+                      opacity: 1 - (i / trailLength),
+                      color: train.color
+                    }
+                  });
+                }
+              }
+            });
+            
+            trailSource.setData({
+              type: "FeatureCollection",
+              features: trailFeatures
+            });
+          }
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(updateEntityBehavior);
+        }
+      };
+      
+      updateEntityBehavior();
+
+      console.log("✅ Behavioral animation engine active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 5. INFRASTRUCTURE DATA FLOW - Smart City Nervous System
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Create subtle data particles flowing along metro lines
+      if (trainData && trainData.metroLinePaths) {
+        const dataFlowParticles: any[] = [];
+        const particlesPerLine = 8; // Subtle amount
+        
+        Object.keys(trainData.metroLinePaths).forEach(lineId => {
+          const path = trainData.metroLinePaths[Number(lineId)];
+          if (!path || !path.coordinates || path.coordinates.length < 2) return;
+          
+          for (let i = 0; i < particlesPerLine; i++) {
+            dataFlowParticles.push({
+              lineId: Number(lineId),
+              position: i / particlesPerLine,
+              speed: 0.0003 + Math.random() * 0.0002, // Very slow
+              color: trainData.trains.find((t: any) => t.lineId === Number(lineId))?.color || "#0ea5e9"
+            });
+          }
+        });
+
+        const dataFlowSource = {
+          type: "FeatureCollection" as const,
+          features: dataFlowParticles.map((p, idx) => ({
+            type: "Feature" as const,
+            geometry: {
+              type: "Point" as const,
+              coordinates: [0, 0]
+            },
+            properties: {
+              id: `data-${idx}`,
+              color: p.color,
+              opacity: 0.4
+            }
+          }))
+        };
+
+        map.addSource("infrastructure-data-flow", {
+          type: "geojson",
+          data: dataFlowSource
+        });
+
+        // Ultra-subtle data particles
+        map.addLayer({
+          id: "data-flow-particles",
+          type: "circle",
+          source: "infrastructure-data-flow",
+          paint: {
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              10, 1.5,
+              14, 2,
+              18, 2.5
+            ],
+            "circle-color": ["get", "color"],
+            "circle-opacity": 0.15,
+            "circle-blur": 0.8
+          }
+        }, "metro-train-glow");
+
+        // Animate data flow particles
+        const animateDataFlow = () => {
+          dataFlowParticles.forEach((particle, idx) => {
+            const path = trainData.metroLinePaths[particle.lineId];
+            if (!path || !path.coordinates) return;
+
+            particle.position = (particle.position + particle.speed) % 1;
+
+            const totalSegments = path.coordinates.length - 1;
+            const floatIndex = particle.position * totalSegments;
+            const segmentIndex = Math.floor(floatIndex);
+            const segmentProgress = floatIndex - segmentIndex;
+
+            const startCoord = path.coordinates[segmentIndex];
+            const endCoord = path.coordinates[Math.min(segmentIndex + 1, path.coordinates.length - 1)];
+
+            if (startCoord && endCoord) {
+              const lng = startCoord[0] + (endCoord[0] - startCoord[0]) * segmentProgress;
+              const lat = startCoord[1] + (endCoord[1] - startCoord[1]) * segmentProgress;
+              dataFlowSource.features[idx].geometry.coordinates = [lng, lat];
+            }
+          });
+
+          const flowSource = map.getSource("infrastructure-data-flow") as maplibregl.GeoJSONSource;
+          if (flowSource) {
+            flowSource.setData(dataFlowSource);
+          }
+
+          if (map && !map._removed) {
+            requestAnimationFrame(animateDataFlow);
+          }
+        };
+        animateDataFlow();
+
+        console.log("✅ Infrastructure data flow active");
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 6. DYNAMIC CITY ACTIVITY FIELDS - Invisible Intelligence Zones
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Create activity intensity zones (not visible circles, but data presence)
+      const activityZones = stations
+        .filter(s => s.lines.length > 1) // Interchange stations
+        .map(s => ({
+          coordinates: [s.coordinates.lng, s.coordinates.lat],
+          intensity: 0.5 + Math.random() * 0.3,
+          phase: Math.random() * Math.PI * 2
+        }));
+
+      if (activityZones.length > 0) {
+        map.addSource("city-activity-zones", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: activityZones.map((zone, idx) => ({
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: zone.coordinates
+              },
+              properties: {
+                id: `activity-${idx}`,
+                intensity: zone.intensity,
+                phase: zone.phase
+              }
+            }))
+          }
+        });
+
+        // Ultra-subtle atmospheric distortion (not circles)
+        map.addLayer({
+          id: "activity-field-distortion",
+          type: "circle",
+          source: "city-activity-zones",
+          paint: {
+            "circle-radius": [
+              "interpolate",
+              ["linear"],
+              ["zoom"],
+              10, 80,
+              14, 130,
+              18, 200
+            ],
+            "circle-color": "#0d2840",
+            "circle-opacity": 0.02, // Almost invisible
+            "circle-blur": 3
+          }
+        });
+
+        // Animate activity field breathing
+        let activityPhase = 0;
+        const animateActivityFields = () => {
+          activityPhase = (activityPhase + 0.003) % (Math.PI * 2);
+          
+          const breathe = 0.02 + Math.sin(activityPhase) * 0.01; // 0.01 to 0.03
+          
+          if (map.getLayer("activity-field-distortion")) {
+            map.setPaintProperty("activity-field-distortion", "circle-opacity", breathe);
+          }
+
+          if (map && !map._removed) {
+            requestAnimationFrame(animateActivityFields);
+          }
+        };
+        animateActivityFields();
+
+        console.log("✅ Dynamic city activity fields active");
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 7. DIGITAL TWIN ATMOSPHERIC SCAN LAYER - Continuous Monitoring
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // Create moving scan plane suggestion (not visible plane, but effect)
+      let scanPlanePhase = 0;
+      
+      const animateScanPlane = () => {
+        scanPlanePhase = (scanPlanePhase + 0.002) % (Math.PI * 2);
+        
+        // Modulate digital grid with scan effect
+        if (map.getLayer("digital-ground-grid-layer")) {
+          const scanIntensity = 0.04 + Math.sin(scanPlanePhase) * 0.015; // 0.025 to 0.055
+          map.setPaintProperty("digital-ground-grid-layer", "line-opacity", scanIntensity);
+        }
+
+        // Occasional data refresh wave (every 20 seconds)
+        const refreshWave = Math.abs(Math.sin(scanPlanePhase * 0.1));
+        if (refreshWave > 0.95 && map.getLayer("activity-field-distortion")) {
+          // Brief refresh pulse
+          map.setPaintProperty("activity-field-distortion", "circle-opacity", 0.05);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateScanPlane);
+        }
+      };
+      animateScanPlane();
+
+      console.log("✅ Digital twin atmospheric scan layer active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 8. URBAN TIME SIMULATION - Deterministic City Rhythm
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      let urbanTimePhase = 0;
+      
+      const updateUrbanTime = () => {
+        urbanTimePhase = (urbanTimePhase + 0.003) % (Math.PI * 2); // Slower
+        
+        // Activity changes (subtle deterministic wave)
+        const activityWave = Math.sin(urbanTimePhase);
+        
+        // Infrastructure intensity modulation (refined)
+        if (map.getLayer("metro-train-glow")) {
+          const trainIntensity = 0.08 + activityWave * 0.015; // Reduced range
+          map.setPaintProperty("metro-train-glow", "circle-opacity", trainIntensity);
+        }
+
+        // Station base activity (calmer)
+        if (map.getLayer("station-energy-pulse")) {
+          const stationBase = 0.15 + activityWave * 0.02; // Reduced
+          map.setPaintProperty("station-energy-pulse", "circle-opacity", stationBase);
+        }
+
+        // Landmark awareness (minimal)
+        if (map.getLayer("landmark-beacon-core")) {
+          const landmarkActivity = 0.3 + activityWave * 0.03; // Reduced
+          map.setPaintProperty("landmark-beacon-core", "circle-opacity", landmarkActivity);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(updateUrbanTime);
+        }
+      };
+      updateUrbanTime();
+
+      console.log("✅ Urban time simulation active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 9. BUILDING INTELLIGENCE LAYER - Landmark Recognition
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      // For major landmarks, add subtle material response
+      // This layer suggests "the building is recognized by the system"
+      
+      // Milad Tower beacon (soft scientific recognition)
+      map.addSource("landmark-recognition", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [
+            {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: [51.375, 35.745] // Milad Tower
+              },
+              properties: {
+                name: "Milad Tower",
+                type: "critical_landmark"
+              }
+            }
+          ]
+        }
+      });
+
+      // Subtle scanning reflection layer
+      map.addLayer({
+        id: "landmark-scanning-field",
+        type: "circle",
+        source: "landmark-recognition",
+        paint: {
+          "circle-radius": [
+            "interpolate",
+            ["linear"],
+            ["zoom"],
+            10, 25,
+            14, 45,
+            18, 70
+          ],
+          "circle-color": "#1a4560",
+          "circle-opacity": 0.03, // Almost imperceptible
+          "circle-blur": 2.5
+        }
+      });
+
+      // Animate landmark recognition
+      let landmarkScanPhase = 0;
+      const animateLandmarkScan = () => {
+        landmarkScanPhase = (landmarkScanPhase + 0.006) % (Math.PI * 2);
+        
+        const scanReflection = 0.03 + Math.sin(landmarkScanPhase) * 0.015; // 0.015 to 0.045
+        
+        if (map.getLayer("landmark-scanning-field")) {
+          map.setPaintProperty("landmark-scanning-field", "circle-opacity", scanReflection);
+        }
+
+        if (map && !map._removed) {
+          requestAnimationFrame(animateLandmarkScan);
+        }
+      };
+      animateLandmarkScan();
+
+      console.log("✅ Building intelligence layer active");
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // 10. PREMIUM LANDMARK 3D SYSTEM - DEBUG MODE
+      // ═══════════════════════════════════════════════════════════════════════════
+      // Following official MapLibre CustomLayer pattern with full debugging
+      
+      // FILTERED DEBUG LOGGER
+      const miladLog = {
+        info: (...args: any[]) => console.log('%c[MILAD]', 'background: #2563eb; color: white; font-weight: bold; padding: 2px 6px; border-radius: 3px;', ...args),
+        success: (...args: any[]) => console.log('%c[MILAD]', 'background: #16a34a; color: white; font-weight: bold; padding: 2px 6px; border-radius: 3px;', ...args),
+        error: (...args: any[]) => console.error('%c[MILAD]', 'background: #dc2626; color: white; font-weight: bold; padding: 2px 6px; border-radius: 3px;', ...args),
+        warn: (...args: any[]) => console.warn('%c[MILAD]', 'background: #ea580c; color: white; font-weight: bold; padding: 2px 6px; border-radius: 3px;', ...args),
+      };
+      
+      try {
+        miladLog.info("🏗️ Starting Milad Tower 3D integration (DEBUG MODE)...");
+        
+        // CRITICAL: Map is ALREADY idle at this point, execute immediately
+        const add3DModel = () => {
+          miladLog.success("✅ Executing 3D layer setup...");
+        
+        // Import Three.js and GLTFLoader
+        import('three').then((THREE) => {
+          import('three/examples/jsm/loaders/GLTFLoader.js').then(({ GLTFLoader }) => {
+            
+            // Milad Tower coordinates
+            const modelOrigin = [51.3753, 35.7448];
+            const modelAltitude = 0;
+            const modelRotate = [Math.PI / 2, 0, 0];
+            
+            miladLog.info("📍 Model origin:", modelOrigin);
+            
+            // Convert to Mercator
+            const modelAsMercatorCoordinate = (maplibregl as any).MercatorCoordinate.fromLngLat(
+              modelOrigin,
+              modelAltitude
+            );
+            
+            // Transformation parameters (following official pattern)
+            const modelTransform = {
+              translateX: modelAsMercatorCoordinate.x,
+              translateY: modelAsMercatorCoordinate.y,
+              translateZ: modelAsMercatorCoordinate.z,
+              rotateX: modelRotate[0],
+              rotateY: modelRotate[1],
+              rotateZ: modelRotate[2],
+              scale: modelAsMercatorCoordinate.meterInMercatorCoordinateUnits()
+            };
+            
+            miladLog.info("🔢 Transform:", {
+              x: modelTransform.translateX,
+              y: modelTransform.translateY,
+              scale: modelTransform.scale.toExponential(4)
+            });
+
+            // Custom Layer
+            const customLayer: maplibregl.CustomLayerInterface = {
+              id: '3d-model',
+              type: 'custom',
+              renderingMode: '3d',
+              
+              onAdd(this: any, map: maplibregl.Map, gl: WebGLRenderingContext) {
+                miladLog.info("✅ onAdd() called");
+                
+                this.camera = new THREE.Camera();
+                this.scene = new THREE.Scene();
+                this.map = map;
+                
+                // TEST CUBE - CRITICAL FOR DEBUGGING
+                miladLog.warn("🟥 Adding TEST RED CUBE (100m cube)");
+                const geometry = new THREE.BoxGeometry(100, 100, 100);
+                const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                this.testCube = new THREE.Mesh(geometry, material);
+                this.scene.add(this.testCube);
+                miladLog.success("✅ Test cube added to scene");
+
+                // Lights
+                const directionalLight = new THREE.DirectionalLight(0xffffff);
+                directionalLight.position.set(0, -70, 100).normalize();
+                this.scene.add(directionalLight);
+
+                const directionalLight2 = new THREE.DirectionalLight(0xffffff);
+                directionalLight2.position.set(0, 70, 100).normalize();
+                this.scene.add(directionalLight2);
+                
+                miladLog.info("💡 Lights added");
+
+                // Renderer
+                this.renderer = new THREE.WebGLRenderer({
+                  canvas: map.getCanvas(),
+                  context: gl,
+                  antialias: true
+                });
+                this.renderer.autoClear = false;
+                
+                miladLog.success("✅ Renderer initialized");
+                miladLog.info("   Scene children:", this.scene.children.length);
+
+                // Load GLB
+                miladLog.info("📦 Loading GLB: /observation+tower+3d+model.glb");
+                const loader = new GLTFLoader();
+                
+                loader.load(
+                  '/observation+tower+3d+model.glb',
+                  (gltf) => {
+                    miladLog.success("✅ GLB loaded successfully");
+                    miladLog.info("   GLB scene:", gltf.scene);
+                    
+                    this.model = gltf.scene;
+
+                    // Calculate real model bounds
+                    const box = new THREE.Box3().setFromObject(this.model);
+                    const size = box.getSize(new THREE.Vector3());
+                    
+                    miladLog.info("📦 MODEL SIZE:");
+                    miladLog.info("   Width (X):", size.x.toFixed(4));
+                    miladLog.info("   Height (Y):", size.y.toFixed(4));
+                    miladLog.info("   Depth (Z):", size.z.toFixed(4));
+
+                    // Calculate scale to match 435m height
+                    const targetHeight = 435;
+                    const modelHeight = size.y;
+                    const calculatedScale = targetHeight / modelHeight;
+                    
+                    miladLog.info("📏 SCALE CALCULATION:");
+                    miladLog.info("   Model height:", modelHeight.toFixed(4));
+                    miladLog.info("   Target height: 435m");
+                    miladLog.info("   Calculated scale:", calculatedScale.toFixed(2));
+                    
+                    this.model.scale.set(calculatedScale, calculatedScale, calculatedScale);
+
+                    // DISABLE materials temporarily - use red for visibility
+                    miladLog.warn("🔴 Applying RED material for debugging");
+                    this.model.traverse((obj: any) => {
+                      if (obj.isMesh) {
+                        obj.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                      }
+                    });
+
+                    this.scene.add(this.model);
+                    miladLog.success("✅ Model added to scene");
+                    miladLog.info("   Total scene children:", this.scene.children.length);
+                    
+                    map.triggerRepaint();
+                  },
+                  (progress) => {
+                    if (progress.total > 0) {
+                      const percent = ((progress.loaded / progress.total) * 100).toFixed(0);
+                      miladLog.info(`⏳ Loading: ${percent}%`);
+                    }
+                  },
+                  (error) => {
+                    miladLog.error("❌ GLB load failed:", error);
+                  }
+                );
+              },
+
+              render(this: any, gl: WebGLRenderingContext, matrix: number[]) {
+                // Count renders
+                if (!this.renderCount) {
+                  this.renderCount = 0;
+                  miladLog.success("🎬 First render() called");
+                }
+                this.renderCount++;
+
+                // Rotation matrices
+                const rotationX = new THREE.Matrix4().makeRotationAxis(
+                  new THREE.Vector3(1, 0, 0),
+                  modelTransform.rotateX
+                );
+                const rotationY = new THREE.Matrix4().makeRotationAxis(
+                  new THREE.Vector3(0, 1, 0),
+                  modelTransform.rotateY
+                );
+                const rotationZ = new THREE.Matrix4().makeRotationAxis(
+                  new THREE.Vector3(0, 0, 1),
+                  modelTransform.rotateZ
+                );
+
+                // Build matrix (official pattern)
+                const m = new THREE.Matrix4().fromArray(matrix);
+                const l = new THREE.Matrix4()
+                  .makeTranslation(
+                    modelTransform.translateX,
+                    modelTransform.translateY,
+                    modelTransform.translateZ
+                  )
+                  .scale(
+                    new THREE.Vector3(
+                      modelTransform.scale,
+                      -modelTransform.scale,
+                      modelTransform.scale
+                    )
+                  )
+                  .multiply(rotationX)
+                  .multiply(rotationY)
+                  .multiply(rotationZ);
+
+                this.camera.projectionMatrix = m.multiply(l);
+                this.renderer.resetState();
+                this.renderer.render(this.scene, this.camera);
+                this.map.triggerRepaint();
+                
+                // Log every 100 renders
+                if (this.renderCount % 100 === 0) {
+                  miladLog.info(`🔄 Render count: ${this.renderCount}`);
+                  miladLog.info("   Scene children:", this.scene.children.length);
+                  if (this.model) {
+                    miladLog.info("   Model visible:", this.model.visible);
+                  }
+                  if (this.testCube) {
+                    miladLog.info("   Test cube visible:", this.testCube.visible);
+                  }
+                }
+              }
+            };
+
+            // Add layer to map
+            miladLog.info("➕ Adding custom layer to map...");
+            
+            // Try to add before waterway-label
+            const layers = map.getStyle().layers;
+            const waterwayLabel = layers.find(l => l.id === 'waterway-label');
+            
+            if (waterwayLabel) {
+              map.addLayer(customLayer, 'waterway-label');
+              miladLog.success("✅ Layer added BEFORE waterway-label");
+            } else {
+              map.addLayer(customLayer);
+              miladLog.success("✅ Layer added at top");
+            }
+            
+            // VERIFY layer was added
+            setTimeout(() => {
+              const addedLayer = map.getStyle().layers.find(l => l.id === '3d-model');
+              if (addedLayer) {
+                miladLog.success("✅ VERIFIED: Custom layer exists in map");
+              } else {
+                miladLog.error("❌ FAILED: Custom layer NOT in map!");
+              }
+            }, 100);
+            
+            // DEBUG: Red marker
+            map.addSource('milad-marker', {
+              type: 'geojson',
+              data: {
+                type: 'Feature',
+                geometry: {
+                  type: 'Point',
+                  coordinates: modelOrigin
+                },
+                properties: {}
+              }
+            });
+
+            map.addLayer({
+              id: 'milad-circle',
+              type: 'circle',
+              source: 'milad-marker',
+              paint: {
+                'circle-radius': 20,
+                'circle-color': '#ff0000',
+                'circle-opacity': 0.8
+              }
+            });
+
+            miladLog.success("🔴 Debug marker added");
+            
+          }).catch(error => {
+            miladLog.error("❌ GLTFLoader import failed:", error);
+          });
+        }).catch(error => {
+          miladLog.error("❌ Three.js import failed:", error);
+        });
+        
+        }; // End of add3DModel function
+        
+        // Map is ALREADY idle - execute immediately with small delay
+        miladLog.info("⚡ Map already idle, executing in 500ms...");
+        setTimeout(() => {
+          add3DModel();
+        }, 500);
+        
+      } catch (error) {
+        miladLog.error("❌ Setup error:", error);
+      }
+
+      // ═══════════════════════════════════════════════════════════════════════════
+      // URBAN ENTITY BEHAVIOR ENGINE STATUS
+      // ═══════════════════════════════════════════════════════════════════════════
+      
+      console.log("🧬 Urban Entity Behavior Engine ACTIVE");
+      console.log("═══════════════════════════════════════════════════════════");
+      console.log("✅ Entity state system: Architecture initialized");
+      console.log("✅ Intelligent stations: Train proximity detection");
+      console.log("✅ Train trails: City nervous system visualization");
+      console.log("✅ City pulse: Global urban heartbeat");
+      console.log("✅ Behavior engine: State-based animation");
+      console.log("✅ Infrastructure data flow: Smart city nervous system");
+      console.log("✅ Dynamic activity fields: Invisible intelligence zones");
+      console.log("✅ Atmospheric scan layer: Continuous monitoring");
+      console.log("✅ Urban time simulation: Deterministic city rhythm");
+      console.log("✅ Building intelligence: Landmark recognition");
+      console.log("═══════════════════════════════════════════════════════════");
+      console.log("🏙️ DIGITAL TWIN COMMAND CENTER: City understands itself");
+
+    } catch (error) {
+      console.error("❌ Failed to initialize Urban Entity Behavior:", error);
+    }
   }
 
   return (

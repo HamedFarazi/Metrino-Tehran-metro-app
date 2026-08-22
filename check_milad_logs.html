@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milad Tower Debug Console</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e1a;
+            color: #00ff88;
+            padding: 20px;
+        }
+        h1 {
+            color: #ff0066;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #ff0066;
+        }
+        #instructions {
+            background: #1a1e2e;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00ff88;
+            border-radius: 4px;
+        }
+        #instructions h2 {
+            color: #00ccff;
+            margin-bottom: 10px;
+        }
+        #instructions ol {
+            margin: 10px 0 10px 30px;
+            color: #88ffbb;
+        }
+        #instructions li {
+            margin: 5px 0;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #console {
+            background: #000;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 70vh;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+        .log-entry {
+            margin: 8px 0;
+            padding: 8px;
+            border-radius: 4px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .log-milad {
+            background: rgba(37, 99, 235, 0.2);
+            border-left: 4px solid #2563eb;
+            color: #93c5fd;
+        }
+        .log-success {
+            background: rgba(22, 163, 74, 0.2);
+            border-left: 4px solid #16a34a;
+            color: #86efac;
+        }
+        .log-error {
+            background: rgba(220, 38, 38, 0.2);
+            border-left: 4px solid #dc2626;
+            color: #fca5a5;
+        }
+        .log-glb {
+            background: rgba(234, 88, 12, 0.2);
+            border-left: 4px solid #ea580c;
+            color: #fdba74;
+        }
+        .timestamp {
+            color: #64748b;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        .icon {
+            font-size: 18px;
+            margin-left: 5px;
+        }
+        #status {
+            text-align: center;
+            padding: 15px;
+            margin-top: 20px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .highlight {
+            background: rgba(255, 255, 0, 0.3);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗼 Milad Tower Console Logger</h1>
+    
+    <div id="instructions">
+        <h2>دستورالعمل:</h2>
+        <ol>
+            <li>روی دکمه "Clear Console & Refresh App" کلیک کنید</li>
+            <li>منتظر بمانید تا برنامه reload شود</li>
+            <li>به marker قرمز zoom کنید (51.3753, 35.7448)</li>
+            <li>logs مربوط به Milad Tower اینجا نمایش داده می‌شوند</li>
+            <li>روی "Copy All Logs" کلیک کنید تا همه logs را کپی کنید</li>
+        </ol>
+    </div>
+
+    <div class="btn-group">
+        <button onclick="clearAndRefresh()">🔄 Clear Console & Refresh App</button>
+        <button onclick="captureCurrentLogs()">📸 Capture Current Logs</button>
+        <button onclick="copyLogs()">📋 Copy All Logs</button>
+    </div>
+
+    <div id="console"></div>
+    <div id="status">در انتظار logs...</div>
+
+    <script>
+        let allLogs = [];
+        const consoleDiv = document.getElementById('console');
+        const statusDiv = document.getElementById('status');
+
+        // Override console methods to capture logs
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        const originalInfo = console.info;
+
+        function formatTimestamp() {
+            const now = new Date();
+            return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}.${now.getMilliseconds().toString().padStart(3, '0')}`;
+        }
+
+        function shouldCapture(args) {
+            const text = args.join(' ').toLowerCase();
+            return text.includes('milad') || 
+                   text.includes('glb') || 
+                   text.includes('tower') ||
+                   text.includes('🏗️') ||
+                   text.includes('✅') ||
+                   text.includes('📦') ||
+                   text.includes('📏') ||
+                   text.includes('🎬');
+        }
+
+        function getLogType(text) {
+            if (text.includes('[MILAD]') || text.includes('🏗️')) return 'milad';
+            if (text.includes('✅') || text.includes('success')) return 'success';
+            if (text.includes('❌') || text.includes('error') || text.includes('failed')) return 'error';
+            if (text.includes('GLB') || text.includes('glb') || text.includes('📦')) return 'glb';
+            return 'milad';
+        }
+
+        function addLog(type, args) {
+            if (!shouldCapture(args)) return;
+
+            const timestamp = formatTimestamp();
+            const message = args.join(' ');
+            const logType = getLogType(message);
+
+            const entry = {
+                timestamp,
+                type,
+                message,
+                logType
+            };
+
+            allLogs.push(entry);
+
+            const logElement = document.createElement('div');
+            logElement.className = `log-entry log-${logType}`;
+            logElement.innerHTML = `
+                <span class="timestamp">[${timestamp}]</span>
+                <span class="icon">${getIcon(logType)}</span>
+                ${escapeHtml(message)}
+            `;
+
+            consoleDiv.appendChild(logElement);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
+            updateStatus();
+        }
+
+        function getIcon(logType) {
+            switch(logType) {
+                case 'success': return '✅';
+                case 'error': return '❌';
+                case 'glb': return '📦';
+                default: return '🗼';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function updateStatus() {
+            const hasStartLog = allLogs.some(l => l.message.includes('🏗️') || l.message.includes('Starting'));
+            const hasGLBLoad = allLogs.some(l => l.message.includes('✅') && l.message.includes('GLB'));
+            const hasBoundingBox = allLogs.some(l => l.message.includes('📦') && l.message.includes('bounding box'));
+            const hasScaling = allLogs.some(l => l.message.includes('📏'));
+            const hasFirstRender = allLogs.some(l => l.message.includes('🎬') || l.message.includes('First render'));
+
+            let status = '';
+            let color = '#ff9800';
+
+            if (hasFirstRender && hasGLBLoad) {
+                status = '✅ System is WORKING! Model is rendering!';
+                color = '#4caf50';
+            } else if (hasGLBLoad) {
+                status = '⏳ GLB loaded, waiting for render...';
+                color = '#2196f3';
+            } else if (hasStartLog) {
+                status = '⏳ Loading GLB file...';
+                color = '#ff9800';
+            } else if (allLogs.length === 0) {
+                status = '⏸️ Waiting for logs... (refresh the app)';
+                color = '#9e9e9e';
+            } else {
+                status = `📊 Captured ${allLogs.length} logs`;
+                color = '#00ff88';
+            }
+
+            statusDiv.textContent = status;
+            statusDiv.style.color = color;
+        }
+
+        console.log = function(...args) {
+            addLog('log', args);
+            originalLog.apply(console, args);
+        };
+
+        console.error = function(...args) {
+            addLog('error', args);
+            originalError.apply(console, args);
+        };
+
+        console.warn = function(...args) {
+            addLog('warn', args);
+            originalWarn.apply(console, args);
+        };
+
+        console.info = function(...args) {
+            addLog('info', args);
+            originalInfo.apply(console, args);
+        };
+
+        function clearAndRefresh() {
+            // Clear local logs
+            allLogs = [];
+            consoleDiv.innerHTML = '';
+            
+            // Clear browser console
+            console.clear();
+            
+            // Add notification
+            const notification = document.createElement('div');
+            notification.className = 'log-entry log-success';
+            notification.innerHTML = `
+                <span class="timestamp">[${formatTimestamp()}]</span>
+                <span class="icon">🔄</span>
+                Console cleared! Refreshing app at http://localhost:5173...
+            `;
+            consoleDiv.appendChild(notification);
+            
+            // Open app in new tab or refresh existing
+            window.open('http://localhost:5173', '_blank');
+            
+            updateStatus();
+        }
+
+        function captureCurrentLogs() {
+            const notification = document.createElement('div');
+            notification.className = 'log-entry log-milad';
+            notification.innerHTML = `
+                <span class="timestamp">[${formatTimestamp()}]</span>
+                <span class="icon">📸</span>
+                Capturing current browser console logs...
+            `;
+            consoleDiv.appendChild(notification);
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+
+        function copyLogs() {
+            if (allLogs.length === 0) {
+                alert('هیچ log ای برای کپی وجود ندارد! ابتدا console را clear کنید و app را refresh کنید.');
+                return;
+            }
+
+            const formattedLogs = allLogs.map(log => 
+                `[${log.timestamp}] ${log.message}`
+            ).join('\n');
+
+            navigator.clipboard.writeText(formattedLogs).then(() => {
+                const notification = document.createElement('div');
+                notification.className = 'log-entry log-success';
+                notification.innerHTML = `
+                    <span class="timestamp">[${formatTimestamp()}]</span>
+                    <span class="icon">✅</span>
+                    ${allLogs.length} logs copied to clipboard!
+                `;
+                consoleDiv.appendChild(notification);
+                consoleDiv.scrollTop = consoleDiv.scrollHeight;
+
+                setTimeout(() => notification.remove(), 3000);
+            });
+        }
+
+        // Initialize
+        updateStatus();
+
+        // Check if app is running
+        fetch('http://localhost:5173')
+            .then(() => {
+                const notification = document.createElement('div');
+                notification.className = 'log-entry log-success';
+                notification.innerHTML = `
+                    <span class="timestamp">[${formatTimestamp()}]</span>
+                    <span class="icon">✅</span>
+                    App is running at http://localhost:5173
+                `;
+                consoleDiv.appendChild(notification);
+            })
+            .catch(() => {
+                const notification = document.createElement('div');
+                notification.className = 'log-entry log-error';
+                notification.innerHTML = `
+                    <span class="timestamp">[${formatTimestamp()}]</span>
+                    <span class="icon">❌</span>
+                    App is not running! Please start it with: pnpm run dev
+                `;
+                consoleDiv.appendChild(notification);
+            });
+    </script>
+</body>
+</html>
