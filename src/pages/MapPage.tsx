@@ -1,4 +1,4 @@
-﻿/**
+/**
  * MapPage — Three map modes: Offline SVG | Street vector | Satellite
  */
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -19,6 +19,7 @@ import { useGeolocation } from "@/hooks/useGeolocation";
 import { useIsDesktop, useMediaQuery } from "@/hooks/useMediaQuery";
 import { LINE_COLORS } from "@/types/metro";
 import { cn, formatDuration } from "@/lib/utils";
+import { createGLBDragController } from "@/lib/glb-drag-controller";
 
 /** Desktop route sidebar = `md` + w-80; station sidebar = `lg` + ~356px */
 const ROUTE_SIDEBAR_OFFSET_PX = 336;
@@ -366,7 +367,7 @@ const LAYERS: Array<{ id: ViewMode; labelFa: string; desc: string; icon: React.R
   { id: "street",    labelFa: "تیره (Fiord)",   desc: "OpenFreeMap — تم تیره", icon: <Layers className="h-5 w-5" /> },
   { id: "liberty",   labelFa: "روشن (Liberty)", desc: "OpenFreeMap — تم روشن", icon: <Layers className="h-5 w-5 opacity-70" /> },
   { id: "satellite", labelFa: "ماهواره‌ای",     desc: "MapTiler Satellite",    icon: <Satellite className="h-5 w-5" /> },
-  { id: "futuristic-3d", labelFa: "شهر هوشمند 3D", desc: "نمای فوتوریستیک تهران", icon: <Building2 className="h-5 w-5" /> },
+  { id: "futuristic-3d", labelFa: "شهر 3D", desc: "نمای 3D تهران", icon: <Building2 className="h-5 w-5" /> },
 ];
 
 function LayerSwitcher({ mode, onChange }: { mode: ViewMode; onChange: (m: ViewMode) => void }) {
@@ -927,6 +928,14 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
               }};
             });
           }
+          // Add promoteId to openmaptiles source so feature IDs work in filters
+          // Use string format to use tile's built-in feature ID
+          if (json.sources?.openmaptiles) {
+            json.sources.openmaptiles = {
+              ...json.sources.openmaptiles,
+              promoteId: "id"  // Use tile's own numeric feature ID
+            };
+          }
           styleObj = json;
         } catch { /* fallback to url */ }
       }
@@ -1147,25 +1156,37 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
       });
 
       // ─── Labels: Minimal & Professional ───────────────────────────────────────
-      const labelLayers = map.getStyle()?.layers?.filter((l: any) => 
-        l.type === "symbol" && !l.id.includes("stations")
-      ) || [];
+      const allSymbolLayers = map.getStyle()?.layers?.filter((l: any) => l.type === "symbol") || [];
+      const labelLayers = allSymbolLayers.filter((l: any) => !l.id.includes("stations"));
+
+      console.log(`🏷️ Total symbol layers: ${allSymbolLayers.length}`);
+      console.log(`🏷️ Non-station labels: ${labelLayers.length}`);
+      console.log("Label layer IDs:", labelLayers.map((l: any) => l.id));
+
+      if (labelLayers.length === 0) {
+        console.warn("⚠️ No label layers found! Style might not have text layers.");
+      }
 
       labelLayers.forEach((layer: any) => {
         try {
-          const isMajor = layer.id.includes("place") || layer.id.includes("district");
+          console.log(`Processing label: ${layer.id}`);
           
-          if (isMajor) {
-            map.setPaintProperty(layer.id, "text-opacity", 0.25);
-            map.setPaintProperty(layer.id, "text-color", "#3b5572");
+          // FORCE all text layers to be visible
+          if (layer.layout?.['text-field']) {
+            map.setLayoutProperty(layer.id, 'visibility', 'visible');
+            map.setPaintProperty(layer.id, "text-opacity", 0.7);
+            map.setPaintProperty(layer.id, "text-color", "#7a94ab");
             map.setPaintProperty(layer.id, "text-halo-color", "#050a12");
             map.setPaintProperty(layer.id, "text-halo-width", 1.5);
-          } else {
-            map.setPaintProperty(layer.id, "text-opacity", 0);
-            map.setPaintProperty(layer.id, "icon-opacity", 0);
+            console.log(`✅ Forced ${layer.id} visible`);
+          }
+          
+          // Also handle icons
+          if (layer.layout?.['icon-image']) {
+            map.setPaintProperty(layer.id, "icon-opacity", 0.5);
           }
         } catch (e) {
-          // Silent fail
+          console.error(`❌ Failed to style label ${layer.id}:`, e);
         }
       });
 
@@ -1270,7 +1291,7 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
         type: "fill-extrusion",
         source: vectorSourceName,
         "source-layer": buildingSourceLayer,
-        minzoom: 12,
+        minzoom: 10, // Lower minzoom to show more buildings
         paint: {
           // PREMIUM ARCHITECTURAL MATERIAL
           // Richer dark graphite with improved depth perception
@@ -1314,6 +1335,22 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
       }, "stations-glow");
 
       console.log("✅ Premium architectural buildings rendered");
+
+      // ─── Move Labels Above Buildings ──────────────────────────────────────────
+      // Fix z-index: Labels should be on top of 3D buildings
+      const allLabelLayers = map.getStyle()?.layers?.filter((l: any) => 
+        l.type === "symbol" && l.layout?.['text-field']
+      ) || [];
+      
+      console.log(`📌 Moving ${allLabelLayers.length} label layers above buildings...`);
+      allLabelLayers.forEach((layer: any) => {
+        try {
+          map.moveLayer(layer.id);
+          console.log(`✅ Moved ${layer.id} to top`);
+        } catch (e) {
+          console.warn(`⚠️ Could not move ${layer.id}:`, e);
+        }
+      });
 
       // ─── Building Edge Enhancement: Refined Silhouette Definition ────────────
       map.addLayer({
@@ -3017,10 +3054,11 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
         import('three').then((THREE) => {
           import('three/examples/jsm/loaders/GLTFLoader.js').then(({ GLTFLoader }) => {
             
-            // Milad Tower coordinates
-            const modelOrigin = [51.3753, 35.7448];
+            // Milad Tower coordinates - FINAL OPTIMIZED POSITION
+            const modelOrigin = [51.375377281551806, 35.74455351604652]; // Tuned via drag mode
             const modelAltitude = 0;
-            const modelRotate = [Math.PI / 2, 0, 0];
+            // Try zero rotation first to see raw model orientation
+            const modelRotate = [Math.PI / 2, 0, 0]; // X rotation needed for Z-up to Y-up conversion
             
             miladLog.info("📍 Model origin:", modelOrigin);
             
@@ -3042,10 +3080,15 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
             };
             
             miladLog.info("🔢 Transform:", {
-              x: modelTransform.translateX,
-              y: modelTransform.translateY,
+              x: modelTransform.translateX.toFixed(6),
+              y: modelTransform.translateY.toFixed(6),
               scale: modelTransform.scale.toExponential(4)
             });
+
+            // Remove existing layer/source if present (reload safety)
+            try { map.removeLayer('3d-model'); } catch(_) {}
+            try { map.removeLayer('milad-circle'); } catch(_) {}
+            try { map.removeSource('milad-marker'); } catch(_) {}
 
             // Custom Layer
             const customLayer: maplibregl.CustomLayerInterface = {
@@ -3054,211 +3097,184 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
               renderingMode: '3d',
               
               onAdd(this: any, map: maplibregl.Map, gl: WebGLRenderingContext) {
-                miladLog.info("✅ onAdd() called");
+                miladLog.success("✅ onAdd() called - Three.js initializing");
                 
                 this.camera = new THREE.Camera();
                 this.scene = new THREE.Scene();
                 this.map = map;
                 
-                // TEST CUBE - CRITICAL FOR DEBUGGING
-                miladLog.warn("🟥 Adding TEST RED CUBE (100m cube)");
-                const geometry = new THREE.BoxGeometry(100, 100, 100);
-                const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-                this.testCube = new THREE.Mesh(geometry, material);
-                this.scene.add(this.testCube);
-                miladLog.success("✅ Test cube added to scene");
+                // TEST CUBE FIRST - 100m x 100m x 100m (in meter units)
+                // REMOVED - cube test passed! Three.js rendering works.
+                // miladLog.warn("🟥 Adding TEST RED CUBE");
+                miladLog.success("✅ Skipping test cube - rendering pipeline confirmed working");
 
-                // Lights
-                const directionalLight = new THREE.DirectionalLight(0xffffff);
-                directionalLight.position.set(0, -70, 100).normalize();
-                this.scene.add(directionalLight);
+                // Lights for MeshStandardMaterial
+                const dirLight = new THREE.DirectionalLight(0xffffff, 2.0);
+                dirLight.position.set(100, 200, 100);
+                this.scene.add(dirLight);
+                const dirLight2 = new THREE.DirectionalLight(0x4a9eff, 0.8);
+                dirLight2.position.set(-100, 100, -100);
+                this.scene.add(dirLight2);
+                const ambientLight = new THREE.AmbientLight(0x404060, 1.0);
+                this.scene.add(ambientLight);
 
-                const directionalLight2 = new THREE.DirectionalLight(0xffffff);
-                directionalLight2.position.set(0, 70, 100).normalize();
-                this.scene.add(directionalLight2);
-                
-                miladLog.info("💡 Lights added");
-
-                // Renderer
+                // Renderer - share GL context
                 this.renderer = new THREE.WebGLRenderer({
                   canvas: map.getCanvas(),
                   context: gl,
                   antialias: true
                 });
                 this.renderer.autoClear = false;
-                
-                miladLog.success("✅ Renderer initialized");
-                miladLog.info("   Scene children:", this.scene.children.length);
+                miladLog.success("✅ Renderer ready");
 
-                // Load GLB
-                miladLog.info("📦 Loading GLB: /observation+tower+3d+model.glb");
+                // Load GLB - using correct path
+                miladLog.info("📦 Loading GLB: /assets/landmarks/miladtower.glb");
                 const loader = new GLTFLoader();
-                
                 loader.load(
-                  '/observation+tower+3d+model.glb',
+                  '/assets/landmarks/miladtower.glb',
                   (gltf) => {
-                    miladLog.success("✅ GLB loaded successfully");
-                    miladLog.info("   GLB scene:", gltf.scene);
-                    
+                    miladLog.success("✅ GLB loaded!");
                     this.model = gltf.scene;
 
-                    // Calculate real model bounds
                     const box = new THREE.Box3().setFromObject(this.model);
                     const size = box.getSize(new THREE.Vector3());
-                    
-                    miladLog.info("📦 MODEL SIZE:");
-                    miladLog.info("   Width (X):", size.x.toFixed(4));
-                    miladLog.info("   Height (Y):", size.y.toFixed(4));
-                    miladLog.info("   Depth (Z):", size.z.toFixed(4));
+                    miladLog.info("📦 MODEL SIZE:", size.x.toFixed(4), size.y.toFixed(4), size.z.toFixed(4));
 
-                    // Calculate scale to match 435m height
-                    const targetHeight = 435;
-                    const modelHeight = size.y;
-                    const calculatedScale = targetHeight / modelHeight;
+                    // CORRECT scaling for MapLibre Mercator pipeline:
+                    // modelTransform.scale = meterInMercatorCoordinateUnits (~3e-8)
+                    // The render() multiplies everything by modelTransform.scale
+                    // So model units must equal METERS (1 model unit = 1 meter)
+                    // targetHeight(m) / modelHeight(units) = meters per unit
+                    const modelHeight = Math.max(size.x, size.y, size.z);
                     
-                    miladLog.info("📏 SCALE CALCULATION:");
-                    miladLog.info("   Model height:", modelHeight.toFixed(4));
-                    miladLog.info("   Target height: 435m");
-                    miladLog.info("   Calculated scale:", calculatedScale.toFixed(2));
+                    // FINAL SCALE: Optimized via drag mode
+                    // Height: 1200m (2.76x real height for perfect coverage)
+                    const targetHeight = 1200; // meters - final tuned value
+                    const metersPerUnit = targetHeight / modelHeight;
                     
-                    this.model.scale.set(calculatedScale, calculatedScale, calculatedScale);
+                    // UNIFORM SCALE: No special width multiplier needed
+                    miladLog.info("📏 Final scale: UNIFORM");
+                    miladLog.info(`   Height: ${targetHeight}m`);
+                    
+                    this.model.scale.setScalar(metersPerUnit);
 
-                    // DISABLE materials temporarily - use red for visibility
-                    miladLog.warn("🔴 Applying RED material for debugging");
+                    // Apply NVIDIA Omniverse dark graphite material
+                    miladLog.info("🎨 Applying premium dark graphite material");
                     this.model.traverse((obj: any) => {
                       if (obj.isMesh) {
-                        obj.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+                        obj.material = new THREE.MeshStandardMaterial({
+                          color: 0x14263a,
+                          metalness: 0.6,
+                          roughness: 0.3,
+                          emissive: 0x0a1a2d,
+                          emissiveIntensity: 0.08
+                        });
                       }
                     });
 
                     this.scene.add(this.model);
-                    miladLog.success("✅ Model added to scene");
-                    miladLog.info("   Total scene children:", this.scene.children.length);
+                    miladLog.success("✅ Model in scene. Total children:", this.scene.children.length);
+                    
+                    // ═══════════════════════════════════════════════════════════════
+                    // DRAG MODE: Interactive GLB Positioning (Shift+D)
+                    // ═══════════════════════════════════════════════════════════════
+                    createGLBDragController({
+                      map,
+                      model: this.model,
+                      modelHeight,
+                      modelTransform,
+                      maplibregl,
+                      miladLog,
+                      initialPosition: modelOrigin,
+                      initialAltitude: modelAltitude,
+                      targetHeight
+                    });
                     
                     map.triggerRepaint();
                   },
-                  (progress) => {
-                    if (progress.total > 0) {
-                      const percent = ((progress.loaded / progress.total) * 100).toFixed(0);
-                      miladLog.info(`⏳ Loading: ${percent}%`);
-                    }
-                  },
-                  (error) => {
-                    miladLog.error("❌ GLB load failed:", error);
-                  }
+                  undefined,
+                  (err) => miladLog.error("❌ GLB failed:", err)
                 );
               },
 
-              render(this: any, gl: WebGLRenderingContext, matrix: number[]) {
-                // Count renders
-                if (!this.renderCount) {
-                  this.renderCount = 0;
-                  miladLog.success("🎬 First render() called");
-                }
+              render(this: any, _gl: WebGLRenderingContext, args: any) {
+                if (!this.renderer) return;
+
+                if (!this.renderCount) this.renderCount = 0;
                 this.renderCount++;
 
-                // Rotation matrices
-                const rotationX = new THREE.Matrix4().makeRotationAxis(
-                  new THREE.Vector3(1, 0, 0),
-                  modelTransform.rotateX
-                );
-                const rotationY = new THREE.Matrix4().makeRotationAxis(
-                  new THREE.Vector3(0, 1, 0),
-                  modelTransform.rotateY
-                );
-                const rotationZ = new THREE.Matrix4().makeRotationAxis(
-                  new THREE.Vector3(0, 0, 1),
-                  modelTransform.rotateZ
-                );
+                // Log first render args structure
+                if (this.renderCount === 1) {
+                  miladLog.success("🎬 FIRST RENDER - inspecting args:");
+                  miladLog.info("   typeof args:", typeof args);
+                  if (args) {
+                    miladLog.info("   args keys:", JSON.stringify(Object.keys(args)));
+                    if (args.defaultProjectionData) {
+                      miladLog.info("   defaultProjectionData keys:", JSON.stringify(Object.keys(args.defaultProjectionData)));
+                      miladLog.info("   mainMatrix length:", args.defaultProjectionData.mainMatrix?.length);
+                    }
+                  }
+                }
 
-                // Build matrix (official pattern)
-                const m = new THREE.Matrix4().fromArray(matrix);
+                // Extract matrix - MapLibre v4+ passes args object
+                let matrixArray: number[];
+                if (args && args.defaultProjectionData && args.defaultProjectionData.mainMatrix) {
+                  matrixArray = args.defaultProjectionData.mainMatrix;
+                } else if (args && Array.isArray(args)) {
+                  matrixArray = args;
+                } else if (args && args.projectionMatrix) {
+                  matrixArray = args.projectionMatrix;
+                } else {
+                  // Try to use args directly as matrix
+                  matrixArray = args;
+                }
+
+                if (!matrixArray) {
+                  if (this.renderCount === 1) miladLog.error("❌ No matrix found in args!");
+                  return;
+                }
+
+                const rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1,0,0), modelTransform.rotateX);
+                const rotY = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0,1,0), modelTransform.rotateY);
+                const rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0,0,1), modelTransform.rotateZ);
+
+                // modelTransform.scale = meterInMercatorCoordinateUnits
+                // This converts meters → Mercator units in the projection matrix
+                const m = new THREE.Matrix4().fromArray(matrixArray);
                 const l = new THREE.Matrix4()
-                  .makeTranslation(
-                    modelTransform.translateX,
-                    modelTransform.translateY,
-                    modelTransform.translateZ
-                  )
-                  .scale(
-                    new THREE.Vector3(
-                      modelTransform.scale,
-                      -modelTransform.scale,
-                      modelTransform.scale
-                    )
-                  )
-                  .multiply(rotationX)
-                  .multiply(rotationY)
-                  .multiply(rotationZ);
+                  .makeTranslation(modelTransform.translateX, modelTransform.translateY, modelTransform.translateZ)
+                  .scale(new THREE.Vector3(modelTransform.scale, -modelTransform.scale, modelTransform.scale))
+                  .multiply(rotX).multiply(rotY).multiply(rotZ);
 
                 this.camera.projectionMatrix = m.multiply(l);
                 this.renderer.resetState();
                 this.renderer.render(this.scene, this.camera);
                 this.map.triggerRepaint();
-                
-                // Log every 100 renders
+
                 if (this.renderCount % 100 === 0) {
                   miladLog.info(`🔄 Render count: ${this.renderCount}`);
                   miladLog.info("   Scene children:", this.scene.children.length);
-                  if (this.model) {
-                    miladLog.info("   Model visible:", this.model.visible);
-                  }
-                  if (this.testCube) {
-                    miladLog.info("   Test cube visible:", this.testCube.visible);
-                  }
+                  if (this.testCube) miladLog.info("   Test cube visible:", this.testCube.visible);
                 }
               }
             };
 
-            // Add layer to map
-            miladLog.info("➕ Adding custom layer to map...");
-            
-            // Try to add before waterway-label
-            const layers = map.getStyle().layers;
-            const waterwayLabel = layers.find(l => l.id === 'waterway-label');
-            
-            if (waterwayLabel) {
-              map.addLayer(customLayer, 'waterway-label');
-              miladLog.success("✅ Layer added BEFORE waterway-label");
-            } else {
+            // Add layer with full error capture
+            miladLog.info("➕ Attempting map.addLayer()...");
+            try {
               map.addLayer(customLayer);
-              miladLog.success("✅ Layer added at top");
+              miladLog.success("✅ map.addLayer() succeeded");
+            } catch (layerErr) {
+              miladLog.error("❌ map.addLayer() threw:", layerErr);
             }
-            
-            // VERIFY layer was added
+
+            // Verify after 200ms
             setTimeout(() => {
-              const addedLayer = map.getStyle().layers.find(l => l.id === '3d-model');
-              if (addedLayer) {
-                miladLog.success("✅ VERIFIED: Custom layer exists in map");
-              } else {
-                miladLog.error("❌ FAILED: Custom layer NOT in map!");
-              }
-            }, 100);
+              const exists = map.getStyle().layers.find(l => l.id === '3d-model');
+              miladLog.info("🔍 Layer in style?", exists ? "✅ YES" : "❌ NO (custom layers not in style array - this is normal)");
+            }, 200);
             
-            // DEBUG: Red marker
-            map.addSource('milad-marker', {
-              type: 'geojson',
-              data: {
-                type: 'Feature',
-                geometry: {
-                  type: 'Point',
-                  coordinates: modelOrigin
-                },
-                properties: {}
-              }
-            });
-
-            map.addLayer({
-              id: 'milad-circle',
-              type: 'circle',
-              source: 'milad-marker',
-              paint: {
-                'circle-radius': 20,
-                'circle-color': '#ff0000',
-                'circle-opacity': 0.8
-              }
-            });
-
-            miladLog.success("🔴 Debug marker added");
+            miladLog.success("🏙️ Milad Tower 3D integration complete");
             
           }).catch(error => {
             miladLog.error("❌ GLTFLoader import failed:", error);
