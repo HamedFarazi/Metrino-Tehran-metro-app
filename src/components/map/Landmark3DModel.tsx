@@ -14,7 +14,7 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import type maplibregl from 'maplibre-gl';
+import maplibregl from 'maplibre-gl';
 
 export interface Landmark3DConfig {
   id: string;
@@ -145,8 +145,11 @@ export function createLandmark3DLayer(
       );
     },
 
-    render(gl: WebGLRenderingContext, matrix: number[]) {
+    render(_gl: WebGLRenderingContext | WebGL2RenderingContext, options: maplibregl.CustomRenderMethodInput) {
       if (!layerState.loaded || !layerState.model) return;
+
+      // Extract modelViewProjectionMatrix from the new API
+      const matrix = options.modelViewProjectionMatrix;
 
       // Create transformation matrix
       const rotationX = new THREE.Matrix4().makeRotationAxis(

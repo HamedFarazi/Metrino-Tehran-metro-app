@@ -11,6 +11,7 @@ import {
   Building2,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent, useTransformEffect } from "react-zoom-pan-pinch";
+import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useMetroStore } from "@/store/metro.store";
 import { MetroDataService } from "@/services/metro-data.service";
@@ -3055,7 +3056,7 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
           import('three/examples/jsm/loaders/GLTFLoader.js').then(({ GLTFLoader }) => {
             
             // Milad Tower coordinates - FINAL OPTIMIZED POSITION
-            const modelOrigin = [51.375377281551806, 35.74455351604652]; // Tuned via drag mode
+            const modelOrigin: [number, number] = [51.375377281551806, 35.74455351604652]; // Tuned via drag mode
             const modelAltitude = 0;
             // Try zero rotation first to see raw model orientation
             const modelRotate = [Math.PI / 2, 0, 0]; // X rotation needed for Z-up to Y-up conversion
@@ -3063,7 +3064,7 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
             miladLog.info("📍 Model origin:", modelOrigin);
             
             // Convert to Mercator
-            const modelAsMercatorCoordinate = (maplibregl as any).MercatorCoordinate.fromLngLat(
+            const modelAsMercatorCoordinate = maplibregl.MercatorCoordinate.fromLngLat(
               modelOrigin,
               modelAltitude
             );
@@ -3197,42 +3198,24 @@ function OnlineMap({ styleKey }: { styleKey: OnlineMode }) {
                 );
               },
 
-              render(this: any, _gl: WebGLRenderingContext, args: any) {
+              render(this: any, _gl: WebGLRenderingContext | WebGL2RenderingContext, options: maplibregl.CustomRenderMethodInput) {
                 if (!this.renderer) return;
 
                 if (!this.renderCount) this.renderCount = 0;
                 this.renderCount++;
 
-                // Log first render args structure
+                // Log first render options structure
                 if (this.renderCount === 1) {
-                  miladLog.success("🎬 FIRST RENDER - inspecting args:");
-                  miladLog.info("   typeof args:", typeof args);
-                  if (args) {
-                    miladLog.info("   args keys:", JSON.stringify(Object.keys(args)));
-                    if (args.defaultProjectionData) {
-                      miladLog.info("   defaultProjectionData keys:", JSON.stringify(Object.keys(args.defaultProjectionData)));
-                      miladLog.info("   mainMatrix length:", args.defaultProjectionData.mainMatrix?.length);
-                    }
+                  miladLog.success("🎬 FIRST RENDER - inspecting options:");
+                  miladLog.info("   typeof options:", typeof options);
+                  if (options) {
+                    miladLog.info("   options keys:", JSON.stringify(Object.keys(options)));
                   }
                 }
 
-                // Extract matrix - MapLibre v4+ passes args object
-                let matrixArray: number[];
-                if (args && args.defaultProjectionData && args.defaultProjectionData.mainMatrix) {
-                  matrixArray = args.defaultProjectionData.mainMatrix;
-                } else if (args && Array.isArray(args)) {
-                  matrixArray = args;
-                } else if (args && args.projectionMatrix) {
-                  matrixArray = args.projectionMatrix;
-                } else {
-                  // Try to use args directly as matrix
-                  matrixArray = args;
-                }
-
-                if (!matrixArray) {
-                  if (this.renderCount === 1) miladLog.error("❌ No matrix found in args!");
-                  return;
-                }
+                // Extract matrix - MapLibre 5.24.0 uses modelViewProjectionMatrix (mat4 type)
+                // mat4 is an array-like object from gl-matrix, convert to Array for Three.js
+                const matrixArray = Array.from(options.modelViewProjectionMatrix);
 
                 const rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1,0,0), modelTransform.rotateX);
                 const rotY = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0,1,0), modelTransform.rotateY);
